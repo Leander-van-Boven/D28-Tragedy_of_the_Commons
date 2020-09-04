@@ -1,7 +1,7 @@
 True versus strategic fairness in a common resource dilemma: Evidence from the dual‐process perspective
 
-proself -- procosial (Selfishly oriented or socially oriented)
-intuition -- deliberation (intuitive decision or deliberative decision)
+proself (Selfishly oriented) vs. procosial (socially oriented)
+intuition (Intuitive decision) vs. deliberation (deliberative decision)
 
 How does proself/prosocialness (Social Value Orientation SVO) moderate result difference between intuition/deliberation when used in CPR problem?
 
