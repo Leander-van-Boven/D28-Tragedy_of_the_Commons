@@ -1,0 +1,6 @@
+The Tragedy of the Commons in Evolutionary Biology - 2007
+	- categorises different forms of TotC.
+	- 2 "social goods": Cooperative + uncompetetive.
+	- a "component tragedy": a low amount of resources, but the population is just surviving.
+	- Forms of solving the tragedy: restraining individuals, divide population, cooperation + punishment, diminishing returns + priorities.
+	- What is the frequency of a TotC arising over time in a population?
