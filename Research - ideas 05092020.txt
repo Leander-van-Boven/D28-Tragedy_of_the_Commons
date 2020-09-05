@@ -1,0 +1,16 @@
+What to model:
+	- Fluctuation of the population
+		- what group causes what outcome
+		- reproduction of both the predator and prey
+		- What counts as sustainible?
+		- Amplitude
+		- convergence
+	- Agent's strategy
+		- their own strategy
+		- they want to achieve thier motivation
+		- How socially minded are they?
+		- How much time to decide?
+		
+RQ:
+How the social conduct/strategy of the agents determine the global outcome of the model.  
+
