@@ -1,7 +1,7 @@
 agent_parameters = {
     "metabolism" : 2,               # The 'cost' of staying alive per epoch (in energy)
-    "procreateReq" : 16,            # The amount of energy an agent needs to have before it can create offspring
-    "procreateCost" : 10,           # The amount of energy it costs to create a new child
+    "procreate_req" : 16,            # The amount of energy an agent needs to have before it can create offspring
+    "procreate_cost" : 10,           # The amount of energy it costs to create a new child
     "maxmimum_age" : 100,           # The maximum age for the agent, the agent gets 'removed' when its age exceeds this parameter
 }
 
@@ -12,7 +12,6 @@ resource_parameters = {
     "energy_per_unit" : 5,          # The amount of energy one unit provides
 }
 
-environment_parameters = {
+simulation_parameters = {
     "initial_agents_count" : 100,  
-
 }

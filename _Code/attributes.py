@@ -10,7 +10,7 @@ resource = [
     "current_amount",
 ]
 
-environment = [
+simulation = [
     "agent_count",
     "epoch"
 ]
