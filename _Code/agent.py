@@ -2,7 +2,11 @@
 
 class Agent:
 
-    # Default parameters
+    # Base Model Parameters
+    scarcity = .1
+    greedy = 1.5
+    
+    """
     metabolism = 2
     procreate_req = 16
     procreate_cost = 10
@@ -13,7 +17,7 @@ class Agent:
     hungry = 1.5
     dying = 2
     eldery = 70
-    
+    """
 
     # Attributes
     age = 0
@@ -40,6 +44,22 @@ class Agent:
 
 
     def energy_function(self, epoch=1):
+        
+        ### Base Model
+    	if self.social_value_orientation >= .5:
+    		energy += -self.metabolism + self.consumption
+    		net_consumption -= self.consumption
+    	else:
+    		if fish/population < self.scarcity:
+    			energy += -self.metabolism + self.consumption*self.greedy
+    			net_consumption -= self.consumption*self.greedy
+    		else:
+    			energy += -self.metabolism + self.consumption
+    			net_consumption -= self.consumption
+
+    	return energy, net_consumption
+        
+        """
         procreation = 0
 
         self.energy += 10 if \
@@ -71,3 +91,17 @@ class Agent:
             elif self.energy >= procreate_req:
                 self.energy += -self.metabolism + self.consumption -self.procreate_cost
                 procreation += 1
+                
+       """
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+####
