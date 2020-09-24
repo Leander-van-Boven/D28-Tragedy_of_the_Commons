@@ -14,7 +14,7 @@ class Resource:
         self.growth_rate = values["growth_rate"]
         self.max_amount = values["max_amount"]
         self.min_amount = values["min_amount"]
-        self.amount = start_amount
+        self.amount = self.start_amount
 
     def growth_func(self, fx):
         if (self.amount <= self.min_amount): 
@@ -30,16 +30,19 @@ class Resource:
     def consume_resource(self, amount):
         if self.amount - amount < 0:
             raise Exception(f"There is not enough of the resource to consume {amount} amount.")
+            # Or return self.amount ? If the agent wants 10 but only 6 is left it gets the last 6?
 
         self.amount -= amount
         return amount * self.energy_per_unit
+
+    def get_amount(self):
+        return self.amount
 
     def get_energy_per_unit(self):
         return self.energy_per_unit
 
     def set_energy_per_unit(self, energy_per_unit):
         self.energy_per_unit = energy_per_unit
-
     
     def get_growth_rate(self):
         return self.growth_rate
