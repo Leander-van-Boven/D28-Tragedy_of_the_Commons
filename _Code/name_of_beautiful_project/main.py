@@ -3,6 +3,7 @@ from output import ResultsPrinter
 from logger import CsvLogger
 import json
 import os,sys
+import shutil
 
 def run(params=None, out_dir=None, use_plot=True):
     if not params:
@@ -51,3 +52,12 @@ def generate_default_params():
 
     with open(".defaults.json", "w") as file:
         file.write(json.dumps(p))
+
+
+def copy_last_run(path):
+
+    if not os.path.isfile('.last.json'):
+        return False
+
+    shutil.copyfile('.last.json', path)
+    return True
