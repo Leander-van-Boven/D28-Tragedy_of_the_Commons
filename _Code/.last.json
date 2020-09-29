@@ -1,0 +1,1 @@
+{"agent": {"metabolism": 2, "procreate_req": 16, "procreate_cost": 10, "maximum_age": 100}, "resource": {"start_amount": 500, "max_amount": 1000, "min_amount": 3, "growth_rate": 1.42, "energy_per_unit": 5}, "simulation": {"initial_agents_count": 50, "max_epoch": 1000}}
