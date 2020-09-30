@@ -4,20 +4,22 @@ import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib import animation
 
-
 class ResultsPrinter:
     def __init__(self, max_agent, agent_distributions: [], max_resource):
         """Initializes the real time plot.
 
-            This will create the figure with the subplots and correct axis labels.
+            This will create the figure with the subplots 
+                and correct axis labels.
         """
+
         # Initialize self properties
         self.max_agent = max_agent
         self.max_resource = max_resource
         self.xdata, self.yagents, self.yresource = [], [[]], []
 
         # Create figure
-        self.fig, (self.ax_agent, self.ax_resource) = plt.subplots(nrows=2, figsize=(16,8))
+        self.fig, (self.ax_agent, self.ax_resource) = plt.subplots(
+            nrows=2, figsize=(16,8))
         self.fig.tight_layout(h_pad=3, pad=4)
 
         # Setup agent subplot

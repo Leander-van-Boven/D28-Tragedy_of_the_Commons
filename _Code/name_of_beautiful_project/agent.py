@@ -30,19 +30,19 @@ class Agent:
     behaviour = None
 
 
-
-
     def __init__(self, param_dict, dist_params):
-        #print('param dict: ', param_dict)
-        self.metabolism = param_dict.get('metabolism', self.metabolism)
-        self.procreate_req = param_dict.get('procreate_req', self.procreate_req)
-        self.procreate_cost = param_dict.get('procreate_cost', self.procreate_cost)
-        self.maximum_age = param_dict.get('maximum_age', self.maximum_age)
-        #self.social_value_orientation = param_dict.get('social_value_orientation'
-        #                                              , self.social_value_orientation)
-        #self.social_value_orientation = rnd.random()
-        self.social_value_orientation = rnd.uniform(dist_params["min_social_value"], dist_params["max_social_value"])
-        self.init_consumption = param_dict.get('init_consumption', self.init_consumption)
+        self.metabolism = param_dict.get('metabolism', 
+                                         self.metabolism)
+        self.procreate_req = param_dict.get('procreate_req', 
+                                            self.procreate_req)
+        self.procreate_cost = param_dict.get('procreate_cost', 
+                                             self.procreate_cost)
+        self.maximum_age = param_dict.get('maximum_age', 
+                                          self.maximum_age)
+        self.social_value_orientation = rnd.uniform(
+            dist_params["min_social_value"], dist_params["max_social_value"])
+        self.init_consumption = param_dict.get('init_consumption', 
+                                               self.init_consumption)
 
         self.consumption = self.init_consumption
    
@@ -65,9 +65,10 @@ class Agent:
         
         Implements the basic behaviour of the agents
         
-        - Pro-social agents will always fish at the predefined consumption rate.
-
-        - Pro-self agents, will fish with an extra greed coefficient when fish population is low relative to human population.
+        - Pro-social agents will always fish 
+            at the predefined consumption rate.
+        - Pro-self agents, will fish with an extra greed coefficient 
+            when fish population is low relative to human population.
         
         """
         self.energy -= self.metabolism
@@ -81,7 +82,8 @@ class Agent:
             fish = res.get_amount()
             population = sim.get_agent_count()
             if fish/population < self.scarcity:
-                self.energy += res.consume_resource(self.consumption*self.greed1)
+                self.energy += res.consume_resource(
+                    self.consumption*self.greed1)
             else:
                 self.energy += res.consume_resource(self.consumption)
 
