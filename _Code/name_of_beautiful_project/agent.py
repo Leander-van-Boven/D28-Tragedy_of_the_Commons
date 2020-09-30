@@ -32,7 +32,7 @@ class Agent:
 
 
 
-    def __init__(self, param_dict, sim):
+    def __init__(self, param_dict, dist_params):
         #print('param dict: ', param_dict)
         self.metabolism = param_dict.get('metabolism', self.metabolism)
         self.procreate_req = param_dict.get('procreate_req', self.procreate_req)
@@ -40,26 +40,26 @@ class Agent:
         self.maximum_age = param_dict.get('maximum_age', self.maximum_age)
         #self.social_value_orientation = param_dict.get('social_value_orientation'
         #                                              , self.social_value_orientation)
-        self.social_value_orientation = rnd.random()
+        #self.social_value_orientation = rnd.random()
+        self.social_value_orientation = rnd.uniform(dist_params["min_social_value"], dist_params["max_social_value"])
         self.init_consumption = param_dict.get('init_consumption', self.init_consumption)
 
         self.consumption = self.init_consumption
-        self.simulation = sim
    
 
-    def act(self, res, epoch):
+    def act(self, sim, res):
         """
         This is the act function of the agent.
         It is does everything relevant to an agent.
         """
-        self.base_energy_function(res)
+        self.base_energy_function(sim, res)
         # These are just future methods that an agent could do
-        #self.procreate(epoch)
+        #self.procreate(sim.get_epoch())
         #self.change_VO()
 
 
     ### Base Model ###
-    def base_energy_function(self, res):
+    def base_energy_function(self, sim, res):
         """
         Base model for the agent.
         
@@ -79,7 +79,7 @@ class Agent:
         # Proself Behaviour
         else:
             fish = res.get_amount()
-            population = self.simulation.get_agent_count()
+            population = sim.get_agent_count()
             if fish/population < self.scarcity:
                 self.energy += res.consume_resource(self.consumption*self.greed1)
             else:

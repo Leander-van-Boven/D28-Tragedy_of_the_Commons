@@ -5,7 +5,6 @@ import json
 import os,sys
 import shutil
 
-
 def run(params=None, out_dir=None, use_plot=True):
     if not params:
         # if not os.path.isfile('.defaults.json'):
@@ -27,9 +26,11 @@ def run(params=None, out_dir=None, use_plot=True):
 
     if use_plot:
         printer = ResultsPrinter(
-            params["simulation"]["initial_agents_count"]
-            , 2 # amount of agent groups
-            , params["resource"]["max_amount"])
+            sum(dist['agent_count'] 
+                for dist 
+                in params['simulation']['agent_distributions'])
+            , params['simulation']['agent_distributions']
+            , params['resource']['max_amount'])
         printer.start_printer(sim.run_simulation)
     else:
         sim.run_simulation()
@@ -48,15 +49,32 @@ def generate_default_params():
 
         "resource" : {
             "start_amount" : 500,           # The starting amount of units of the common resource
-            "max_amount": 1000,              # The maximum amount units there can be at one epoch
-            "min_amount": 3,                # The minimum amount of units. 
+            "max_amount" : 1000,              # The maximum amount units there can be at one epoch
+            "min_amount" : 0,                # The minimum amount of units. 
             "growth_rate" : 1.42,            # The growth rate (in units) of the common resource
             "energy_per_unit" : 5,          # The amount of energy one unit provides
         },
 
         "simulation" : {
-            "initial_agents_count" : 50,  
-            "max_epoch" : 1000
+            "max_epoch" : 1000,
+            "plot_interval" : 2,
+            "print_interval" : 1,
+            "agent_distributions" : [
+                {
+                    "label" : "proself",
+                    "line_style" : ':',
+                    "agent_count" : 25,
+                    "min_social_value" : 0,
+                    "max_social_value" : .25
+                },
+                {
+                    "label" : "prosocial",
+                    "line_style" : '--',
+                    "agent_count" : 25,
+                    "min_social_value" : .75,
+                    "max_social_value" : 1
+                }
+            ]
         }
     }
 

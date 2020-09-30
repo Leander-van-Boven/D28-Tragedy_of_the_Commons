@@ -1,5 +1,6 @@
-import math
+#TODO add docstring
 
+import math
 
 class Resource:
     start_amount = 100
@@ -20,6 +21,15 @@ class Resource:
 
 
     def growth_func(self, fx):
+        '''
+        Parameters:
+            0: r = r * coeff, 
+
+            1: r += r,
+
+            2: r += sqrt(max - current) 
+
+        '''
         if (self.amount <= self.min_amount): 
             self.amount = self.min_amount
 
