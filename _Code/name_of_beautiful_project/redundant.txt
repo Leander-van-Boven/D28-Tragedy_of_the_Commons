@@ -1,0 +1,6 @@
+        "agent" : {
+            "metabolism" : 2,               # The 'cost' of staying alive per epoch (in energy)
+            "procreate_req" : 16,           # The amount of energy an agent needs to have before it can create offspring
+            "procreate_cost" : 10,          # The amount of energy it costs to create a new child
+            "maximum_age" : 100,           # The maximum age for the agent, the agent gets 'removed' when its age exceeds this parameter
+        },

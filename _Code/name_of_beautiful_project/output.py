@@ -1,19 +1,24 @@
 import numpy as np
 import matplotlib
-#matplotlib.use('GTKAgg')
 from matplotlib import pyplot as plt
 from matplotlib import animation
 
 class ResultsPrinter:
-    def __init__(self, max_agent, agent_distributions: [], max_resource):
-        """Initializes the real time plot.
+    def __init__(self, agent_distributions: [], max_resource):        
+        """Initializes the real-time plot
 
-            This will create the figure with the subplots 
-                and correct axis labels.
+        Parameters
+        ----------
+        agent_distributions : `list`,
+            A list containing the different agent groups
+
+        max_resource : `int`,
+            [description]
         """
 
         # Initialize self properties
-        self.max_agent = max_agent
+        self.max_agent = sum(dist['agent_count'] 
+                             for dist in agent_distributions)
         self.max_resource = max_resource
         self.xdata, self.yagents, self.yresource = [], [[]], []
 
@@ -61,6 +66,15 @@ class ResultsPrinter:
 
 
     def update(self, data):
+        """[summary]
+
+        Arguments:
+            data {[type]} -- [description]
+
+        Returns:
+            [type] -- [description]
+        """
+
         t, a, r = data
         self.xdata.append(t)
         for i in range(len(a)):
@@ -82,8 +96,12 @@ class ResultsPrinter:
 
 
     def start_printer(self, data_gen):
-        """Starts the real time plotting with the specified data generator
+        """[summary]
+
+        Args:
+            data_gen ([type]): [description]
         """
+
         ani = animation.FuncAnimation(self.fig, self.update, data_gen, 
                                       blit=False, interval=1, repeat=False, 
                                       init_func=self.init_plot)

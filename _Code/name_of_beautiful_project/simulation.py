@@ -10,21 +10,21 @@ class Simulation:
 
     Attributes
     ----------
-    epoch : `int`\\
-        The current epoch the simulation is on
+    epoch : `int`,
+        the current epoch the simulation is on
 
-    agents : `list`\\
-        A list containing all (alive) agents currently in the simulation
+    agents : `list`,
+        a list containing all (alive) agents currently in the simulation
     
-    result : `str`\\
-        Set when the simulation is done, denoting the outcome of the sim
+    result : `str`,
+        set when the simulation is done, denoting the outcome of the sim
     
-    resource : `Resource`\\
-        A resource object representing the common resource
+    resource : `Resource`,
+        a resource object representing the common resource
 
     Methods
     -------
-    - getters and setters for each attribute
+    getters and setters for each attribute
 
     `get_agent_count(min_social_value=0, max_social_value=1)`
 
@@ -49,11 +49,10 @@ class Simulation:
         self.plot_interval = self.params['plot_interval']
         self.print_interval = self.params['print_interval']
 
-        self.agent_params = param_dict['agent']
+        self.agent_distributions = param_dict['agent_distributions']
         self.resource_params = param_dict['resource']
 
 
-    #--- Getters & Setters
     def get_agent_count(self, min_social_value=0, max_social_value=1):
         """Returns the amount of all agents if no params are specified
         
@@ -90,6 +89,17 @@ class Simulation:
 
 
     def remove_agent(self, agent):
+        """[summary]
+
+        #TODO determine what to do with the energy of the agent
+            when the agent dies from for example age or punishment
+
+        Parameters
+        ----------
+            agent : `Agent`
+                [description]
+        """
+
         self.agents.remove(agent)
 
     
@@ -101,7 +111,6 @@ class Simulation:
         return self.epoch
 
 
-    #--- Main methods
     def run_simulation(self):
         """Run the simulation
         
@@ -120,9 +129,9 @@ class Simulation:
         self.epoch = 0
 
         # Initialise the agents
-        for dist in self.params['agent_distributions']:
+        for dist in self.agent_distributions:
             for i in range(dist['agent_count']):
-                self.add_agent(Agent(self.agent_params, dist))
+                self.add_agent(Agent(dist))
 
         # Initialise the resource
         self.resource = Resource(self.resource_params)
@@ -135,16 +144,21 @@ class Simulation:
                 yield (self.epoch,
                       [self.get_agent_count(dist['min_social_value'],
                                             dist['max_social_value'])
-                        for dist in self.params['agent_distributions']
+                        for dist in self.agent_distributions
                       ],
                       self.resource.get_amount())
             # Print results in console
             if self.epoch % self.print_interval == 0:
-                print((f"epoch: {self.epoch}, " +
-                       f"res: {self.resource.get_amount():.2f}, " + 
-                       f"self: {self.get_agent_count(.5, False)}, " + 
-                       f"social: {self.get_agent_count(.5, True)}"), 
-                      end = "\r", flush = True)
+                cur_stats = f"epoch: {self.epoch}, "
+                for dist in self.agent_distributions:
+                    cur_stats += (f"{dist['label']}: " + 
+                        str(self.get_agent_count(dist['min_social_value'], 
+                                                 dist['max_social_value'])) + 
+                        ", ")
+                cur_stats += f"res: {self.resource.get_amount():.2f}"
+                print(cur_stats, end = "\r", flush = True)           
+            # Log results in CSV file
+            #TODO
 
             # Update the agents
             for agent in self.agents:
@@ -157,12 +171,14 @@ class Simulation:
             if self.get_agent_count() <= 0:
                 self.result = ("All agents are dead :(" + 
                               "there is no hope left for the village," + 
-                              "just darkness.")
+                              "just darkness.\n" +
+                              "Last stats: " + cur_stats)
                 print(self.result)
                 return
 
             # Update the resource and epoch
             self.resource.growth_func(0) 
+            np.random.shuffle(self.agents)
             self.epoch += 1
 
             # Uncomment below to slow down the simulation/plotting speed
@@ -170,4 +186,5 @@ class Simulation:
         
         self.result = ("Maximum epoch reached, you managed to keep " +
                        self.get_agent_count() +
-                       " agents alive!")
+                       " agents alive!\n" +
+                       "Last stats: " + cur_stats)

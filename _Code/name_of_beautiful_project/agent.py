@@ -30,18 +30,18 @@ class Agent:
     behaviour = None
 
 
-    def __init__(self, param_dict, dist_params):
-        self.metabolism = param_dict.get('metabolism', 
+    def __init__(self, dist_params):
+        self.metabolism = dist_params.get('metabolism', 
                                          self.metabolism)
-        self.procreate_req = param_dict.get('procreate_req', 
+        self.procreate_req = dist_params.get('procreate_req', 
                                             self.procreate_req)
-        self.procreate_cost = param_dict.get('procreate_cost', 
+        self.procreate_cost = dist_params.get('procreate_cost', 
                                              self.procreate_cost)
-        self.maximum_age = param_dict.get('maximum_age', 
+        self.maximum_age = dist_params.get('maximum_age', 
                                           self.maximum_age)
         self.social_value_orientation = rnd.uniform(
             dist_params["min_social_value"], dist_params["max_social_value"])
-        self.init_consumption = param_dict.get('init_consumption', 
+        self.init_consumption = dist_params.get('init_consumption', 
                                                self.init_consumption)
 
         self.consumption = self.init_consumption
@@ -52,16 +52,15 @@ class Agent:
         This is the act function of the agent.
         It is does everything relevant to an agent.
         """
+
         self.base_energy_function(sim, res)
         # These are just future methods that an agent could do
         #self.procreate(sim.get_epoch())
         #self.change_VO()
 
 
-    ### Base Model ###
     def base_energy_function(self, sim, res):
-        """
-        Base model for the agent.
+        """This is the base model energy function for our agent.
         
         Implements the basic behaviour of the agents
         
@@ -71,6 +70,7 @@ class Agent:
             when fish population is low relative to human population.
         
         """
+        
         self.energy -= self.metabolism
 
         # Prosocial Behaviour
@@ -88,13 +88,16 @@ class Agent:
                 self.energy += res.consume_resource(self.consumption)
 
 
-    #def secondary_energy_function(self, res)
+    #TODO implement more energy functions / behaviours
+    # def secondary_energy_function(self, res):
     """
     Built of base model.
 
-    Accounts for deliberation time contraints based on age, hunger, and scarcity
+    Accounts for deliberation time contraints based on age, hunger,
+        and scarcity
 
-    These time contraints inspire increasingly greedy behaviour in proself agents
+    These time contraints inspire increasingly greedy behaviour in 
+        proself agents
 
     Additional greed coefficients are weighted at a diminishing value
     """
@@ -129,4 +132,11 @@ class Agent:
     #   if self.energy > self.procreate_req:
     #       reproduce += 1
     #   return reproduce
-    #    
+
+    #TODO
+    # implement high-reward high-risk functions 
+    #   that have possible punishments:
+    #   "An agent is not allowed to go fishing 
+    #       when the amount of fish is below x",
+    #   Punishment: If caught, the agent is not allowed to fish 
+    #       or y amount of days
