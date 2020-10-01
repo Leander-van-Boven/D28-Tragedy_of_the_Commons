@@ -5,7 +5,7 @@ from matplotlib import animation
 
 class ResultsPrinter:
     def __init__(self, agent_distributions: [], max_resource):        
-        """Initializes the real-time plot
+        """Sets up the real-time plot
 
         Parameters
         ----------
@@ -13,10 +13,11 @@ class ResultsPrinter:
             A list containing the different agent groups
 
         max_resource : `int`,
-            [description]
+            The maximum amount of resource there can be,
+                used to set the y-axis range appropiately.
         """
 
-        # Initialize self properties
+        # Initialise self properties
         self.max_agent = sum(dist['agent_count'] 
                              for dist in agent_distributions)
         self.max_resource = max_resource
@@ -50,11 +51,15 @@ class ResultsPrinter:
 
 
     def init_plot(self):
+        '''Final initialisation of the plots'''
+
+        # Set axis ranges
         self.ax_agent.set_ylim(-.1, self.max_agent + 1)
         self.ax_agent.set_xlim(0, 10)
         self.ax_resource.set_ylim(-.1, self.max_resource + 1)
         self.ax_resource.set_xlim(0, 10)
 
+        # Reset all data
         del self.xdata[:]
         self.yagents = [[] for i in range(len(self.agent_lines))]
         del self.yresource[:]
@@ -64,19 +69,20 @@ class ResultsPrinter:
             agent_line.set_data(self.xdata, [])           
         self.resource_line.set_data(self.xdata, self.yresource)
 
-        return self.agent_lines, self.resource_line
-
 
     def update(self, data):
-        """[summary]
+        """Updates the plot
+        This method is called each time the data generator yields data.
 
-        Arguments:
-            data {[type]} -- [description]
-
-        Returns:
-            [type] -- [description]
+        Parameters
+        ----------
+        data : `tuple`,
+            Tuple containing the current epoch, 
+                the current amount of agents per agent distribution
+                and the current amount of the common resource.
         """
 
+        # Append the data to the correct lists
         t, a, r = data
         self.xdata.append(t)
         for i in range(len(a)):
@@ -86,6 +92,7 @@ class ResultsPrinter:
             self.yagents[i].append(a[i]) 
         self.yresource.append(r)
 
+        # Resize window if current epoch exceeds x_max
         xmin, xmax = self.ax_agent.get_xlim()
         if t >= xmax:
             self.ax_agent.set_xlim(xmin, 2*xmax)
@@ -93,19 +100,19 @@ class ResultsPrinter:
             self.ax_agent.figure.canvas.draw()
             self.ax_resource.figure.canvas.draw()
 
-        #self.agent_line.set_data(self.xdata, self.yagents)
+        # Update the actual lines
         for i in range(len(self.yagents)):
             self.agent_lines[i].set_data(self.xdata, self.yagents[i])
         self.resource_line.set_data(self.xdata, self.yresource)
 
-        return self.agent_lines, self.resource_line
-
 
     def start_printer(self, data_gen):
-        """[summary]
+        """Creates the real-time plot and shows it, waiting for data.
 
-        Args:
-            data_gen ([type]): [description]
+        Parameters
+        ----------
+        data_gen : `function`
+            The function that yields the data to plot.
         """
 
         ani = animation.FuncAnimation(self.fig, self.update, data_gen, 

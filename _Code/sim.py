@@ -6,6 +6,7 @@ running:
 >>> python3 sim.py -h
 """
 
+#TODO maybe find a more suitable name to nobp
 import name_of_beautiful_project as nobp
 import argparse
 import json
@@ -49,6 +50,7 @@ if __name__ == "__main__":
         nobp.run(param_dict, args.outdir, use_plot)
     
     # Save the results from the previous run
+    #TODO test if this works.
     elif args.command=="save":
         if args.scenario:
             path = args.scenario

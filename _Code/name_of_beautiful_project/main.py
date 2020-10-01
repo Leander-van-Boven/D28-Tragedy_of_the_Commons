@@ -1,7 +1,7 @@
 from .simulation import Simulation
 from .output import ResultsPrinter
 from .logger import CsvLogger
-from .parameters import p as default_params
+from .parameters import default_params
 import json
 import os,sys
 import shutil
@@ -46,8 +46,6 @@ def run(params=None, out_dir=None, use_plot=True):
         printer.start_printer(sim.run_simulation)
     else:
         sim.run_simulation()
-
-    #print(sim.result)
 
 
 def generate_default_params():

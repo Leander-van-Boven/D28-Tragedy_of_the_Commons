@@ -44,19 +44,24 @@ class Agent:
                                                    self.start_energy_multiplier)
         
    
-    def act(self, sim, res):
-        """
-        This is the act function of the agent.
-        It is does everything relevant to an agent.
+    def act(self, sim):
+        """This is the act function of the agent.
+        It updates the status of the agent depending on multiple factors.
+
+        Parameters
+        ----------
+        sim : `Simulation`,
+            Reference to the simulation
         """
 
-        self.base_energy_function(sim, res)
-        # These are just future methods that an agent could do
+        self.base_energy_function(sim)
+
+        #TODO Implement more behaviours
         #self.procreate(sim.get_epoch())
         #self.change_VO()
 
 
-    def base_energy_function(self, sim, res):
+    def base_energy_function(self, sim):
         """This is the base model energy function for our agent.
         
         Implements the basic behaviour of the agents
@@ -66,13 +71,18 @@ class Agent:
         - Pro-self agents, will fish with an extra greed coefficient 
             when fish population is low relative to human population.
         
+        Parameters
+        ----------
+        sim : `Simulation`,
+            Reference to the simulation
         """
         
         self.energy -= self.metabolism
 
         # Prosocial Behaviour
         if self.social_value_orientation >= .5:
-            self.energy += res.consume_resource(self.consumption)
+            self.energy += sim.get_resource().consume_resource(
+                self.consumption)
 
         # Proself Behaviour
         else:
@@ -80,10 +90,11 @@ class Agent:
             population = sim.get_agent_count()
             if fish/population < self.scarcity:
                 #print('')
-                self.energy += res.consume_resource(
+                self.energy += sim.get_resource().consume_resource(
                     self.consumption*self.greed3)
             else:
-                self.energy += res.consume_resource(self.consumption)
+                self.energy += sim.get_resource().consume_resource(
+                    self.consumption)
 
 
     #TODO implement more energy functions / behaviours
@@ -115,11 +126,16 @@ class Agent:
     #   hungry_bool = self.energy < self.hungry
     #
     #   if scarce_bool and age_bool and hungry_bool:
-    #       self.energy += res.consume_resource(self.consumption*self.greed1*greed2*greed3)
-    #   elif (scarce_bool and age_bool) or (scarce_bool and hungry_bool) or (age_bool and hungry_bool):
-    #       self.energy += res.consume_resource(self.consumption*self.greed1*greed2)
+    #       self.energy += res.consume_resource(
+    #           self.consumption*self.greed1*greed2*greed3)
+    #   elif (scarce_bool and age_bool) or 
+    #        (scarce_bool and hungry_bool) or 
+    #        (age_bool and hungry_bool):
+    #       self.energy += res.consume_resource(
+    #           self.consumption*self.greed1*greed2)
     #   elif scare_bool or age_bool or hungry_bool:
-    #       self.energy += res.consume_resource(self.consumption*self.greed1)
+    #       self.energy += res.consume_resource(
+    #           self.consumption*self.greed1)
     #   else:
     #       self.energy += res.consume_resource(self.consumption)
     #

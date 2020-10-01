@@ -4,3 +4,10 @@
             "procreate_cost" : 10,          # The amount of energy it costs to create a new child
             "maximum_age" : 100,           # The maximum age for the agent, the agent gets 'removed' when its age exceeds this parameter
         },
+
+        # if self.growth_func == 0:
+        #     self.amount += self.amount * self.growth_rate
+        # elif self.growth_func == 1:
+        #     self.amount += self.amount
+        # elif self.growth_func == 2:
+        #     self.amount += math.sqrt(self.max_amount - self.amount) 

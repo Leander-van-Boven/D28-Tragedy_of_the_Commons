@@ -54,7 +54,7 @@ class Simulation:
 
 
     def get_agent_count(self, min_social_value=0, max_social_value=1):
-        """Returns the amount of all agents if no params are specified
+        """Returns the amount of all agents if no params are specified.
         
         This function returns the amount of agents that have a social
         value orientation between the two parameters (inclusive).
@@ -62,9 +62,9 @@ class Simulation:
         Parameters
         ----------
         min_social_value : float
-            the lower limit of the SVO of the agent (inclusive)
+            The lower limit of the SVO of the agent (inclusive).
         max_social_value : flaot
-            the upper limit of the SVO of the agent (inclusive)
+            The upper limit of the SVO of the agent (inclusive).
         """
 
         return len([agent 
@@ -75,7 +75,7 @@ class Simulation:
 
 
     def get_agents(self):
-        '''Creates a histogram with an agent count for each unique SVO'''
+        '''Creates a histogram with an agent count for each unique SVO.'''
 
         classes = {}
         for agent in self.agents:   
@@ -89,19 +89,23 @@ class Simulation:
 
 
     def remove_agent(self, agent):
-        """[summary]
+        """Removes the agent from the simulation.
 
         #TODO determine what to do with the energy of the agent
-            when the agent dies from for example age or punishment
+            when the agent dies from for example age or punishment.
 
         Parameters
         ----------
             agent : `Agent`
-                [description]
+                The agent to remove.
         """
 
         self.agents.remove(agent)
 
+
+    def get_resource(self):
+        return self.resource
+        
     
     def get_result(self):
         return self.result
@@ -112,7 +116,7 @@ class Simulation:
 
 
     def run_simulation(self):
-        """Run the simulation
+        """Runs the simulation.
         
         This function runs sets up the simulation and runs it.
         It makes an agent act, causes resource to replenish 
@@ -120,13 +124,11 @@ class Simulation:
 
         Yields
         ------
-        data : tuple
-            a tuple containing the current epoch, 
-            current amount of agents for each agent distribution,
-            current amount of the common resource
+        data : `tuple`,
+            Tuple containing the current epoch, 
+                the current amount of agents per agent distribution
+                and the current amount of the common resource.
         """
-
-        self.epoch = 0
 
         # Initialise the agents
         for dist in self.agent_distributions:
@@ -135,56 +137,79 @@ class Simulation:
 
         # Initialise the resource
         self.resource = Resource(self.resource_params)
+
+        # Initialise runtime variables
+        self.epoch = 0
+        self.cur_stats = ''
+
+        # Plot starting situation
+        yield self.plot_results()
+        self.print_results()
+
+        #TODO We might want to add self.epoch = 1 here.
         
         # Run the simulations for max_epoch amounts
         while (self.epoch < self.max_epoch):
-            # Print the current stats of the simulation
-            # Yield results for the plot
-            if self.epoch % self.plot_interval == 0:
-                yield (self.epoch,
-                      [self.get_agent_count(dist['min_social_value'],
-                                            dist['max_social_value'])
-                        for dist in self.agent_distributions
-                      ],
-                      self.resource.get_amount())
-            # Print results in console
-            if self.epoch % self.print_interval == 0:
-                cur_stats = f"epoch: {self.epoch}, "
-                for dist in self.agent_distributions:
-                    cur_stats += (f"{dist['label']}: " + 
-                        str(self.get_agent_count(dist['min_social_value'], 
-                                                 dist['max_social_value'])) + 
-                        ", ")
-                cur_stats += f"res: {self.resource.get_amount():.2f}"
-                print(cur_stats, end = "\r", flush = True)           
-            # Log results in CSV file
-            #TODO
-
             # Update the agents
             for agent in self.agents:
-                agent.act(self, self.resource)
+                agent.act(self)
                 # Check whether agent has died from his actions
                 if agent.energy <= 0:
                     self.remove_agent(agent)
-                
+
+            # Print the current stats of the simulation
+            if self.epoch % self.plot_interval == 0:
+                yield self.plot_results()
+            if self.epoch % self.print_interval == 0:
+                self.print_results()
+            #TODO Implement CSV logger
+
             # Check whether there are still agents alive
             if self.get_agent_count() <= 0:
                 self.result = ("All agents are dead :(" + 
-                              "there is no hope left for the village," + 
-                              "just darkness.\n" +
-                              "Last stats: " + cur_stats)
+                               "there is no hope left for the village," + 
+                               "just darkness.\n" +
+                               "Last stats: " + self.cur_stats)
                 print(self.result)
                 return
 
             # Update the resource and epoch
-            self.resource.growth_func(0) 
+            self.resource.grow_resource() 
             np.random.shuffle(self.agents)
             self.epoch += 1
 
             # Uncomment below to slow down the simulation/plotting speed
             #time.sleep(0.5) 
         
+        # While loop finished, maximum epoch reached
+        # Some agents stayed alive
         self.result = ("Maximum epoch reached, you managed to keep " +
                        self.get_agent_count() +
                        " agents alive!\n" +
-                       "Last stats: " + cur_stats)
+                       "Last stats: " + self.cur_stats)
+
+    
+    def plot_results(self):
+        """Creates a tuple of the current stats of the simulation.
+        This tuple then needs to be yielded to get plotted.
+        """
+
+        return (self.epoch,
+              [self.get_agent_count(dist['min_social_value'],
+                                    dist['max_social_value'])
+               for dist in self.agent_distributions
+              ],
+               self.resource.get_amount())
+
+
+    def print_results(self):
+        '''Prints the current stats of the simulation.'''
+
+        self.cur_stats = f"epoch: {self.epoch}, "
+        for dist in self.agent_distributions:
+            self.cur_stats += (f"{dist['label']}: " + 
+                str(self.get_agent_count(dist['min_social_value'], 
+                                         dist['max_social_value'])) + 
+                ", ")
+        self.cur_stats += f"res: {self.resource.get_amount():.2f}"
+        print(self.cur_stats, end = "\r", flush = True)
