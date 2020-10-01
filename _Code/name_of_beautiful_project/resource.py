@@ -13,7 +13,6 @@ class Resource:
 
     def __init__(self, values):
         self.start_amount = values["start_amount"]
-        self.energy_per_unit =  values["energy_per_unit"]
         self.growth_rate = values["growth_rate"]
         self.max_amount = values["max_amount"]
         self.min_amount = values["min_amount"]
@@ -47,22 +46,14 @@ class Resource:
     def consume_resource(self, amount):
         if self.amount - amount < 0:
             self.amount = 0
-            return self.amount * self.energy_per_unit
+            return self.amount
         else:
             self.amount -= amount
-            return amount * self.energy_per_unit
+            return amount
 
 
     def get_amount(self):
         return self.amount
-
-
-    def get_energy_per_unit(self):
-        return self.energy_per_unit
-
-
-    def set_energy_per_unit(self, energy_per_unit):
-        self.energy_per_unit = energy_per_unit
 
 
     def get_growth_rate(self):

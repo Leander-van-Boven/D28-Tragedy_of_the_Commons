@@ -2,12 +2,13 @@ import random as rnd
 
 class Agent:
     # Base Model Parameters
-    scarcity = .1
+    scarcity = .5
     greed1 = 1.5
     greed2 = 1.85
-    greed3 = 2
+    greed3 = 5
+    start_energy_multiplier = 3
     metabolism = 2
-    consumption = 3
+    consumption = 1
 
     # Prime Model Parameters
     hunger = 9
@@ -16,7 +17,6 @@ class Agent:
     procreate_cost = 10
     maximum_age = 100
 
-    init_consumption = 3
     low_energy = 3
     hungry = 1.5
     dying = 2
@@ -30,23 +30,20 @@ class Agent:
     behaviour = None
 
 
-    def __init__(self, dist_params):
-        self.metabolism = dist_params.get('metabolism', 
-                                         self.metabolism)
-        self.procreate_req = dist_params.get('procreate_req', 
-                                            self.procreate_req)
-        self.procreate_cost = dist_params.get('procreate_cost', 
-                                             self.procreate_cost)
-        self.maximum_age = dist_params.get('maximum_age', 
-                                          self.maximum_age)
+    def __init__(self, params):
+        self.metabolism = params.get('metabolism', self.metabolism)
+        self.consumption = params.get('consumption', self.consumption)
+        self.procreate_req = params.get('procreate_req', self.procreate_req)
+        self.procreate_cost = params.get('procreate_cost', self.procreate_cost)
+        self.maximum_age = params.get('maximum_age', self.maximum_age)
+
         self.social_value_orientation = rnd.uniform(
-            dist_params["min_social_value"], dist_params["max_social_value"])
-        self.init_consumption = dist_params.get('init_consumption', 
-                                               self.init_consumption)
+            params["min_social_value"], params["max_social_value"])
 
-        self.consumption = self.init_consumption
+        self.energy = self.metabolism * params.get('start_energy_multiplier',
+                                                   self.start_energy_multiplier)
+        
    
-
     def act(self, sim, res):
         """
         This is the act function of the agent.
@@ -83,7 +80,7 @@ class Agent:
             population = sim.get_agent_count()
             if fish/population < self.scarcity:
                 self.energy += res.consume_resource(
-                    self.consumption*self.greed1)
+                    self.consumption*self.greed3)
             else:
                 self.energy += res.consume_resource(self.consumption)
 

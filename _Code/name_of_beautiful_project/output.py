@@ -54,14 +54,16 @@ class ResultsPrinter:
         self.ax_agent.set_xlim(0, 10)
         self.ax_resource.set_ylim(-.1, self.max_resource + 1)
         self.ax_resource.set_xlim(0, 10)
+
         del self.xdata[:]
-        #del self.yagents[:]
         self.yagents = [[] for i in range(len(self.agent_lines))]
         del self.yresource[:]
-        #self.agent_line.set_data(self.xdata, self.yagents)
+        self.zero_flags = np.repeat(0, len(self.agent_lines))
+
         for agent_line in self.agent_lines:
             agent_line.set_data(self.xdata, [])           
         self.resource_line.set_data(self.xdata, self.yresource)
+
         return self.agent_lines, self.resource_line
 
 
@@ -78,6 +80,9 @@ class ResultsPrinter:
         t, a, r = data
         self.xdata.append(t)
         for i in range(len(a)):
+            if a[i] == 0 and self.zero_flags[i] == 0:
+                self.zero_flags[i] = 1
+                self.ax_agent.axvline(x=t, c=self.agent_lines[i].get_c())
             self.yagents[i].append(a[i]) 
         self.yresource.append(r)
 
@@ -92,6 +97,7 @@ class ResultsPrinter:
         for i in range(len(self.yagents)):
             self.agent_lines[i].set_data(self.xdata, self.yagents[i])
         self.resource_line.set_data(self.xdata, self.yresource)
+
         return self.agent_lines, self.resource_line
 
 

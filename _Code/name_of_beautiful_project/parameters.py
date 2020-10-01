@@ -26,6 +26,8 @@ agent_distributions:
 
         metabolism: the cost of staying alive (in energy / epoch)
 
+        consumption: the amount of fish per epoch an agent catches
+
         maximum_age: the maximum age for the agent
 
 
@@ -45,7 +47,9 @@ p = {
             "max_social_value" : .25,
 
             "standard_param_deviation" : .1,
-            "metabolism" : 2,
+            "start_energy_multiplier" : 3,
+            "metabolism" : 1,
+            "consumption" : 1,
             "maximum_age" : 100,
 
             "procreate_req" : 16,
@@ -59,7 +63,9 @@ p = {
             "max_social_value" : 1,
 
             "standard_param_deviation" : .1,
-            "metabolism" : 2,
+            "start_energy_multiplier" : 3,
+            "metabolism" : 1,
+            "consumption" : 1,
             "maximum_age" : 100,
 
             "procreate_req" : 16,
@@ -71,8 +77,7 @@ p = {
         "start_amount" : 1000,
         "max_amount" : 1000,
         "min_amount" : 0,
-        "growth_rate" : 1.42,
-        "energy_per_unit" : 1,
+        "growth_rate" : 1,
     },
 
     "simulation" : {
