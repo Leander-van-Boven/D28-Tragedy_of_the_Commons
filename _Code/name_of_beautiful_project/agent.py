@@ -2,7 +2,7 @@ import random as rnd
 
 class Agent:
     # Base Model Parameters
-    scarcity = .5
+    scarcity = 1
     greed1 = 1.5
     greed2 = 1.85
     greed3 = 5
@@ -79,6 +79,7 @@ class Agent:
             fish = res.get_amount()
             population = sim.get_agent_count()
             if fish/population < self.scarcity:
+                #print('')
                 self.energy += res.consume_resource(
                     self.consumption*self.greed3)
             else:

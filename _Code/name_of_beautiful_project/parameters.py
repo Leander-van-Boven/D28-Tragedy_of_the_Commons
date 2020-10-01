@@ -74,10 +74,10 @@ p = {
     ],
 
     "resource" : {
-        "start_amount" : 1000,
-        "max_amount" : 1000,
+        "start_amount" : 250,
+        "max_amount" : 250,
         "min_amount" : 0,
-        "growth_rate" : 1,
+        "growth_rate" : .25,
     },
 
     "simulation" : {

@@ -33,7 +33,7 @@ class Resource:
             self.amount = self.min_amount
 
         if fx == 0:
-            self.amount = self.amount * self.growth_rate
+            self.amount += self.amount * self.growth_rate
         elif fx == 1:
             self.amount += self.amount
         elif fx == 2:
