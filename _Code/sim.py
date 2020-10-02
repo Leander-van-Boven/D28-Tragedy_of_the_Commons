@@ -125,4 +125,4 @@ if __name__ == '__main__':
 
     elif args.command=='list':
         print('\n'.join(sorted([path for path in os.listdir(SCENARIO_DIR) if \
-            os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
+              os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
