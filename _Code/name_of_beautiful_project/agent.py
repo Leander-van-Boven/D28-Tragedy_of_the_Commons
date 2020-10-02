@@ -86,7 +86,7 @@ class Agent:
 
         # Proself Behaviour
         else:
-            fish = res.get_amount()
+            fish = sim.get_resource().get_amount()
             population = sim.get_agent_count()
             if fish/population < self.scarcity:
                 #print('')

@@ -41,8 +41,9 @@ class Simulation:
     resource = None
 
 
-    def __init__(self, param_dict, logger=None):
+    def __init__(self, param_dict, printer=None, logger=None):
         '''Initializes the simulation with the provided parameter dict.'''
+        self.printer = printer
 
         self.params = param_dict['simulation']
         self.max_epoch = self.params['max_epoch']
@@ -96,7 +97,7 @@ class Simulation:
 
         Parameters
         ----------
-            agent : `Agent`
+            agent : `Agent`,
                 The agent to remove.
         """
 
@@ -132,7 +133,7 @@ class Simulation:
 
         # Initialise the agents
         for dist in self.agent_distributions:
-            for i in range(dist['agent_count']):
+            for _ in range(dist['agent_count']):
                 self.add_agent(Agent(dist))
 
         # Initialise the resource
@@ -147,7 +148,6 @@ class Simulation:
         self.print_results()
 
         #TODO We might want to add self.epoch = 1 here.
-        
         # Run the simulations for max_epoch amounts
         while (self.epoch < self.max_epoch):
             # Update the agents
@@ -166,12 +166,7 @@ class Simulation:
 
             # Check whether there are still agents alive
             if self.get_agent_count() <= 0:
-                self.result = ("All agents are dead :(" + 
-                               "there is no hope left for the village," + 
-                               "just darkness.\n" +
-                               "Last stats: " + self.cur_stats)
-                print(self.result)
-                return
+                break
 
             # Update the resource and epoch
             self.resource.grow_resource() 
@@ -183,10 +178,19 @@ class Simulation:
         
         # While loop finished, maximum epoch reached
         # Some agents stayed alive
-        self.result = ("Maximum epoch reached, you managed to keep " +
-                       self.get_agent_count() +
-                       " agents alive!\n" +
-                       "Last stats: " + self.cur_stats)
+        if self.get_agent_count() > 0:
+            self.result = ("Maximum epoch reached, you managed to keep " +
+                           self.get_agent_count() +
+                           " agents alive!\n" +
+                           "Last stats: " + self.cur_stats)
+        else:
+            self.result = ("All agents are dead :( " + 
+                           "there is no hope left for the village, " + 
+                           "just darkness.\n" +
+                           "Last stats: " + self.cur_stats)
+
+        self.printer.save_fig('.lastplot.pdf')
+        print(self.result)
 
     
     def plot_results(self):

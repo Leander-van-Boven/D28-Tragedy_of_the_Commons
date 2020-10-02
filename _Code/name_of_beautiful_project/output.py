@@ -29,7 +29,6 @@ class ResultsPrinter:
         self.fig.tight_layout(h_pad=3, pad=4)
 
         # Setup agent subplot
-        styles = ['--', ':', ',']
         self.agent_lines = []
         for dist in agent_distributions:
             self.agent_lines.append(
@@ -115,7 +114,11 @@ class ResultsPrinter:
             The function that yields the data to plot.
         """
 
-        ani = animation.FuncAnimation(self.fig, self.update, data_gen, 
-                                      blit=False, interval=1, repeat=False, 
-                                      init_func=self.init_plot)
+        _ = animation.FuncAnimation(self.fig, self.update, data_gen, 
+                                blit=False, interval=1, repeat=False, 
+                                init_func=self.init_plot)
         plt.show()
+        
+
+    def save_fig(self, path):
+        plt.savefig(path)

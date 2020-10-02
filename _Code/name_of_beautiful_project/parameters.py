@@ -85,7 +85,7 @@ default_params = {
         {
             "label" : "proself",
             "line_style" : ':',
-            "agent_count" : 25,
+            "agent_count" : 50,
             "min_social_value" : 0,
             "max_social_value" : .25,
 
@@ -101,7 +101,7 @@ default_params = {
         {
             "label" : "prosocial",
             "line_style" : '--',
-            "agent_count" : 75,
+            "agent_count" : 50,
             "min_social_value" : .75,
             "max_social_value" : 1,
 
@@ -117,10 +117,10 @@ default_params = {
     ],
 
     "resource" : {
-        "start_amount" : 250,
-        "max_amount" : 250,
+        "start_amount" : 500,
+        "max_amount" : 500,
         "min_amount" : 0,
-        "growth_rate" : .25
+        "growth_rate" : .2
     },
 
     "simulation" : {

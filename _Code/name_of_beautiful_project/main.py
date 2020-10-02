@@ -34,15 +34,16 @@ def run(params=None, out_dir=None, use_plot=True):
     else:
         logger = None
     
-    sim = Simulation(params, logger)
+    printer = None if not use_plot else \
+        ResultsPrinter(params['agent_distributions'],
+                       params['resource']['max_amount'])
+
+    sim = Simulation(params, printer, logger)
 
     with open(".last.json", "w") as file:
         file.write(json.dumps(params))
 
     if use_plot:
-        printer = ResultsPrinter(
-            params['agent_distributions']
-            , params['resource']['max_amount'])
         printer.start_printer(sim.run_simulation)
     else:
         sim.run_simulation()

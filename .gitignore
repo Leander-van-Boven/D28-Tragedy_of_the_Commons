@@ -1,3 +1,6 @@
 .vs/
 .vscode/
 __pycache__/
+.defaults.json
+.last.json
+.lastplot.pdf
