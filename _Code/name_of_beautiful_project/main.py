@@ -56,11 +56,16 @@ def generate_default_params():
         file.write(json.dumps(default_params))
 
 
-def copy_last_run(path):
+def copy_last_run(param_path, fig_path):
     '''Used to save the results from last run'''
 
     if not os.path.isfile('.last.json'):
         return False
 
-    shutil.copyfile('.last.json', path)
+    if not os.path.isfile('.lastplot.pdf'):
+        return False
+
+    shutil.copyfile('.last.json', param_path)
+    shutil.copyfile('.lastplot.pdf', fig_path)
+
     return True
