@@ -1,2 +1,2 @@
 # Tragedy of the Commons: Simulation directory
-### DMAS project, group D28
+This directory contains all the code files of the simulation.

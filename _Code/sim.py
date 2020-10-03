@@ -3,7 +3,7 @@
 It parses the commandline arguments and starts the simulation accordingly.
 The possible commandline arguments can be requested and reviewed by
 running: 
->>> python3 sim.py -h
+>>> python3 sim.py --help
 '''
 
 #TODO maybe find a more suitable name to nobp
@@ -91,6 +91,6 @@ if __name__ == '__main__':
 
     # Or, if we want to list all saved scenarios:
     elif args.command=='list':
-        
+
         print('\n'.join(sorted([path for path in os.listdir(SCENARIO_DIR) if \
               os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
