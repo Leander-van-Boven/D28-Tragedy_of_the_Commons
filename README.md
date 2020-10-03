@@ -31,7 +31,7 @@ A tragedy about a planet with a single island in a sea of fish run by a bunch of
   ```
   pip3 install numpy matplotlib
   ``` 
-* Download the code by cloning this repository
+* Download the code by cloning this repository.
   ```
   git clone https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons
   ```

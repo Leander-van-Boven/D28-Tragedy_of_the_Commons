@@ -22,15 +22,12 @@ if __name__ == '__main__':
     parser.add_argument(
         'command', choices=['run', 'save', 'list'], 
         help='Whether to run a new simulation, or to save the previous one')
-    # parser.add_argument(
-    #     '-p', '--path', required=False,
-    #     help='The scenario load or save directory.')
     parser.add_argument(
         '-n', '--name', required=False,
         help='The scenario name to load, or save to')
     parser.add_argument(
         '-o', '--logdir', required=False,
-        help='If desired, the output directory for logging')
+        help='If desired, the output directory for CSV logging')
     parser.add_argument(
         '--noplot', required=False, action='store_true',
         help='Add flag to disable real-time plotting')
