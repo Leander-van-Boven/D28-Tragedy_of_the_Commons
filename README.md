@@ -3,6 +3,7 @@
 
 A tragedy about a planet with a single island in a sea of fish run by a bunch of self-ish and self-less agents.
 
+## How to run the simulation
 
 ## Structure of this repository
 > All files are still under development and are heavily subdue of changes.

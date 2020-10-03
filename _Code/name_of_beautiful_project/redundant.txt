@@ -11,3 +11,40 @@
         #     self.amount += self.amount
         # elif self.growth_func == 2:
         #     self.amount += math.sqrt(self.max_amount - self.amount) 
+
+
+
+OLD ARGPARSE W/ SCENARIO PATH INSTEAD OF NAME:
+if args.command=='run':
+    if args.path:
+    try:
+        if os.path.isdir(args.path):
+            loc = f'{args.path}\\params.json'
+            with open(args.path+'\\params.json', 'r') as file:
+                param_dict = json.loads(file.read())
+        elif os.path.isfile(args.path):
+            loc = args.path
+            with open(args.path, 'r') as file:
+                param_dict = json.loads(file.read())
+    except FileNotFoundError:
+        print('Parameter file not found: %s' % loc)
+        sys.exit(1)
+    TODO: Catch more errors if needed
+# Load correct scenario if provided
+if args.scenario != None:
+    with open(args.scenario, 'r') as file:
+        param_dict = json.loads(file.read())
+
+elif args.command=='save':
+        if args.path and os.path.isdir(args.path):
+            path = args.path
+        else:
+            i=0
+            while(os.path.isfile('run'+i+'.py')):
+                i+=1
+            path = 'run'+i+'.py'
+
+        if nobp.copy_last_run(path):
+            print('Saved last run to', path)
+        else:
+            print('No run to save :(')

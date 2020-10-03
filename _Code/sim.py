@@ -38,7 +38,7 @@ if __name__ == '__main__':
     # Parse the inputted arguments
     args = parser.parse_args()
 
-    # Run the simulation
+    # If we want to run the simulation:
     if args.command=='run':
 
         param_dict = None
@@ -53,29 +53,8 @@ if __name__ == '__main__':
                 param_dict = json.loads(file.read())
 
         nobp.run(param_dict, args.logdir, not args.noplot)
-        # if args.path:
-        #     try:
-        #         if os.path.isdir(args.path):
-        #             loc = f'{args.path}\\params.json'
-        #             with open(args.path+'\\params.json', 'r') as file:
-        #                 param_dict = json.loads(file.read())
-        #         elif os.path.isfile(args.path):
-        #             loc = args.path
-        #             with open(args.path, 'r') as file:
-        #                 param_dict = json.loads(file.read())
-        #     except FileNotFoundError:
-        #         print('Parameter file not found: %s' % loc)
-        #         sys.exit(1)
-            #TODO: Catch more errors if needed
-        # Load correct scenario if provided
-        # if args.scenario != None:
-        #     with open(args.scenario, 'r') as file:
-        #         param_dict = json.loads(file.read())
 
-
-    
-    # Save the results from the previous run
-    #TODO test if this works.
+    # Or, if we want to save the previous simulation:
     elif args.command=='save':
 
         if not os.path.isdir(SCENARIO_DIR):
@@ -110,19 +89,8 @@ if __name__ == '__main__':
         else:
             print("There is no scenario to save :(")
 
-        # if args.path and os.path.isdir(args.path):
-        #     path = args.path
-        # else:
-        #     i=0
-        #     while(os.path.isfile('run'+i+'.py')):
-        #         i+=1
-        #     path = 'run'+i+'.py'
-
-        # if nobp.copy_last_run(path):
-        #     print('Saved last run to', path)
-        # else:
-        #     print('No run to save :(')
-
+    # Or, if we want to list all saved scenarios:
     elif args.command=='list':
+        
         print('\n'.join(sorted([path for path in os.listdir(SCENARIO_DIR) if \
               os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
