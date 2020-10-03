@@ -23,11 +23,20 @@ A tragedy about a planet with a single island in a sea of fish run by a bunch of
   - [`simulation.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/name_of_beautiful_project/simulation.py) contains the `Simulation` class. This class runs the simulation. It manages changes to the common resource and the changes to the agents as a result of the changes in the resource, and vice-versa.
   - [`test.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/name_of_beautiful_project/test.py) (_can be ignored_) used to try out pieces of code.
 
-## Prerequisites
-The simulation assumes Python 3.6+, and requires the modules `numpy` and `matplotlib`. 
+
 
 ## How to run the simulation
-After downloading the repository, open `./_Code/` in your favorite terminal. Simulations can be ran, saved and loaded through `sim.py`. 
+### Prerequisites
+* The simulation assumes Python 3.6+, and requires the modules `numpy` and `matplotlib` to be installed.
+  ```
+  pip3 install numpy matplotlib
+  ``` 
+* Download the code by cloning this repository
+  ```
+  git clone https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons
+  ```
+### Usage
+After downloading the repository, open `./_Code/` in your favourite terminal. Simulations can be ran, saved and loaded through `sim.py`. 
 
 * To run a simulation with default parameters, use: 
   ```
@@ -54,4 +63,4 @@ After downloading the repository, open `./_Code/` in your favorite terminal. Sim
   python3 sim.py --help
   ```
 
-* It's also possible to `import name_of_beautiful_project` in a python script for more fine-grained control over the simulation.
+* It's also possible to import `name_of_beautiful_project` as a module in a custom python script for more fine-grained control over the simulation.
