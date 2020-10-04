@@ -7,7 +7,7 @@ running:
 '''
 
 #TODO maybe find a more suitable name to nobp
-import name_of_beautiful_project as nobp
+import cpr_simulation as cpr
 import argparse
 import json
 import os, sys
@@ -49,7 +49,7 @@ if __name__ == '__main__':
             with open(path) as file:
                 param_dict = json.loads(file.read())
 
-        nobp.run(param_dict, args.logdir, not args.noplot)
+        cpr.run(param_dict, args.logdir, not args.noplot)
 
     # Or, if we want to save the previous simulation:
     elif args.command=='save':
@@ -81,7 +81,7 @@ if __name__ == '__main__':
         param_path = '%s\\%s' % (path, PARAM_NAME)
         fig_path = '%s\\%s' % (path, FIG_NAME)
 
-        if nobp.copy_last_run(param_path, fig_path):
+        if cpr.copy_last_run(param_path, fig_path):
             print("Saved scenario as \'%s\'" % name)
         else:
             print("There is no scenario to save :(")
