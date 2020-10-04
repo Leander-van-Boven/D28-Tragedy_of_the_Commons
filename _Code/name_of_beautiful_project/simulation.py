@@ -199,11 +199,10 @@ class Simulation:
         """
 
         return (self.epoch,
-              [self.get_agent_count(dist['min_social_value'],
-                                    dist['max_social_value'])
-               for dist in self.agent_distributions
-              ],
-               self.resource.get_amount())
+                [self.get_agent_count(dist['min_social_value'],
+                                      dist['max_social_value'])
+                 for dist in self.agent_distributions],
+                self.resource.get_amount())
 
 
     def print_results(self):
