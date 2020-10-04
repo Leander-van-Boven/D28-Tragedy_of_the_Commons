@@ -22,7 +22,7 @@ A tragedy about a planet with a single island in a sea of fish run by a bunch of
   - [`parameters.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/cpr_simulation/parameters.py) contains the default parameters that are used in the simulation.
   - [`output.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/cpr_simulation/output.py) is used to plot the results from the model after and during the simulation.
   - [`logger.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/cpr_simulation/logger.py) contains a class that is used to construct and write CSV files.
-  - [`test.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/name_of_beautiful_project/test.py) (_can be ignored_) is used to try out pieces of code.
+  - [`test.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/cpr_simulation/test.py) (_can be ignored_) is used to try out pieces of code.
   - [`redundant.txt`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/cpr_simulation/redundant.txt) (_can be ignored_) contains some deprecated and/or redundant snippets of code.
 
 
