@@ -27,9 +27,9 @@ A tragedy about a planet with a single island in a sea of fish run by a bunch of
 
 ## How to run the simulation
 ### Prerequisites
-* The simulation assumes Python 3.6+, and requires the modules `numpy` and `matplotlib` to be installed.
+* The simulation assumes Python 3.6+, and requires the modules `numpy`, `argparse`, and `matplotlib` to be installed.
   ```
-  pip3 install numpy matplotlib
+  pip3 install numpy matplotlib argparse
   ``` 
 * Download the code by cloning this repository.
   ```

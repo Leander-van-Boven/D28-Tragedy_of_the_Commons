@@ -65,7 +65,7 @@ class CsvLogger:
         if len(row) != self.n_cols:
             raise Exception("Invalid number of columns in row!")
         self.table.append([str(r).replace(self.separator, self.sep_replace)
-                          for r in row])
+                           for r in row])
         self.n_rows += 1
 
     def write(self, path):
