@@ -62,9 +62,9 @@ class Simulation:
 
         Parameters
         ----------
-        min_social_value : float
+        min_social_value : `float`
             The lower limit of the SVO of the agent (inclusive).
-        max_social_value : flaot
+        max_social_value : `float`
             The upper limit of the SVO of the agent (inclusive).
         """
 
