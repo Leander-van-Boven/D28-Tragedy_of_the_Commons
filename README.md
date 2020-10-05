@@ -10,7 +10,7 @@ A tragedy about a planet with a single island in a sea of fish run by a bunch of
 
 * The `_Code` folder contains the simulation code and interface:
   - [`cpr_simulation`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/tree/master/_Code/cpr_simulation) is the module that contains the simulation code. 
-  - [`scenarios`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/tree/master/_Code/scenarios) contains different scenarios that can be ran on the simulation that we found interesting. 
+  - [`scenarios`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/tree/master/_Code/scenarios) contains different scenarios that can be run on the simulation that we found interesting. 
   - [`figures`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/tree/master/_Code/figures) contains interesting figures.
   - [`sim.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/sim.py) implements a command-line interface for the `cpr_simulation` module.
 
@@ -40,7 +40,7 @@ A tragedy about a planet with a single island in a sea of fish run by a bunch of
   git clone https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons
   ```
 ### Usage
-After downloading the repository, open `./_Code/` in your favourite terminal. Simulations can be ran, saved and loaded through `sim.py`. 
+After downloading the repository, open `./_Code/` in your favourite terminal. Simulations can be run, saved and loaded through `sim.py`. 
 
 * To run a simulation with default parameters, use: 
   ```
