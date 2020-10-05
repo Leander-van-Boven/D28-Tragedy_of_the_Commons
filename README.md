@@ -12,9 +12,9 @@ A tragedy about a planet with a single island in a sea of fish run by a bunch of
   - [`cpr_simulation`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/tree/master/_Code/cpr_simulation) is the module that contains the simulation code. 
   - [`scenarios`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/tree/master/_Code/scenarios) contains different scenarios that can be ran on the simulation that we found interesting. 
   - [`figures`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/tree/master/_Code/figures) contains interesting figures.
-  - [`sim.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/sim.py) implements a command-line interface for the `name_of_beautiful_project` module.
+  - [`sim.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/sim.py) implements a command-line interface for the `cpr_simulation` module.
 
-* Structure of the `_Code/name_of_beautiful_project` folder:
+* Structure of the `_Code/cpr_simulation` folder:
   - [`main.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/cpr_simulation/main.py) is the entry point to the module. This file contains methods that can be used to run and save simulations. These methods are exposed when the module is imported.
   - [`simulation.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/cpr_simulation/simulation.py) contains the `Simulation` class. This class runs the simulation. It manages changes to the common resource and the changes to the agents as a result of the changes in the resource, and vice-versa.
   - [`agent.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/cpr_simulation/agent.py) contains the `Agent` class. This class represents the agents of our model and contains their properties. 
