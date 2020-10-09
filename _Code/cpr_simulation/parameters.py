@@ -127,5 +127,9 @@ default_params = {
         "max_epoch" : 1000,
         "plot_interval" : 1,
         "print_interval" : 1
+    },
+
+    "experiment" :{
+        "runs" : 1
     }
 }
