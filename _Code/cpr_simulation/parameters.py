@@ -142,6 +142,11 @@ default_params = {
 
     "logger_params" : {
         "separator" : ',',
-        "separator_replacement" : ' '
+        "separator_replacement" : ' ',
+        "print_interval" : 1
+    },
+
+    "experiment" : {
+        "runs" : 1
     }
 }

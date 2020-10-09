@@ -20,7 +20,6 @@ def run(params=None, out_dir=None, use_plot=True, use_logger=True):
     use_plot : `bool`, optional,
         Whether to use real time plotting, by default True.
     """
-
     if not params:
         # if not os.path.isfile('.defaults.json'):
         #     generate_default_params()

@@ -11,10 +11,71 @@ import cpr_simulation as cpr
 import argparse
 import json
 import os, sys
+import collections.abc
 
 SCENARIO_DIR = 'scenarios'
 PARAM_NAME = 'params.json'
 FIG_NAME = 'figure.pdf'
+
+def update_dict(d, u):
+    """Recursively updates dict d with the values of dict u."""
+    for k, v in u.items():
+        if isinstance(v, collections.abc.Mapping):
+            d[k] = update_dict(d.get(k, {}), v)
+        else:
+            d[k] = v
+    return d
+
+def run(args):
+    param_dict = None
+    if args.name:
+        path = '%s\\%s\\%s' % (SCENARIO_DIR, args.name, PARAM_NAME)
+
+        if not os.path.isfile(path):
+            print("Couldn't find scenario named %s" % args.name)
+            sys.exit(1)
+
+        with open(path) as file:
+            param_dict = json.loads(file.read())
+
+    cpr.run(param_dict, args.logdir, not args.noplot)
+
+def save(args):
+    if not os.path.isdir(SCENARIO_DIR):
+        os.mkdir(SCENARIO_DIR)
+
+    if args.name:
+        path = '%s\\%s' % (SCENARIO_DIR, args.name)
+
+        if os.path.isdir(path):
+            print("A scenario named \'%s\' already exists" % args.name)
+            sys.exit(1)  
+
+        name = args.name
+        os.mkdir(path)         
+    else:
+        i=0
+        name = 'scenario%s' % i
+        path = '%s\\%s' % (SCENARIO_DIR, name)
+
+        while(os.path.isfile(path)):
+            i += 1
+            name = 'scenario%s' % i
+            path = '%s\\%s' % (SCENARIO_DIR, name)
+
+        os.mkdir(path)
+        
+    param_path = '%s\\%s' % (path, PARAM_NAME)
+    fig_path = '%s\\%s' % (path, FIG_NAME)
+
+    if cpr.copy_last_run(param_path, fig_path):
+        print("Saved scenario as \'%s\'" % name)
+    else:
+        print("There is no scenario to save :(")
+
+def list(args):
+    print('\n'.join(sorted([path for path in os.listdir(SCENARIO_DIR) if \
+                            os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
 
 if __name__ == '__main__':
     # Define possible arguments
@@ -35,59 +96,19 @@ if __name__ == '__main__':
     # Parse the inputted arguments
     args = parser.parse_args()
 
-    # If we want to run the simulation:
-    if args.command=='run':
+    eval(args.command)(args)
 
-        param_dict = None
-        if args.name:
-            path = '%s\\%s\\%s' % (SCENARIO_DIR, args.name, PARAM_NAME)
+    # # If we want to run the simulation:
+    # if args.command=='run':
 
-            if not os.path.isfile(path):
-                print("Couldn't find scenario named %s" % args.name)
-                sys.exit(1)
+        
 
-            with open(path) as file:
-                param_dict = json.loads(file.read())
+    # # Or, if we want to save the previous simulation:
+    # elif args.command=='save':
 
-        cpr.run(param_dict, args.logdir, not args.noplot)
+        
 
-    # Or, if we want to save the previous simulation:
-    elif args.command=='save':
+    # # Or, if we want to list all saved scenarios:
+    # elif args.command=='list':
 
-        if not os.path.isdir(SCENARIO_DIR):
-            os.mkdir(SCENARIO_DIR)
-
-        if args.name:
-            path = '%s\\%s' % (SCENARIO_DIR, args.name)
-
-            if os.path.isdir(path):
-                print("A scenario named \'%s\' already exists" % args.name)
-                sys.exit(1)  
-
-            name = args.name
-            os.mkdir(path)         
-        else:
-            i=0
-            name = 'scenario%s' % i
-            path = '%s\\%s' % (SCENARIO_DIR, name)
-
-            while(os.path.isfile(path)):
-                i += 1
-                name = 'scenario%s' % i
-                path = '%s\\%s' % (SCENARIO_DIR, name)
-
-            os.mkdir(path)
-            
-        param_path = '%s\\%s' % (path, PARAM_NAME)
-        fig_path = '%s\\%s' % (path, FIG_NAME)
-
-        if cpr.copy_last_run(param_path, fig_path):
-            print("Saved scenario as \'%s\'" % name)
-        else:
-            print("There is no scenario to save :(")
-
-    # Or, if we want to list all saved scenarios:
-    elif args.command=='list':
-
-        print('\n'.join(sorted([path for path in os.listdir(SCENARIO_DIR) if \
-              os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
+        
