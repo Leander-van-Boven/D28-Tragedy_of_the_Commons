@@ -5,12 +5,12 @@ from matplotlib import animation
 
 class ResultsPrinter:
     def __init__(self, agent_distributions: [], max_resource):        
-        """Sets up the real-time plot
+        """Sets up the real-time plot.
 
         Parameters
         ----------
         agent_distributions : `list`,
-            A list containing the different agent groups
+            A list containing the different agent groups.
 
         max_resource : `int`,
             The maximum amount of resource there can be,

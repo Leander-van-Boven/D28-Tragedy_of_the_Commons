@@ -6,19 +6,19 @@ import json
 import os,sys
 import shutil
 
-def run(params=None, out_dir=None, use_plot=True):
-    """Reads and generates param dicts and runs the simulation with them
+def run(params=None, out_dir=None, use_plot=True, use_logger=True):
+    """Reads and generates param dicts and runs the simulation with them.
 
     Parameters
     ----------
     params : `dict`, optional,
-        A dictionary with parameters to use by the sim, by default None
+        A dictionary with parameters to use by the sim, by default None.
 
     out_dir : `str`, optional,
-        The directory where to save the output, by default None
+        The directory where to save the output, by default None.
 
     use_plot : `bool`, optional,
-        Whether to use real time plotting, by default True
+        Whether to use real time plotting, by default True.
     """
 
     if not params:
@@ -29,8 +29,12 @@ def run(params=None, out_dir=None, use_plot=True):
             s = file.read()
         params = json.loads(s)
 
-    if out_dir:
-        logger = CsvLogger(out_dir)
+    if out_dir is not None and use_logger:
+        #TODO Do something with experiment number?
+        col_names = ['Epoch', 'Resource']
+        for dist in params['agent_distributions']:
+            col_names.append(dist['label'])
+        logger = CsvLogger(params['logger_params'], out_dir, col_names)
     else:
         logger = None
     
@@ -50,14 +54,14 @@ def run(params=None, out_dir=None, use_plot=True):
 
 
 def generate_default_params():
-    '''Used to generate the parameters for the simulation'''
+    '''Used to generate the parameters for the simulation.'''
 
     with open(".defaults.json", "w") as file:
         file.write(json.dumps(default_params))
 
 
 def copy_last_run(param_path, fig_path):
-    '''Used to save the results from last run'''
+    '''Used to save the results from last run.'''
 
     if not os.path.isfile('.last.json'):
         return False

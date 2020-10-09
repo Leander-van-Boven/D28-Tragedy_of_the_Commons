@@ -4,23 +4,23 @@ from .agent import Agent
 from .resource import Resource
 
 class Simulation:
-    """Main class that manages the agents and resource
+    """Main class that manages the agents and resource.
 
     ...
 
     Attributes
     ----------
     epoch : `int`,
-        the current epoch the simulation is on
+        The current epoch the simulation is on.
 
     agents : `list`,
-        a list containing all (alive) agents currently in the simulation
+        A list containing all (alive) agents currently in the simulation.
     
     result : `str`,
-        set when the simulation is done, denoting the outcome of the sim
+        Set when the simulation is done, denoting the outcome of the sim.
     
     resource : `Resource`,
-        a resource object representing the common resource
+        A resource object representing the common resource.
 
     Methods
     -------
@@ -44,11 +44,13 @@ class Simulation:
     def __init__(self, param_dict, printer=None, logger=None):
         '''Initializes the simulation with the provided parameter dict.'''
         self.printer = printer
+        self.logger = logger
 
         self.params = param_dict['simulation']
         self.max_epoch = self.params['max_epoch']
         self.plot_interval = self.params['plot_interval']
         self.print_interval = self.params['print_interval']
+        self.log_interval = self.params['log_interval']
 
         self.agent_distributions = param_dict['agent_distributions']
         self.resource_params = param_dict['resource']
@@ -62,9 +64,9 @@ class Simulation:
 
         Parameters
         ----------
-        min_social_value : `float`
+        min_social_value : `float`,
             The lower limit of the SVO of the agent (inclusive).
-        max_social_value : `float`
+        max_social_value : `float`,
             The upper limit of the SVO of the agent (inclusive).
         """
 
@@ -158,11 +160,12 @@ class Simulation:
                     self.remove_agent(agent)
 
             # Print the current stats of the simulation
-            if self.epoch % self.plot_interval == 0:
-                yield self.plot_results()
             if self.epoch % self.print_interval == 0:
                 self.print_results()
-            #TODO Implement CSV logger
+            if self.printer is not None and self.epoch%self.plot_interval==0:
+                yield self.plot_results()
+            if self.logger is not None and self.epoch%self.log_interval==0:
+                self.log_results()
 
             # Check whether there are still agents alive
             if self.get_agent_count() <= 0:
@@ -216,3 +219,14 @@ class Simulation:
                 ", ")
         self.cur_stats += f"res: {self.resource.get_amount():.2f}"
         print(self.cur_stats, end = "\r", flush = True)
+
+
+    def log_results(self):
+        '''Adds a new row to the log.'''
+
+        row = [self.epoch, self.resource.get_amount()]
+        for dist in self.agent_distributions:
+            row.append(self.get_agent_count(dist['min_social_value'],
+                                            dist['max_social_value']))
+
+        self.logger.add_row(row)

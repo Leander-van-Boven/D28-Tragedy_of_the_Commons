@@ -1,28 +1,28 @@
 import os,sys
 
 class CsvLogger:
-    """Helper class that constructs a CSV table
+    """Helper class that constructs a CSV table.
 
     Attributes
     ----------
-    head : `list[str]`
-        the table header, where head[i] is the header for column i
+    head : `list[str]`, 
+        The table header, where head[i] is the header for column i.
     
-    table : `list[list[str]]`
-        the table, where table[i][j] holds the value of row i, column j
+    table : `list[list[str]]`,
+        The table, where table[i][j] holds the value of row i, column j.
 
-    n_cols : `int`
-        the amount of columns of this table
+    n_cols : `int`,
+        The amount of columns of this table.
 
-    n_rows : `int`
-        the amount of rows of this table
+    n_rows : `int`,
+        The amount of rows of this table.
 
-    separator : `str`
-        the separator character used in CSV conversion
+    separator : `str`,
+        The separator character used in CSV conversion.
 
-    sep_replace : `str`
-        if a table value contains the separator character, it will be 
-        replaced by this character
+    sep_replace : `str`,
+        If a table value contains the separator character, 
+        it will be replaced by this character.
 
     Methods
     -------
@@ -30,53 +30,68 @@ class CsvLogger:
     
     `write(path)`
     """
-    def __init__(self, col_names, sep=',', rep=' '):
-        '''Initializes the CsvLogger class.
+
+
+    def __init__(self, params:{}, path:str, col_names:[]):
+        """Initializes the CsvLogger class.
         
         Parameters
         ----------
-        col_names : `list[str]`
-            The table header 
+        params : `dict`,
+            A dictionary containing paramaters for the logger.
 
-        sep : `str`
-            The separator character
+        path : `str`, 
+            The path to which the output should be written.
 
-        rep : `str`
-            The replacement character for the separator in table values
-        '''
-        if sep == rep:
-            raise Exception("rep and sep can't be equal!")
-        self.separator = sep
-        self.sep_replace = rep
+        col_names : `list[str]`,
+            A list containing the names for each column of the table.
+        """
+
+        self.path = path
+
+        self.separator = params['separator']
+        self.sep_replace = params['separator_replacement']
+        if self.sep == self.rep:
+            raise Exception("Separator and sep. replacement can't be equal!")
+
         self.head = [col.replace(self.separator, self.sep_replace)
                      for col in col_names]
         self.n_cols = len(col_names)
         self.n_rows = 0
         self.table = list()
 
+
     def add_row(self, row):
-        '''Adds a row to the table.
+        """Adds a row to the table.
 
         Parameters
         ----------
-        row : `list[str]`
-            The row to add, where row[i] will be put at column i
-        '''
+        row : `list[str]`,
+            The row to add, where row[i] will be put at column i.
+        """
+
         if len(row) != self.n_cols:
             raise Exception("Invalid number of columns in row!")
-        self.table.append([str(r).replace(self.separator, self.sep_replace)
-                           for r in row])
+        # self.table.append([str(r).replace(self.separator, self.sep_replace)
+        #                    for r in row])
+        self.table.append(self.separator.join(
+            [str(r).replace(self.separator, self.sep_replace) for r in row])
+        )
         self.n_rows += 1
 
-    def write(self, path):
-        '''Writes the table as a CSV file to the specified path.
+
+    def write(self, path:None):
+        """Writes the table as a CSV file to the specified path.
 
         Parameters
         ----------
-        path : `str`
-            The path to write the file to
-        '''
-        with open(path, 'w') as file:
+        path : `str`,
+            The path to write the file to,
+            if not specified self.path is taken.
+        """
+
+        with open(path if path is not None else self.path, 'w') as file:
             file.write(self.separator.join(self.head) + '\n') 
-            file.write('\n'.join([self.separator.join(row) 
-                                  for row in self.table]))
+            # file.write('\n'.join([self.separator.join(row) 
+            #                       for row in self.table]))
+            file.write('\n'.join(self.table))
