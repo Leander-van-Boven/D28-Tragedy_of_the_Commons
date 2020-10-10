@@ -48,3 +48,13 @@ elif args.command=='save':
             print('Saved last run to', path)
         else:
             print('No run to save :(')
+
+
+
+MAIN.PY DECIDE WHAT PARAMS TO USE:
+        # if not os.path.isfile('.defaults.json'):
+        #     generate_default_params()
+        # generate_default_params()
+        # with open('.defaults.json', 'r') as file:
+        #     s = file.read()
+        # params = json.loads(s)

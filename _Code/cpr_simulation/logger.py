@@ -32,7 +32,7 @@ class CsvLogger:
     """
 
 
-    def __init__(self, params:{}, path:str, col_names:[]):
+    def __init__(self, params:dict, path:str, col_names:list):
         """Initializes the CsvLogger class.
         
         Parameters
@@ -51,8 +51,8 @@ class CsvLogger:
 
         self.separator = params['separator']
         self.sep_replace = params['separator_replacement']
-        if self.sep == self.rep:
-            raise Exception("Separator and sep. replacement can't be equal!")
+        if self.separator == self.sep_replace:
+            raise Exception("Separator and its replacement can't be equal!")
 
         self.head = [col.replace(self.separator, self.sep_replace)
                      for col in col_names]
@@ -61,7 +61,7 @@ class CsvLogger:
         self.table = list()
 
 
-    def add_row(self, row):
+    def add_row(self, row:list):
         """Adds a row to the table.
 
         Parameters

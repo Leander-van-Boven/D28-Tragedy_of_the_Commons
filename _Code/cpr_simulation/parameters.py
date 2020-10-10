@@ -146,7 +146,5 @@ default_params = {
         "print_interval" : 1
     },
 
-    "experiment" : {
-        "runs" : 1
-    }
+    "run" : 1,
 }

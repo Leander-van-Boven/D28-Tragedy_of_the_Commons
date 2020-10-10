@@ -41,10 +41,11 @@ class Simulation:
     resource = None
 
 
-    def __init__(self, param_dict, printer=None, logger=None):
+    def __init__(self, param_dict, printer=None, logger=None, row_head=[]):
         '''Initializes the simulation with the provided parameter dict.'''
         self.printer = printer
         self.logger = logger
+        self.log_row_head = row_head
 
         self.params = param_dict['simulation']
         self.max_epoch = self.params['max_epoch']
@@ -224,7 +225,7 @@ class Simulation:
     def log_results(self):
         '''Adds a new row to the log.'''
 
-        row = [self.epoch, self.resource.get_amount()]
+        row = self.log_row_head + [self.epoch, self.resource.get_amount()]
         for dist in self.agent_distributions:
             row.append(self.get_agent_count(dist['min_social_value'],
                                             dist['max_social_value']))

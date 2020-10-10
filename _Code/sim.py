@@ -11,23 +11,17 @@ import cpr_simulation as cpr
 import argparse
 import json
 import os, sys
-import collections.abc
 
 SCENARIO_DIR = 'scenarios'
 PARAM_NAME = 'params.json'
 FIG_NAME = 'figure.pdf'
 
-def update_dict(d, u):
-    """Recursively updates dict d with the values of dict u."""
-    for k, v in u.items():
-        if isinstance(v, collections.abc.Mapping):
-            d[k] = update_dict(d.get(k, {}), v)
-        else:
-            d[k] = v
-    return d
+
+def test(args):
+    pass
+
 
 def run(args):
-    param_dict = None
     if args.name:
         path = '%s\\%s\\%s' % (SCENARIO_DIR, args.name, PARAM_NAME)
 
@@ -37,8 +31,21 @@ def run(args):
 
         with open(path) as file:
             param_dict = json.loads(file.read())
+    else: 
+        param_dict = dict()
 
-    cpr.run(param_dict, args.logdir, not args.noplot)
+
+    param_ranges = [(1,args.batch+1,1)]
+    params_to_range = ["['run']"]
+
+    if args.range:
+        names, ranges = zip(*[pair.split(':=') for pair in args.range])
+        params_to_range += list(names)
+        param_ranges += [tuple(map(int, x.split(','))) for x in ranges]
+
+    cpr.run(params_to_range, param_ranges, param_dict, args.logdir, 
+            not args.noplot)
+
 
 def save(args):
     if not os.path.isdir(SCENARIO_DIR):
@@ -73,15 +80,17 @@ def save(args):
     else:
         print("There is no scenario to save :(")
 
-def list(args):
+
+def llist(args):
     print('\n'.join(sorted([path for path in os.listdir(SCENARIO_DIR) if \
                             os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
+
 
 if __name__ == '__main__':
     # Define possible arguments
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'command', choices=['run', 'save', 'list'], 
+        'command', choices=['run', 'save', 'list', 'test'], 
         help='Whether to run a new simulation, or to save the previous one')
     parser.add_argument(
         '-n', '--name', required=False,
@@ -92,23 +101,21 @@ if __name__ == '__main__':
     parser.add_argument(
         '--noplot', required=False, action='store_true',
         help='Add flag to disable real-time plotting')
+    parser.add_argument(
+        '-b', '--batch', required=False, default=1, type=int,
+        help="The amount of times the same experiment should be run." +
+            " Defaults to 1.")
+    parser.add_argument(
+        '-r', '--range', required=False, nargs='+', type=str,
+        help="Add parameters to run the simulation with a range of values")
 
     # Parse the inputted arguments
     args = parser.parse_args()
 
+    # Run the right method, based on CL argument
+    if args.command=='list':
+        args.command='llist'
     eval(args.command)(args)
 
-    # # If we want to run the simulation:
-    # if args.command=='run':
-
-        
-
-    # # Or, if we want to save the previous simulation:
-    # elif args.command=='save':
-
-        
-
-    # # Or, if we want to list all saved scenarios:
-    # elif args.command=='list':
 
         
