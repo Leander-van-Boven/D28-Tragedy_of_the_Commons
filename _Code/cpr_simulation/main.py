@@ -1,4 +1,4 @@
-from .simulation import Simulation
+from .simulation import Simulator
 from .output import ResultsPrinter
 from .logger import CsvLogger
 from .parameters import default_params
@@ -6,11 +6,11 @@ from .util import update_dict
 import json
 import os
 import shutil
-from numpy import arange
+from numpy import arange, prod
 import itertools as it
 
 def run(override_params=dict(), params_to_range:list=None, 
-        param_ranges:list=None, log_dir=None, use_plot=True):
+        param_ranges:list=None, log_dir=None, use_plot=True, verbose=True):
     """Reads and generates param dicts and runs the simulation with them.
 
     Parameters
@@ -55,35 +55,44 @@ def run(override_params=dict(), params_to_range:list=None,
         col_names = params_to_range + ['Epoch', 'Resource']
         for dist in params['agent_distributions']:
             col_names.append(dist['label'])
-        logger = CsvLogger(params['logger_params'], log_dir, col_names)
+        logger = CsvLogger(params['logger_params'], col_names, log_dir)
     else:
         logger = None
 
     # Generate all combinations of parameters we'll run
-    range_combis = it.product(*[arange(*x) for x in param_ranges])
+    param_values = [arange(*x) for x in param_ranges]
+    value_combis = it.product(*param_values)
+    amt_combis = prod([len(x) for x in param_values])
 
-    for combi in range_combis:
-        print(', '.join(["%s = %s" % i for i in zip(params_to_range, combi)]))
+    for (run, combi) in enumerate(value_combis):
+        if verbose:
+            print('\n'+', '.join(["%s = %s" % i 
+                                  for i in zip(params_to_range, combi)]))
+        else:
+            print('%s/%s' % (run+1, amt_combis), end='\r', flush=True)
 
         curr_params = params.copy()
         for (param, value) in zip(params_to_range, combi):
             loc = "curr_params[\'" + "\'][\'".join(param.split(':')) + "\']"
-            print(loc)
             exec('%s=%s' % (loc, value))
 
         printer = None if not use_plot else \
             ResultsPrinter(params['agent_distributions'],
                         params['resource']['max_amount'])
 
-        sim = Simulation(curr_params, printer, logger, list(combi))
+        simulator = Simulator(curr_params, printer, logger, list(combi), 
+                              verbose)
 
         with open(".last.json", "w") as file:
             file.write(json.dumps(curr_params))
 
         if use_plot:
-            printer.start_printer(sim.run_simulation)
+            printer.start_printer(simulator.generate_simulation)
         else:
-            sim.run_simulation()
+            simulation = simulator.generate_simulation()
+            while True:
+                try: next(simulation)
+                except StopIteration: break
 
     if log_dir:
         logger.write()

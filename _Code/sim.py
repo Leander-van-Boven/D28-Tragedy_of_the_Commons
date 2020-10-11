@@ -6,7 +6,11 @@ running:
 >>> python3 sim.py --help
 '''
 
-#TODO maybe find a more suitable name to nobp
+#TODO:
+# - Check behavior of output path for csv logger
+# - Implement plot default true if single exp, default false if batch or
+#   range. 
+
 import cpr_simulation as cpr
 import argparse
 import json
@@ -43,10 +47,14 @@ def run(args):
         params_to_range += list(names)
         param_ranges += [tuple(map(int, x.split(','))) for x in ranges]
 
-    print(params_to_range)
+    plot = args.plot if args.plot is not None else \
+        not (args.range or args.batch-1)
 
-    cpr.run(param_dict, params_to_range, param_ranges, args.logdir, 
-            not args.noplot)
+    verbose = args.verbose if args.verbose is not None else \
+        not (args.range or args.batch-1)
+
+    cpr.run(param_dict, params_to_range, param_ranges, args.logdir, plot, 
+            verbose)
 
 
 def save(args):
@@ -83,10 +91,20 @@ def save(args):
         print("There is no scenario to save :(")
 
 
-def llist(args):
+def llist(_):
     print('\n'.join(sorted([path for path in os.listdir(SCENARIO_DIR) if \
                             os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
 
+def str2bool(v):
+    if v is None:
+        return None
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    if v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    raise argparse.ArgumentTypeError('Boolean value expected.')
 
 if __name__ == '__main__':
     # Define possible arguments
@@ -95,14 +113,18 @@ if __name__ == '__main__':
         'command', choices=['run', 'save', 'list', 'test'], 
         help='Whether to run a new simulation, or to save the previous one')
     parser.add_argument(
-        '-n', '--name', required=False,
+        '-n', '--name', required=False, type=str,
         help='The scenario name to load, or save to')
     parser.add_argument(
-        '-o', '--logdir', required=False,
+        '-o', '--logdir', required=False, type=str,
         help='If desired, the output directory for CSV logging')
     parser.add_argument(
-        '--noplot', required=False, action='store_true',
-        help='Add flag to disable real-time plotting')
+        '-p', '--plot', required=False, default=None, const=True, type=str2bool,
+        nargs='?', help='Add flag to disable real-time plotting')
+    parser.add_argument(
+        '-v', '--verbose', required=False, default=None, const=True, 
+        type=str2bool, nargs='?',
+        help="Enter verbose mode. Will print parameters of every run.")
     parser.add_argument(
         '-b', '--batch', required=False, default=1, type=int,
         help="The amount of times the same experiment should be run." +
@@ -111,10 +133,13 @@ if __name__ == '__main__':
         '-r', '--range', required=False, nargs='+', type=str,
         help="Add parameters to run the simulation with a range of values")
 
+
     # Parse the inputted arguments
     args = parser.parse_args()
 
     # Run the right method, based on CL argument
+    # We had to rename the method `list`, as otherwise it would have 
+    # conflicted with the type.
     if args.command=='list':
         args.command='llist'
     eval(args.command)(args)

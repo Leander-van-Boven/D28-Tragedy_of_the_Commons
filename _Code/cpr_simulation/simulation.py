@@ -3,7 +3,7 @@ import time
 from .agent import Agent
 from .resource import Resource
 
-class Simulation:
+class Simulator:
     """Main class that manages the agents and resource.
 
     ...
@@ -32,7 +32,7 @@ class Simulation:
 
     `remove_agent(agent)`
 
-    `run_simulation()`
+    `generate_simulation()`
     """
 
     epoch = 0
@@ -41,11 +41,13 @@ class Simulation:
     resource = None
 
 
-    def __init__(self, param_dict, printer=None, logger=None, row_head=[]):
+    def __init__(self, param_dict, printer=None, logger=None, row_head=[],
+                 verbose=True):
         '''Initializes the simulation with the provided parameter dict.'''
         self.printer = printer
         self.logger = logger
         self.log_row_head = row_head
+        self.verbose = verbose
 
         self.params = param_dict['simulation']
         self.max_epoch = self.params['max_epoch']
@@ -119,12 +121,12 @@ class Simulation:
         return self.epoch
 
 
-    def run_simulation(self):
-        """Runs the simulation.
+    def generate_simulation(self):
+        """Generates the simulation.
         
-        This function runs sets up the simulation and runs it.
-        It makes an agent act, causes resource to replenish 
-        and collects data to plot.
+        This function runs sets up the simulation as a Generator
+        Every iteration, tt makes an agent act, causes resource to 
+        replenish and collects data to plot and/or log.
 
         Yields
         ------
@@ -148,7 +150,8 @@ class Simulation:
 
         # Plot starting situation
         yield self.plot_results()
-        self.print_results()
+        if self.verbose:
+            self.print_results()
 
         #TODO We might want to add self.epoch = 1 here.
         # Run the simulations for max_epoch amounts
@@ -161,11 +164,12 @@ class Simulation:
                     self.remove_agent(agent)
 
             # Print the current stats of the simulation
-            if self.epoch % self.print_interval == 0:
+            if self.verbose and self.epoch % self.print_interval == 0:
                 self.print_results()
-            if self.printer is not None and self.epoch%self.plot_interval==0:
+            if self.printer and self.epoch%self.plot_interval==0:
                 yield self.plot_results()
-            if self.logger is not None and self.epoch%self.log_interval==0:
+            #print(self.logger is None, self.epoch%self.log_interval)
+            if self.logger and self.epoch%self.log_interval==0:
                 self.log_results()
 
             # Check whether there are still agents alive
@@ -184,17 +188,20 @@ class Simulation:
         # Some agents stayed alive
         if self.get_agent_count() > 0:
             self.result = ("Maximum epoch reached, you managed to keep " +
-                           self.get_agent_count() +
-                           " agents alive!\n" +
-                           "Last stats: " + self.cur_stats)
+                        str(self.get_agent_count()) +
+                        " agents alive!\n" +
+                        "Last stats: " + self.cur_stats)
         else:
             self.result = ("All agents are dead :( " + 
-                           "there is no hope left for the village, " + 
-                           "just darkness.\n" +
-                           "Last stats: " + self.cur_stats)
+                        "there is no hope left for the village, " + 
+                        "just darkness.\n" +
+                        "Last stats: " + self.cur_stats)
 
-        self.printer.save_fig('.lastplot.pdf')
-        print(self.result)
+        if self.printer:
+            self.printer.save_fig('.lastplot.pdf')
+
+        if self.verbose:
+            print(self.result)
 
     
     def plot_results(self):
