@@ -111,27 +111,28 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
         'command', choices=['run', 'save', 'list', 'test'], 
-        help='Whether to run a new simulation, or to save the previous one')
+        help='run: run a simulation; save: save the previous simulation; ' +
+             'list: list all saved simulations; test: for testing purposes')
     parser.add_argument(
-        '-n', '--name', required=False, type=str,
-        help='The scenario name to load, or save to')
+        '-n', '--name', required=False, type=str, dest='scenario',
+        help='the scenario name to load from, or to save to')
     parser.add_argument(
-        '-o', '--logdir', required=False, type=str,
-        help='If desired, the output directory for CSV logging')
+        '-o', '--out', required=False, type=str, dest='file path',
+        help='the output path for CSV logging')
     parser.add_argument(
         '-p', '--plot', required=False, default=None, const=True, type=str2bool,
-        nargs='?', help='Add flag to disable real-time plotting')
+        nargs='?', dest='bool', help='whether to show a real-time plot')
     parser.add_argument(
         '-v', '--verbose', required=False, default=None, const=True, 
-        type=str2bool, nargs='?',
-        help="Enter verbose mode. Will print parameters of every run.")
+        type=str2bool, nargs='?', dest='bool',
+        help="whether to enter verbose mode")
     parser.add_argument(
         '-b', '--batch', required=False, default=1, type=int,
-        help="The amount of times the same experiment should be run." +
-            " Defaults to 1.")
+        help='the amount of times the same experiment should be run (def. 1)')
     parser.add_argument(
         '-r', '--range', required=False, nargs='+', type=str,
-        help="Add parameters to run the simulation with a range of values")
+        dest='param:=from,to,incr',
+        help="add parameters to run the simulation with a range of values")
 
 
     # Parse the inputted arguments
