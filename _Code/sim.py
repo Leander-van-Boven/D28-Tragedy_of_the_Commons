@@ -36,14 +36,16 @@ def run(args):
 
 
     param_ranges = [(1,args.batch+1,1)]
-    params_to_range = ["['run']"]
+    params_to_range = ["run"]
 
     if args.range:
         names, ranges = zip(*[pair.split(':=') for pair in args.range])
         params_to_range += list(names)
         param_ranges += [tuple(map(int, x.split(','))) for x in ranges]
 
-    cpr.run(params_to_range, param_ranges, param_dict, args.logdir, 
+    print(params_to_range)
+
+    cpr.run(param_dict, params_to_range, param_ranges, args.logdir, 
             not args.noplot)
 
 

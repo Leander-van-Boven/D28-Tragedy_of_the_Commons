@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from matplotlib import animation
 
 class ResultsPrinter:
-    def __init__(self, agent_distributions: [], max_resource):        
+    def __init__(self, agent_distributions:list, max_resource):        
         """Sets up the real-time plot.
 
         Parameters

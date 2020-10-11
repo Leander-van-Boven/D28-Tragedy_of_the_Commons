@@ -32,7 +32,7 @@ class CsvLogger:
     """
 
 
-    def __init__(self, params:dict, path:str, col_names:list):
+    def __init__(self, params:dict, col_names:list, path:str=None):
         """Initializes the CsvLogger class.
         
         Parameters
@@ -80,17 +80,17 @@ class CsvLogger:
         self.n_rows += 1
 
 
-    def write(self, path:None):
+    def write(self, path:str=None):
         """Writes the table as a CSV file to the specified path.
 
         Parameters
         ----------
-        path : `str`,
+        path : `str`, optional,
             The path to write the file to,
             if not specified self.path is taken.
         """
 
-        with open(path if path is not None else self.path, 'w') as file:
+        with open(path or self.path or '.log.csv', 'w') as file:
             file.write(self.separator.join(self.head) + '\n') 
             # file.write('\n'.join([self.separator.join(row) 
             #                       for row in self.table]))
