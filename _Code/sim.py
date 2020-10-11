@@ -53,7 +53,7 @@ def run(args):
     verbose = args.verbose if args.verbose is not None else \
         not (args.range or args.batch-1)
 
-    cpr.run(param_dict, params_to_range, param_ranges, args.logdir, plot, 
+    cpr.run(param_dict, params_to_range, param_ranges, args.out, plot, 
             verbose)
 
 
@@ -114,24 +114,24 @@ if __name__ == '__main__':
         help='run: run a simulation; save: save the previous simulation; ' +
              'list: list all saved simulations; test: for testing purposes')
     parser.add_argument(
-        '-n', '--name', required=False, type=str, dest='scenario',
+        '-n', '--name', required=False, type=str, metavar='scenario',
         help='the scenario name to load from, or to save to')
     parser.add_argument(
-        '-o', '--out', required=False, type=str, dest='file path',
+        '-o', '--out', required=False, type=str, metavar='file_path',
         help='the output path for CSV logging')
     parser.add_argument(
         '-p', '--plot', required=False, default=None, const=True, type=str2bool,
-        nargs='?', dest='bool', help='whether to show a real-time plot')
+        nargs='?', metavar='bool', help='whether to show a real-time plot')
     parser.add_argument(
         '-v', '--verbose', required=False, default=None, const=True, 
-        type=str2bool, nargs='?', dest='bool',
+        type=str2bool, nargs='?', metavar='bool',
         help="whether to enter verbose mode")
     parser.add_argument(
-        '-b', '--batch', required=False, default=1, type=int,
+        '-b', '--batch', required=False, default=1, type=int, metavar='amount',
         help='the amount of times the same experiment should be run (def. 1)')
     parser.add_argument(
         '-r', '--range', required=False, nargs='+', type=str,
-        dest='param:=from,to,incr',
+        metavar='param:=from,to,incr',
         help="add parameters to run the simulation with a range of values")
 
 

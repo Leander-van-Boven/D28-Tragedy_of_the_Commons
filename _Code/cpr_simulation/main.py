@@ -66,7 +66,8 @@ def run(override_params=dict(), params_to_range:list=None,
 
     for (run, combi) in enumerate(value_combis):
         if verbose:
-            print('\n'+', '.join(["%s = %s" % i 
+            print('\n%s/%s' % (run+1, amt_combis))
+            print(', '.join(["%s = %s" % i 
                                   for i in zip(params_to_range, combi)]))
         else:
             print('%s/%s' % (run+1, amt_combis), end='\r', flush=True)
