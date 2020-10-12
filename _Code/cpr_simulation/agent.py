@@ -1,36 +1,54 @@
 import random as rnd
 
 class Agent:
+    # Attributes
+    age = 0
+    energy = 0
+    child_count = 0
+
+    # Parameters
+    behaviour = None
+    social_value_orientation = 0
+    metabolism = 2
+    consumption = 1
+    procreate_req = 16
+    procreate_cost = 10
+    maximum_age = 100
+
     # Base Model Parameters
     scarcity = 1
     greed1 = 1.5
     greed2 = 1.85
     greed3 = 5
     start_energy_multiplier = 3
-    metabolism = 2
-    consumption = 1
 
     # Prime Model Parameters
     hunger = 9
-    age = 0
-    procreate_req = 16
-    procreate_cost = 10
-    maximum_age = 100
-
     low_energy = 3
     hungry = 1.5
     dying = 2
     eldery = 70
 
-    # Attributes
-    age = 0
-    energy = 0
-    child_count = 0
-    social_value_orientation = 0
-    behaviour = None
+    # Restricted Model Parameters
+    res_lim = 1
+    violation_chance = .25
+    caught_chance = .10
+    cooldown = 5
+    cur_cooldown = 0
 
 
     def __init__(self, params):
+        """Initialises the agent with the provided parameters.
+
+        If a parameter is not specified, its default value (set above)
+        is used.
+
+        Parameters
+        ----------
+        params : `dict`,
+            Dictionary containing the parameters for this agent.
+        """
+
         self.metabolism = params.get('metabolism', self.metabolism)
         self.consumption = params.get('consumption', self.consumption)
         self.procreate_req = params.get('procreate_req', self.procreate_req)
@@ -54,6 +72,11 @@ class Agent:
             Reference to the simulation
         """
 
+        # Life cycle
+        self.energy -= self.metabolism
+
+        # Execute behaviour to compensate lost energy from metabolism
+        #TODO Change this to execute the behaviour set as parameter.
         self.base_energy_function(sim)
 
         #TODO Implement more behaviours
@@ -76,13 +99,10 @@ class Agent:
         sim : `Simulation`,
             Reference to the simulation
         """
-        
-        self.energy -= self.metabolism
 
         # Prosocial Behaviour
         if self.social_value_orientation >= .5:
-            self.energy += sim.get_resource().consume_resource(
-                self.consumption)
+            self.energy += sim.get_resource().consume_resource(self.consumption)
 
         # Proself Behaviour
         else:
@@ -95,6 +115,65 @@ class Agent:
             else:
                 self.energy += sim.get_resource().consume_resource(
                     self.consumption)
+
+    
+    def restricted_energy_function(self, sim):
+        """Agent behaviour based on restrictions on the common resource.
+
+        This behaviour allows agents to fish their consumption when
+        the resource amount is above the set restriction limit.
+        This limit is determined in terms of currently alive agents and
+        a certain factor.
+
+        The following happens when resources drop below set limit: 
+        - Prosocial agents will only consume enough fish to be left 
+            with 1 energy; enough to just survive another day.
+            Thus if they already have >=1 energy they will not fish.
+        - Proself agents with >=1 energy have a chance to violate the
+            fishing restriction and fish anyways. If they do, there is a
+            chance they get caught and are not allowed to fish for a
+            certain amount of days.
+
+        Parameters
+        ----------
+        sim : `Simulation`,
+            Reference to the simulation
+        """
+
+        # Check if agent is not allowed to fish this epoch.
+        if self.cur_cooldown > 0:
+            self.cur_cooldown -= 1
+            return
+
+        # Check whether the resources dropped below restriction limit.
+        if (sim.get_resource().get_amount() < 
+            sim.get_agent_count()*self.res_limit_factor):
+            # Prosocial Behaviour
+            if self.social_value_orientation >= .5:
+                # Agent only fishes enough to survive another day.
+                if self.energy <= 0:
+                    self.energy += sim.get_resource().consume_resource(
+                        abs(self.energy) + 1)
+            # Proself Behaviour
+            else:
+                # Determine if proself agent violates restriction rule.
+                if self.energy>0 and rnd.random()<self.violation_chance:
+                    self.energy = sim.get_resource().consume_resource(
+                        self.consumption)
+                    # Check whether agent is caught fishing.
+                    #TODO Determine whether to take away fished resources 
+                        # this epoch as extra punishment.
+                    if rnd.random() < self.caught_chance:
+                        self.cur_cooldown = self.cooldown
+                # Comply to restriction rule; 
+                # only fish to survive another day.
+                else:
+                    self.energy += sim.get_resource().consume_resource(
+                        abs(self.energy) + 1)
+        
+        # 'Plenty' of fish
+        else:
+            self.energy += sim.get_resource().consume_resource(self.consumption)
 
 
     #TODO implement more energy functions / behaviours

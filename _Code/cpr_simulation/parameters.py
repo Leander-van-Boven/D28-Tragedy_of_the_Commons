@@ -79,6 +79,7 @@ simulation : `dict`,
     print_interval : `int`,
         How many every epoch the console should be updated.
 
+
 logger_params : `dict`,
     Contains parameters for the CSV logger.
     
@@ -88,6 +89,11 @@ logger_params : `dict`,
     separator_replacement : `str`,
         The value to replace the separator with 
         if it occurs in a value.
+
+
+run : `int`,
+    Determines the amount of times the simulation is run, 
+    with the specified parameters.
 """
 
 default_params = {
