@@ -61,6 +61,11 @@ resource : `dict`,
         If the amount of resource gets lower than this limit,
             the amount of resource gets reset to this limit.
 
+    cooldown : `int`,
+        Determines the amount of epochs that the resource will be at 0.
+        When cooldown amount of epochs are past the resource will be set
+        at min_amount.
+
     growth_rate : `double`,
         Determines the percentage with which the resource growths /epoch.
         0 means no regrowth, 1 means a doubling of the resource, etc.
@@ -135,7 +140,8 @@ default_params = {
     "resource" : {
         "start_amount" : 500,
         "max_amount" : 500,
-        "min_amount" : 0,
+        "min_amount" : 50,
+        "cooldown" : 5,
         "growth_rate" : .2
     },
 

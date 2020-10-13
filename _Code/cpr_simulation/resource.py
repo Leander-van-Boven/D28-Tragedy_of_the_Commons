@@ -19,12 +19,16 @@ class Resource:
     max_amount = 100
     min_amount = 0
     growth_rate = 1.0
+    cooldown = 10
+    cur_cooldown = 0
+    in_cooldown = False
 
 
     def __init__(self, values):
         self.start_amount = values.get('start_amount', self.start_amount)
         self.max_amount = values.get('max_amount', self.max_amount)
         self.min_amount = values.get('min_amount', self.min_amount)
+        self.cooldown = values.get('cooldown', self.cooldown)
         self.growth_rate = values.get('growth_rate', self.growth_rate)
 
         self.amount = self.start_amount
@@ -33,12 +37,24 @@ class Resource:
     def grow_resource(self):
         """Regrows the resource with `self.growth_rate`
 
-        Keeps the resource amount between `self.min_amount`
-            and `self.max_amount`
+        If the current amount of resources reaches 0 or lower, the
+        cooldown is triggered. When the cooldown is past, resource
+        amount will be reset to self.min_amount.
         """
         
-        if (self.amount <= self.min_amount): 
-            self.amount = self.min_amount
+        # if (self.amount <= self.min_amount): 
+        #     self.amount = self.min_amount
+        if self.in_cooldown:
+            self.cur_cooldown -= 1
+            if self.cur_cooldown == 0:
+                self.in_cooldown = False
+                self.amount = self.min_amount
+            return
+
+        if self.amount <= 0:
+            self.cur_cooldown = self.cooldown
+            self.in_cooldown = True
+            return
 
         self.amount += self.amount * self.growth_rate
 
