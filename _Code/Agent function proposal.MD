@@ -1,0 +1,10 @@
+# Proposal Agent resource function
+Take, for some simulation $S$, the set of all epochs $T_S$ and the set of all agents $A_S$. We want to define a function $f$, such that:
+$$f : T_S \times A_S \mapsto [0,1]$$
+In other words, $f$ denotes the fraction of the available energy an agent $a_S\in A_S$ will take, based on the epoch $t_S\in T_S$. The maximum amount of energy an agent will take is a pre-defined parameter $\epsilon_{max}\in\mathbb{N}$. However, we need to make sure this amount of energy is available in the current epoch. We denote this value as $\epsilon_{t_S}\in\mathbb{N}$. The true amount of energy an agent will take at a certain epoch can then be described by the function $E : T_S \times A_S \mapsto \mathbb{N}$ such that:
+$$E(t_s, a_s) = \min(f(t_s, a_s) \cdot \epsilon_{max}, \epsilon_{t_S})$$
+We only need to define $f$. The output of this function is influenced by different behaviours that an agent can emit. The agent acts on the current state of the simulation, and a behaviour defines how to act. However, multiple behaviours exist and these can have conflicting outcomes. In our simulation, the influence a behaviour can have on the outcome of $f$ depends on the agent's social value orientation, or $svo_a\in [0,1]$. The total collection of $n$ behaviours can be defined as a tuple 
+$$\beta ={\langle B, \Mu\rangle, } $$
+Where $B$ is a set of $n$ behaviour functions $b_i\in B : T_S \times A_S \mapsto [0,1]$, that 'vote' for the fraction of energy they 'advice' the agent to take. $\Mu$ is a set of values ${\mu_i\in \Mu}$ that defines the 'optimal' social value orientation value for function $b_i$. We can now define $f$ as
+$$f(t_s, a_s) = \text{combine}(\{b_1(t_s, a_s), \dots, b_n(t_s, a_s)\}, \{\mu_1, \dots, \mu_n\})$$
+Where $\text{combine} : B\times M \mapsto [0,1]$ is a function that combines all the behaviours based on the values in $\Mu$. This can be done in multiple ways, for instance by taking the weighted average of $B$ with $M$ as weights, or by taking the behaviour with the closest 
