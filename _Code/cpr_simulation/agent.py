@@ -30,7 +30,7 @@ class Agent:
     eldery = 70
 
     # Restricted Model Parameters
-    res_lim = 1
+    res_limit_factor = 1
     violation_chance = .25
     caught_chance = .10
     cooldown = 5
@@ -77,7 +77,8 @@ class Agent:
 
         # Execute behaviour to compensate lost energy from metabolism
         #TODO Change this to execute the behaviour set as parameter.
-        self.base_energy_function(sim)
+        #self.base_energy_function(sim)
+        self.restricted_energy_function(sim)
 
         #TODO Implement more behaviours
         #self.procreate(sim.get_epoch())

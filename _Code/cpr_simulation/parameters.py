@@ -146,7 +146,7 @@ default_params = {
     },
 
     "simulation" : {
-        "max_epoch" : 1000,
+        "max_epoch" : 100,
         "plot_interval" : 1,
         "print_interval" : 1,
         "log_interval" : 1

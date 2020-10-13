@@ -87,7 +87,8 @@ class ResultsPrinter:
         for i in range(len(a)):
             if a[i] == 0 and self.zero_flags[i] == 0:
                 self.zero_flags[i] = 1
-                self.ax_agent.axvline(x=t, c=self.agent_lines[i].get_c())
+                self.ax_agent.axvline(x=t, c=self.agent_lines[i].get_c(), 
+                                      alpha=.5)
             self.yagents[i].append(a[i]) 
         self.yresource.append(r)
 
