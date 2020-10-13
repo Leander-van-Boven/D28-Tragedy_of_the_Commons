@@ -116,8 +116,8 @@ default_params = {
             "consumption" : 1,
             "maximum_age" : 100,
 
-            "procreate_req" : 16,
-            "procreate_cost" : 10,
+            "procreate_req" : 4,
+            "procreate_cost" : 1,
         },
         {
             "label" : "prosocial",
@@ -132,8 +132,8 @@ default_params = {
             "consumption" : 1,
             "maximum_age" : 100,
 
-            "procreate_req" : 16,
-            "procreate_cost" : 10
+            "procreate_req" : 4,
+            "procreate_cost" : 1
         }
     ],
 
