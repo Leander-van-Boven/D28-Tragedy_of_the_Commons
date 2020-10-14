@@ -176,6 +176,52 @@ class Agent:
         else:
             self.energy += sim.get_resource().consume_resource(self.consumption)
 
+    def procreate(self, sim, parents):
+        """This is the procreate function of the agent.
+        It allows the agents to procreate.
+
+        Parameters
+        ----------
+        sim : `Simulation`,
+            Reference to the simulation
+        parents : [],
+            An array of agents with energy > procreate_req
+        """
+        rnd.shuffle(parents)
+        while len(parents) > 1:
+            # Select parent 1, update its params
+            parent1 = parents.pop()
+            parent1.energy -= parent1.procreate_req
+            parent1.child_count += 1
+
+            # Select parent 2, update its params
+            parent2 = parents.pop()
+            parent2.energy -= parent2.procreate_req
+            parent2.child_count += 1
+
+            # Select the winning parent. Its genes will be used for the child
+            # genes = rnd.random([parent1,parent2])
+            # genes = parent1 if parent1.age >= parent2.age else parent 2
+            genes = parent1 if parent1.energy >= parent2.energy else parent2
+
+            # Create the child with winning genes
+            child = {
+                "label": "blerg",
+                "line_style": ':',
+                "agent_count": 1,
+                "min_social_value": genes.social_value_orientation,
+                "max_social_value": genes.social_value_orientation,
+
+                "standard_param_deviation": .1,
+                "start_energy_multiplier": 3,
+                "metabolism": genes.metabolism,
+                "consumption": genes.consumption,
+                "maximum_age": genes.maximum_age,
+
+                "procreate_req": genes.procreate_req,
+                "procreate_cost": genes.procreate_cost,
+            }
+            sim.add_agent(Agent(child))
 
     #TODO implement more energy functions / behaviours
     # def secondary_energy_function(self, res):

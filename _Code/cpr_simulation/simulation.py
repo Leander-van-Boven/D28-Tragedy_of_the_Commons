@@ -156,6 +156,7 @@ class Simulator:
 
         #TODO We might want to add self.epoch = 1 here.
         # Run the simulations for max_epoch amounts
+        parents = []
         while (self.epoch < self.max_epoch):
             # Update the agents
             for agent in self.agents:
@@ -163,6 +164,10 @@ class Simulator:
                 # Check whether agent has died from his actions
                 if agent.energy <= 0:
                     self.remove_agent(agent)
+                if agent.energy >= agent.procreate_req:
+                    parents.append(agent)
+
+            agent.procreate(self, parents)
 
             # Print the current stats of the simulation
             if self.verbose and self.epoch % self.print_interval == 0:
