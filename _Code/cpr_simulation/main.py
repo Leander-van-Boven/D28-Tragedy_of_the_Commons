@@ -53,8 +53,8 @@ def run(override_params=dict(), params_to_range:list=None,
     if log_dir:
         #TODO Do something with experiment number?
         col_names = params_to_range + ['Epoch', 'Resource']
-        for dist in params['agent_distributions']:
-            col_names.append(dist['label'])
+        for dist_name in params['agent_distributions']:
+            col_names.append(dist_name)
         logger = CsvLogger(params['logger_params'], col_names, log_dir)
     else:
         logger = None

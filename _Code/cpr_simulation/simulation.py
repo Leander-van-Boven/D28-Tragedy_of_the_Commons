@@ -137,7 +137,8 @@ class Simulator:
         """
 
         # Initialise the agents
-        for dist in self.agent_distributions:
+        for dist_name in self.agent_distributions:
+            dist = self.agent_distributions[dist_name]
             for _ in range(dist['agent_count']):
                 self.add_agent(Agent(dist))
 
@@ -215,9 +216,10 @@ class Simulator:
         """
 
         return (self.epoch,
-                [self.get_agent_count(dist['min_social_value'],
-                                      dist['max_social_value'])
-                 for dist in self.agent_distributions],
+                [self.get_agent_count(
+                    self.agent_distributions[dist_name]['min_social_value'],
+                    self.agent_distributions[dist_name]['max_social_value'])
+                 for dist_name in self.agent_distributions],
                 self.resource.get_amount())
 
 
@@ -225,8 +227,9 @@ class Simulator:
         '''Prints the current stats of the simulation.'''
 
         self.cur_stats = f"epoch: {self.epoch}, "
-        for dist in self.agent_distributions:
-            self.cur_stats += (f"{dist['label']}: " + 
+        for dist_name in self.agent_distributions:
+            dist = self.agent_distributions[dist_name]
+            self.cur_stats += (f"{dist_name}: " + 
                 str(self.get_agent_count(dist['min_social_value'], 
                                          dist['max_social_value'])) + 
                 ", ")
@@ -238,7 +241,8 @@ class Simulator:
         '''Adds a new row to the log.'''
 
         row = self.log_row_head + [self.epoch, self.resource.get_amount()]
-        for dist in self.agent_distributions:
+        for dist_name in self.agent_distributions:
+            dist = self.agent_distributions[dist_name]
             row.append(self.get_agent_count(dist['min_social_value'],
                                             dist['max_social_value']))
 

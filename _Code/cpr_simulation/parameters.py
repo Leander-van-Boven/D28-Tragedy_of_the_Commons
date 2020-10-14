@@ -102,9 +102,8 @@ run : `int`,
 """
 
 default_params = {
-    "agent_distributions" : [
-        {
-            "label" : "proself",
+    "agent_distributions" : {
+        "proself" : {
             "line_style" : ':',
             "agent_count" : 50,
             "min_social_value" : 0,
@@ -119,8 +118,7 @@ default_params = {
             "procreate_req" : 4,
             "procreate_cost" : 1,
         },
-        {
-            "label" : "prosocial",
+        "prosocial" : {
             "line_style" : '--',
             "agent_count" : 50,
             "min_social_value" : .75,
@@ -132,10 +130,10 @@ default_params = {
             "consumption" : 1,
             "maximum_age" : 100,
 
-            "procreate_req" : 4,
-            "procreate_cost" : 1
-        }
-    ],
+            "procreate_req" : 16,
+            "procreate_cost" : 10
+        },
+    },
 
     "resource" : {
         "start_amount" : 500,
