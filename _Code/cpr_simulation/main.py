@@ -46,7 +46,7 @@ def run(override_params=dict(), params_to_range:list=None,
     #print(params)
 
     if not params_to_range:
-        params_to_range = [['run']]
+        params_to_range = ['[run]']
         param_ranges = [(1,2,1)]
         
 
@@ -62,20 +62,19 @@ def run(override_params=dict(), params_to_range:list=None,
     # Generate all combinations of parameters we'll run
     param_values = [arange(*x) for x in param_ranges]
     value_combis = it.product(*param_values)
-    amt_combis = prod([len(x) for x in param_values])
+    number_of_combis = prod([len(x) for x in param_values])
 
     for (run, combi) in enumerate(value_combis):
         if verbose:
-            print('\n%s/%s' % (run+1, amt_combis))
+            print('\n%s/%s' % (run+1, number_of_combis))
             print(', '.join(["%s = %s" % i 
                                   for i in zip(params_to_range, combi)]))
         else:
-            print('%s/%s' % (run+1, amt_combis), end='\r', flush=True)
+            print('%s/%s' % (run+1, number_of_combis), end='\r', flush=True)
 
         curr_params = params.copy()
-        for (param, value) in zip(params_to_range, combi):
-            loc = "curr_params[\'" + "\'][\'".join(param.split(':')) + "\']"
-            exec('%s=%s' % (loc, value))
+        for param_pair in zip(params_to_range, combi):
+            exec('curr_params%s=%s' % param_pair)
 
         printer = None if not use_plot else \
             ResultsPrinter(params['agent_distributions'],
