@@ -10,8 +10,8 @@ class Agent:
     start_energy_multiplier = 3
     standard_param_deviation = .1
     social_value_orientation = 0
-    metabolism = 3
-    consumption = 15
+    metabolism = 4
+    consumption = 10
     procreate_req = 20
     procreate_cost = 15
     maximum_age = 100
@@ -32,8 +32,8 @@ class Agent:
 
     # Restricted Model Parameters
     res_limit_factor = 2
-    caught_chance = .25
-    cooldown = 20
+    caught_chance = .5
+    cooldown = 25
     cur_cooldown = 0
 
 

@@ -111,11 +111,11 @@ default_params = {
             "min_social_value" : 0,
             "max_social_value" : .5,  
 
-            "metabolism" : 3,
-            "consumption" : 10,
+            # "metabolism" : 3,
+            # "consumption" : 15,
 
-            "procreate_req" : 20,
-            "procreate_cost" : 15,
+            # "procreate_req" : 15,
+            # "procreate_cost" : 10,
         },
         # "neutral" : {
         #     "standard_param_deviation" : .1,
@@ -133,11 +133,11 @@ default_params = {
             "min_social_value" : .5,
             "max_social_value" : 1,
 
-            "metabolism" : 3,
-            "consumption" : 10,
+            # "metabolism" : 3,
+            # "consumption" : 15,
 
-            "procreate_req" : 20,
-            "procreate_cost" : 15
+            # "procreate_req" : 15,
+            # "procreate_cost" : 10
         },
     },
 
