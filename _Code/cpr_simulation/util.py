@@ -31,5 +31,4 @@ def update_dict(d, u, omit_new=False):
                         for (i,j) in itertools.zip_longest(d.get(k, []), v)]
         else:
             d[k] = v
-
     return d

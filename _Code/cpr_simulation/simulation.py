@@ -44,6 +44,7 @@ class Simulator:
     def __init__(self, param_dict, printer=None, logger=None, row_head=[],
                  verbose=True):
         '''Initializes the simulation with the provided parameter dict.'''
+
         self.printer = printer
         self.logger = logger
         self.log_row_head = row_head
@@ -91,6 +92,14 @@ class Simulator:
 
 
     def add_agent(self, agent):
+        """Adds an agent to the list of agents.
+
+        Parameters
+        ----------
+        agent : `Agent`
+            The agent to add.
+        """
+
         self.agents.append(agent)
 
 
@@ -194,22 +203,19 @@ class Simulator:
             #time.sleep(0.5) 
         
         # While loop finished, maximum epoch reached
-        print('', flush=True)
-        print(flush=False)
+        print()
         # Some agents stayed alive
         if self.get_agent_count() > 1:
             self.result = ("Maximum epoch reached, you managed to keep " +
-                        str(self.get_agent_count()) +
-                        " agents alive!\n" +
-                        "Last stats: " + self.cur_stats)
+                           str(self.get_agent_count()) +
+                           " agents alive!")
         elif self.get_agent_count() == 1:
-            self.result = ("Only one lonely agent managed to survive.\n" +
-                           "Last stats: " + self.cur_stats)
+            self.result = ("Only one lonely agent managed to survive\n" +
+                           "He will stay on this forgotten island forever.")
         else:
             self.result = ("All agents are dead :( " + 
-                        "there is no hope left for the village, " + 
-                        "just darkness.\n" +
-                        "Last stats: " + self.cur_stats)
+                           "there is no hope left for the village, " + 
+                           "just darkness.")
 
         if self.printer:
             self.printer.save_fig('.lastplot.pdf')
@@ -237,7 +243,8 @@ class Simulator:
         self.cur_stats = f"epoch: {self.epoch}, "
         for dist_name in self.agent_distributions:
             dist = self.agent_distributions[dist_name]
-            self.cur_stats += (f"{dist_name}: " + 
+            self.cur_stats += (
+                f"{dist_name}: " + 
                 str(self.get_agent_count(dist['min_social_value'], 
                                          dist['max_social_value'])) + 
                 ", ")

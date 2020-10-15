@@ -42,8 +42,6 @@ class Resource:
         amount will be reset to self.min_amount.
         """
         
-        # if (self.amount <= self.min_amount): 
-        #     self.amount = self.min_amount
         if self.in_cooldown:
             self.cur_cooldown -= 1
             if self.cur_cooldown <= 0:

@@ -6,13 +6,13 @@
             "agent_count": 50,
             "min_social_value": 0,
             "max_social_value": 0.5,
-            "metabolism": 3,
-            "consumption": 15,
+            "metabolism": 4,
+            "consumption": 10,
             "procreate_req": 20,
             "procreate_cost": 15,
             "res_limit_factor": 2,
-            "caught_chance": 0.25,
-            "caught_cooldown": 20
+            "caught_chance": 0.5,
+            "caught_cooldown": 50
         },
         "prosocial": {
             "standard_param_deviation": 0.1,
@@ -20,21 +20,21 @@
             "agent_count": 50,
             "min_social_value": 0.5,
             "max_social_value": 1,
-            "metabolism": 3,
-            "consumption": 15,
+            "metabolism": 4,
+            "consumption": 10,
             "procreate_req": 20,
             "procreate_cost": 15,
             "res_limit_factor": 2,
-            "caught_chance": 0.25,
-            "caught_cooldown": 20
+            "caught_chance": 0.5,
+            "caught_cooldown": 50
         }
     },
     "resource": {
         "start_amount": 10000,
         "max_amount": 10000,
         "min_amount": 500,
-        "cooldown": 3,
-        "growth_rate": 0.2
+        "cooldown": 2,
+        "growth_rate": 0.5
     },
     "simulation": {
         "max_epoch": 1000,

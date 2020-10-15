@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from matplotlib import animation
 
 class ResultsPrinter:
-    def __init__(self, agent_distributions:list, max_resource):        
+    def __init__(self, agent_distributions, max_resource):        
         """Sets up the real-time plot.
 
         Parameters
@@ -127,4 +127,12 @@ class ResultsPrinter:
         
 
     def save_fig(self, path):
+        """Saves the plot to the specified path.
+
+        Parameters
+        ----------
+        path : `str`,
+            The path to save the plot to.
+        """
+        
         plt.savefig(path)

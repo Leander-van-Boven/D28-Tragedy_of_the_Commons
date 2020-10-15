@@ -9,8 +9,8 @@ import shutil
 from numpy import arange, prod
 import itertools as it
 
-def run(override_params=dict(), params_to_range:list=None, 
-        param_ranges:list=None, log_dir=None, use_plot=True, verbose=True):
+def run(override_params=dict(), params_to_range=None, 
+        param_ranges=None, log_dir=None, use_plot=True, verbose=True):
     """Reads and generates param dicts and runs the simulation with them.
 
     Parameters
@@ -33,7 +33,6 @@ def run(override_params=dict(), params_to_range:list=None,
     use_plot : `bool`, optional,
         Whether to use real time plotting, by default True.
     """
-
 
     # Update the parameter dictionary with the override values
     assert isinstance(override_params, dict)
@@ -65,24 +64,25 @@ def run(override_params=dict(), params_to_range:list=None,
     # Calculate the total number of iterations 
     number_of_combis = prod([len(x) for x in param_values])
 
+    # Get more print-friendly parameter locations
+    param_names = [':'.join(x.split('\'][\''))[2:-2] for x in params_to_range]
+
     # Write the parameters to a json file to make saving possible
     #TODO: Incorporate range and batch parameters to save. 
     with open(".last.json", "w") as file:
         file.write(json.dumps(params))
 
     # Iterate
-    for (run, combi) in enumerate(value_combis):
-        
+    for (run, combi) in enumerate(value_combis):       
         # Provide run information if verbose mode is on
         if verbose:
             print('\nIteration: %s/%s' % (run+1, number_of_combis))
             print('Params: ' + ', '.join(["%s = %s" % i 
-                                         for i in zip(params_to_range, combi)]))
-        
+                                          for i in zip(param_names, combi)]))     
         # If not, keep a simple run counter
         else:
-            print('Iteration: %s/%s' % (run+1, number_of_combis), end='\r', 
-                  flush=True)
+            print('Iteration: %s/%s' % (run+1, number_of_combis), 
+                  end='\r', flush=True)
 
         # Add values of ranged parameters to the dictionary
         curr_params = params.copy()
@@ -92,7 +92,7 @@ def run(override_params=dict(), params_to_range:list=None,
         # If real-time plot is on, generate the ResultPrinter class
         printer = None if not use_plot else \
             ResultsPrinter(params['agent_distributions'],
-                        params['resource']['max_amount'])
+                           params['resource']['max_amount'])
 
         # Generate the Simulator class
         simulator = Simulator(curr_params, printer, logger, list(combi), 
@@ -102,7 +102,6 @@ def run(override_params=dict(), params_to_range:list=None,
         # to the printer.
         if use_plot:
             printer.start_printer(simulator.generate_simulation)
-
         # If not, we neet to manually iterate over the simulation
         else:
             simulation = simulator.generate_simulation()
@@ -114,6 +113,7 @@ def run(override_params=dict(), params_to_range:list=None,
     if log_dir:
         logger.write()
 
+
 def generate_default_params(path=".defaults.json"):
     '''Used to generate the parameters for the simulation.'''
 
@@ -124,13 +124,10 @@ def generate_default_params(path=".defaults.json"):
 def copy_last_run(param_path, fig_path):
     '''Used to save the results from last run.'''
 
-    if not os.path.isfile('.last.json'):
-        return False
-
-    if not os.path.isfile('.lastplot.pdf'):
+    if not os.path.isfile('.last.json') or \
+       not os.path.isfile('.lastplot.pdf'):
         return False
 
     shutil.copyfile('.last.json', param_path)
     shutil.copyfile('.lastplot.pdf', fig_path)
-
     return True

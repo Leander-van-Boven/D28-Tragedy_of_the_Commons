@@ -32,7 +32,7 @@ class CsvLogger:
     """
 
 
-    def __init__(self, params:dict, col_names:list, path:str=None):
+    def __init__(self, params, col_names, path=None):
         """Initializes the CsvLogger class.
         
         Parameters
@@ -61,7 +61,7 @@ class CsvLogger:
         self.table = list()
 
 
-    def add_row(self, row:list):
+    def add_row(self, row):
         """Adds a row to the table.
 
         Parameters
@@ -80,7 +80,7 @@ class CsvLogger:
         self.n_rows += 1
 
 
-    def write(self, path:str=None):
+    def write(self, path=None):
         """Writes the table as a CSV file to the specified path.
 
         Parameters

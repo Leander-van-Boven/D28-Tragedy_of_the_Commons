@@ -8,10 +8,9 @@ class Agent:
 
     # Parameters
     start_energy_multiplier = 3
-    standard_param_deviation = .1
     social_value_orientation = 0
-    metabolism = 4
-    consumption = 10
+    metabolism = 3
+    consumption = 15
     procreate_req = 20
     procreate_cost = 15
     maximum_age = 100
@@ -32,8 +31,8 @@ class Agent:
 
     # Restricted Model Parameters
     res_limit_factor = 2
-    caught_chance = .5
-    cooldown = 25
+    caught_chance = .25
+    caught_cooldown = 20
     cur_cooldown = 0
 
 
@@ -49,10 +48,6 @@ class Agent:
             Dictionary containing the parameters for this agent.
         """
 
-        #TODO implement standard_param_deviation param.
-        self.standard_param_deviation = params.get(
-            'standard_param_deviation', self.standard_param_deviation)
-
         self.metabolism = params.get('metabolism', self.metabolism)
         self.consumption = params.get('consumption', self.consumption)
         self.maximum_age = params.get('maximum_age', self.maximum_age)
@@ -67,6 +62,13 @@ class Agent:
 
         self.energy = self.metabolism * params.get('start_energy_multiplier',
                                                    self.start_energy_multiplier)
+
+        # Restricted energy function parameters
+        self.res_limit_factor = params.get('res_limit_factor',
+                                           self.res_limit_factor)
+        self.caught_chance = params.get('caught_chance', self.caught_chance)
+        self.caught_cooldown = params.get('caught_cooldown',
+                                          self.caught_cooldown)
         
    
     def act(self, sim):
@@ -84,18 +86,16 @@ class Agent:
         self.energy -= self.metabolism
         self.age += 1
         # Execute behaviour to compensate lost energy from metabolism
-        #TODO Change this to execute the behaviour set as parameter.
+        #TODO Change this to execute the behaviour set as parameter
+        #TODO Implement more behaviours
         #self.base_energy_function(sim)
         self.restricted_energy_function(sim)
-
-        #TODO Implement more behaviours
-        #self.change_VO()
-
+        
 
     def base_energy_function(self, sim):
         """This is the base model energy function for our agent.
         
-        Implements the basic behaviour of the agents
+        Implements the basic behaviour of the agents.
         
         - Pro-social agents will always fish 
             at the predefined consumption rate.
@@ -117,7 +117,6 @@ class Agent:
             fish = sim.get_resource().get_amount()
             population = sim.get_agent_count()
             if fish/population < self.scarcity:
-                #print('')
                 self.energy += sim.get_resource().consume_resource(
                     self.consumption*self.greed3)
             else:
@@ -168,7 +167,7 @@ class Agent:
             elif rnd.random() > self.social_value_orientation:
                 # Check if agent is caught violating the rule.
                 if rnd.random() < self.caught_chance:
-                    self.cur_cooldown = self.cooldown
+                    self.cur_cooldown = self.caught_cooldown
                 else:
                     self.energy += sim.get_resource().consume_resource(
                         self.consumption)    

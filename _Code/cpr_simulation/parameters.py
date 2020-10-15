@@ -6,13 +6,13 @@ Explanation of parameters
 agent_distributions : `dict`,
     Contians the different groups of agents, 
         with their respective parameter values.
-
-    label : `str`,
-        The name of the group.
+    The key for each group denotes it label (this is also shown as line
+        label in the legend of the real-time plot).
 
     line_style : `str`,
         The style to use for the plot for this group.
         Refer to https://tinyurl.com/y9go69zm for possible options.
+        (#NOTE not all options seem to work)
 
     agent_count : `int`,
         The amount of agents in the group.
@@ -23,11 +23,6 @@ agent_distributions : `dict`,
     max_social_value : `float`, 
         The upper limit of the SVO for agents in this group.
 
-
-    standard_param_deviation : `float`,
-        How much the actual metabolism, consumption and maximum_age 
-        may deviate from the set value (.1 means 10%).
-
     metabolism : `double`,
         The cost of staying alive (in energy / epoch)
 
@@ -37,12 +32,31 @@ agent_distributions : `dict`,
     maximum_age : `int`,
         The maximum age for the agent (in epochs).
 
+    mutation_factor : `float`,
+        This factor is used as standard deviation in a gaussian
+        distribution for calculating a modification value for above
+        mentioned parameters (metabolism, consumption, max_age).
+        This will cause more variation within the group of agents.
 
     procreate_req : `double`,
         How much energy an agent needs before it may procreate.
 
     procreate_cost : `double`,
         Cost of energy to procreate.
+
+    # Restricted Energy Function Parameters
+    res_limit_factor : `double`,
+        This factor is multiplied by the amount of agents alive at that
+        point. If the resource amount is below the calculated value, 
+        the resources are assumed as 'scarce' and the restriction rule
+        is activated.
+    caught_chance : `float`,
+        If an agent violates the restriction rule, this parameter
+        determines the chance the agent gets caught.
+    caught_cooldown : `int`,
+        If an agent is caught violating the restriction rule, this
+        parameter determines the amount of epochs the agent is prohibited
+        from fishing.
 
 
 resource : `dict`,
@@ -104,40 +118,38 @@ run : `int`,
 default_params = {
     "agent_distributions" : {
         "proself" : {
-            "standard_param_deviation" : .1,
-
             "line_style" : ':',
             "agent_count" : 50,
             "min_social_value" : 0,
             "max_social_value" : .5,  
 
-            # "metabolism" : 3,
-            # "consumption" : 15,
+            "metabolism" : 3,
+            "consumption" : 15,
 
-            # "procreate_req" : 15,
-            # "procreate_cost" : 10,
+            "procreate_req" : 20,
+            "procreate_cost" : 15,
+
+            # Restricted Model Parameters
+            "res_limit_factor" : 2,
+            "caught_chance" : .25,
+            "caught_cooldown" : 20,
         },
-        # "neutral" : {
-        #     "standard_param_deviation" : .1,
-
-        #     "line_style" : '-.',
-        #     "agent_count" : 50,
-        #     "min_social_value" : .25,
-        #     "max_social_value" : .75,
-        # },
         "prosocial" : {
-            "standard_param_deviation" : .1,
-
             "line_style" : '--',
             "agent_count" : 50,
             "min_social_value" : .5,
             "max_social_value" : 1,
 
-            # "metabolism" : 3,
-            # "consumption" : 15,
+            "metabolism" : 3,
+            "consumption" : 15,
 
-            # "procreate_req" : 15,
-            # "procreate_cost" : 10
+            "procreate_req" : 20,
+            "procreate_cost" : 15,
+
+            # Restricted Model Parameters
+            "res_limit_factor" : 2,
+            "caught_chance" : .25,
+            "caught_cooldown" : 20,
         },
     },
 
