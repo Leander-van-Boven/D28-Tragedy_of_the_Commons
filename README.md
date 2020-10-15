@@ -47,6 +47,11 @@ After following the steps to install the simulation, open your favourite termina
   ```shell
   python sim.py run
   ```
+* To load a certain scenario, run
+  ```shell
+  python sim.py run -n [scenario name]
+  ```
+  * We included two scenarios that show interesting results. These are called `small_fluctuations` and `big_fluctuations`.  
 * To inspect all possible command-line arguments, run
   ```shell
   python sim.py --help
