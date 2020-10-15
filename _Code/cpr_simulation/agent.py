@@ -176,6 +176,7 @@ class Agent:
         else:
             self.energy += sim.get_resource().consume_resource(self.consumption)
 
+
     def procreate(self, sim, parents):
         """This is the procreate function of the agent.
         It allows the agents to procreate.

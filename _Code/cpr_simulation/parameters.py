@@ -112,11 +112,11 @@ default_params = {
             "standard_param_deviation" : .1,
             "start_energy_multiplier" : 3,
             "metabolism" : 1,
-            "consumption" : 1,
+            "consumption" : 2,
             "maximum_age" : 100,
 
-            "procreate_req" : 4,
-            "procreate_cost" : 1,
+            "procreate_req" : 10,
+            "procreate_cost" : 5,
         },
         "prosocial" : {
             "line_style" : '--',
@@ -127,11 +127,11 @@ default_params = {
             "standard_param_deviation" : .1,
             "start_energy_multiplier" : 3,
             "metabolism" : 1,
-            "consumption" : 1,
+            "consumption" : 2,
             "maximum_age" : 100,
 
-            "procreate_req" : 16,
-            "procreate_cost" : 10
+            "procreate_req" : 10,
+            "procreate_cost" : 5
         },
     },
 
@@ -144,7 +144,7 @@ default_params = {
     },
 
     "simulation" : {
-        "max_epoch" : 100,
+        "max_epoch" : 1000,
         "plot_interval" : 1,
         "print_interval" : 1,
         "log_interval" : 1
