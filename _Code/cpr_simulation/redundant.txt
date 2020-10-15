@@ -79,3 +79,25 @@ def test():
 
     a.update(b)
     return a
+
+            sim.get_agent_count()*self.res_limit_factor):
+            # Prosocial Behaviour
+            if self.social_value_orientation >= .5:
+                # Agent only fishes enough to survive another day.
+                if self.energy <= 0:
+                    self.energy += sim.get_resource().consume_resource(
+                        abs(self.energy) + 1)
+            # Proself Behaviour
+            else:
+                # Determine if proself agent violates restriction rule.
+                if self.energy>0 and rnd.random()<self.violation_chance:
+                    self.energy = sim.get_resource().consume_resource(
+                        self.consumption)
+                    # Check whether agent is caught fishing.
+                    if rnd.random() < self.caught_chance:
+                        self.cur_cooldown = self.cooldown
+                # Comply to restriction rule; 
+                # only fish to survive another day.
+                else:
+                    self.energy += sim.get_resource().consume_resource(
+                        abs(self.energy) + 1)

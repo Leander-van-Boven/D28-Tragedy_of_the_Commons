@@ -18,7 +18,7 @@ class ResultsPrinter:
         """
 
         # Initialise self properties
-        self.max_agent = sum(agent_distributions[dist]['agent_count'] 
+        self.max_agent = sum(agent_distributions[dist].get('agent_count', 0) 
                              for dist in agent_distributions)
         self.max_resource = max_resource
         self.xdata, self.yagents, self.yresource = [], [[]], []
@@ -35,7 +35,7 @@ class ResultsPrinter:
             self.agent_lines.append(
                 self.ax_agent.plot([], [], 
                                    lw=2, label=dist_name, 
-                                   linestyle=dist['line_style'])[0])
+                                   linestyle=dist.get('line_style', '-'))[0])
         self.ax_agent.set_title('Real time plot of agent count')
         self.ax_agent.set_ylabel('agent count')
         self.ax_agent.set_xlabel('epochs')

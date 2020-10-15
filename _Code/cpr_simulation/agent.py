@@ -7,20 +7,21 @@ class Agent:
     child_count = 0
 
     # Parameters
-    behaviour = None
+    start_energy_multiplier = 3
+    standard_param_deviation = .1
     social_value_orientation = 0
     metabolism = 2
     consumption = 1
-    procreate_req = 16
-    procreate_cost = 10
+    procreate_req = 10
+    procreate_cost = 5
     maximum_age = 100
+    mutation_factor = .1
 
     # Base Model Parameters
     scarcity = 1
     greed1 = 1.5
     greed2 = 1.85
     greed3 = 5
-    start_energy_multiplier = 3
 
     # Prime Model Parameters
     hunger = 9
@@ -30,10 +31,9 @@ class Agent:
     eldery = 70
 
     # Restricted Model Parameters
-    res_limit_factor = 1
-    violation_chance = .25
-    caught_chance = .10
-    cooldown = 5
+    res_limit_factor = 2
+    caught_chance = .5
+    cooldown = 10
     cur_cooldown = 0
 
 
@@ -49,14 +49,21 @@ class Agent:
             Dictionary containing the parameters for this agent.
         """
 
+        #TODO implement standard_param_deviation param.
+        self.standard_param_deviation = params.get(
+            'standard_param_deviation', self.standard_param_deviation)
+
         self.metabolism = params.get('metabolism', self.metabolism)
         self.consumption = params.get('consumption', self.consumption)
+        self.maximum_age = params.get('maximum_age', self.maximum_age)
+        self.mutation_factor = params.get('mutation_factor', 
+                                          self.mutation_factor)
+
         self.procreate_req = params.get('procreate_req', self.procreate_req)
         self.procreate_cost = params.get('procreate_cost', self.procreate_cost)
-        self.maximum_age = params.get('maximum_age', self.maximum_age)
 
         self.social_value_orientation = rnd.uniform(
-            params["min_social_value"], params["max_social_value"])
+            params.get('min_social_value',0), params.get('max_social_value',1))
 
         self.energy = self.metabolism * params.get('start_energy_multiplier',
                                                    self.start_energy_multiplier)
@@ -73,15 +80,15 @@ class Agent:
         """
 
         # Life cycle
+        #TODO Metabolism increases as agent gets older
         self.energy -= self.metabolism
-
+        self.age += 1
         # Execute behaviour to compensate lost energy from metabolism
         #TODO Change this to execute the behaviour set as parameter.
         #self.base_energy_function(sim)
         self.restricted_energy_function(sim)
 
         #TODO Implement more behaviours
-        #self.procreate(sim.get_epoch())
         #self.change_VO()
 
 
@@ -149,29 +156,20 @@ class Agent:
         # Check whether the resources dropped below restriction limit.
         if (sim.get_resource().get_amount() < 
             sim.get_agent_count()*self.res_limit_factor):
-            # Prosocial Behaviour
-            if self.social_value_orientation >= .5:
-                # Agent only fishes enough to survive another day.
-                if self.energy <= 0:
-                    self.energy += sim.get_resource().consume_resource(
-                        abs(self.energy) + 1)
-            # Proself Behaviour
-            else:
-                # Determine if proself agent violates restriction rule.
-                if self.energy>0 and rnd.random()<self.violation_chance:
-                    self.energy = sim.get_resource().consume_resource(
-                        self.consumption)
-                    # Check whether agent is caught fishing.
-                    #TODO Determine whether to take away fished resources 
-                        # this epoch as extra punishment.
-                    if rnd.random() < self.caught_chance:
-                        self.cur_cooldown = self.cooldown
-                # Comply to restriction rule; 
-                # only fish to survive another day.
+            # If agent would die this epoch it is allowed to fish the
+            # amount of fish to get at 1 energy at the end of the epoch.
+            if self.energy <= 0:
+                self.energy += sim.get_resource().consume_resource(
+                    abs(self.energy) + 1)
+            # Otherwise, determine based on SVO whether agent violates
+            # the fishing rule.
+            elif rnd.random() > self.social_value_orientation:
+                # Check if agent is caught violating the rule.
+                if rnd.random() < self.caught_chance:
+                    self.cur_cooldown = self.cooldown
                 else:
                     self.energy += sim.get_resource().consume_resource(
-                        abs(self.energy) + 1)
-        
+                        self.consumption)    
         # 'Plenty' of fish
         else:
             self.energy += sim.get_resource().consume_resource(self.consumption)
@@ -188,6 +186,7 @@ class Agent:
         parents : [],
             An array of agents with energy > procreate_req
         """
+
         rnd.shuffle(parents)
         while len(parents) > 1:
             # Select parent 1, update its params
@@ -200,27 +199,37 @@ class Agent:
             parent2.energy -= parent2.procreate_req
             parent2.child_count += 1
 
-            # Select the winning parent. Its genes will be used for the child
+            # Select the winning parent. 
+            # Its genes will be used for the child
+            # --------------------------------------------
             # genes = rnd.random([parent1,parent2])
             # genes = parent1 if parent1.age >= parent2.age else parent 2
             genes = parent1 if parent1.energy >= parent2.energy else parent2
 
             # Create the child with winning genes
+            # Added genetic transmission of stronger parent with 
+            # randomized coefficient.
+            mutation = 0
             child = {
-                "label": "blerg",
-                "line_style": ':',
-                "agent_count": 1,
-                "min_social_value": genes.social_value_orientation,
-                "max_social_value": genes.social_value_orientation,
+                "min_social_value" : min(parent1.social_value_orientation, 
+                                         parent2.social_value_orientation),
+                "max_social_value" : max(parent1.social_value_orientation, 
+                                         parent2.social_value_orientation),
 
-                "standard_param_deviation": .1,
-                "start_energy_multiplier": 3,
-                "metabolism": genes.metabolism,
-                "consumption": genes.consumption,
-                "maximum_age": genes.maximum_age,
+                "metabolism" : genes.metabolism 
+                    + genes.metabolism*rnd.gauss(0,self.mutation_factor),
+                "consumption" : genes.consumption 
+                    + genes.consumption*rnd.gauss(0,self.mutation_factor),
+                "maximum_age" : genes.maximum_age 
+                    + genes.maximum_age*rnd.gauss(0,self.mutation_factor),
 
-                "procreate_req": genes.procreate_req,
-                "procreate_cost": genes.procreate_cost,
+                "procreate_req" : genes.procreate_req
+                    + genes.procreate_req*rnd.gauss(0,self.mutation_factor),
+                "procreate_cost" : genes.procreate_cost
+                    + genes.procreate_cost*rnd.gauss(0,self.mutation_factor),
+
+                "mutation_factor" : self.mutation_factor
+                    + self.mutation_factor*rnd.gauss(0,self.mutation_factor),
             }
             sim.add_agent(Agent(child))
 

@@ -139,7 +139,7 @@ class Simulator:
         # Initialise the agents
         for dist_name in self.agent_distributions:
             dist = self.agent_distributions[dist_name]
-            for _ in range(dist['agent_count']):
+            for _ in range(dist.get('agent_count',0)):
                 self.add_agent(Agent(dist))
 
         # Initialise the resource
@@ -156,14 +156,15 @@ class Simulator:
 
         #TODO We might want to add self.epoch = 1 here.
         # Run the simulations for max_epoch amounts
-        parents = []
         while (self.epoch < self.max_epoch):
+            parents = []
             # Update the agents
             for agent in self.agents:
                 agent.act(self)
                 # Check whether agent has died from his actions
                 if agent.energy <= 0:
                     self.remove_agent(agent)
+                #TODO check if agent is removed due to its age
                 if agent.energy >= agent.procreate_req:
                     parents.append(agent)
 
@@ -172,14 +173,14 @@ class Simulator:
             # Print the current stats of the simulation
             if self.verbose and self.epoch % self.print_interval == 0:
                 self.print_results()
-            if self.printer and self.epoch%self.plot_interval==0:
+            if self.printer and self.epoch % self.plot_interval == 0:
                 yield self.plot_results()
             #print(self.logger is None, self.epoch%self.log_interval)
-            if self.logger and self.epoch%self.log_interval==0:
+            if self.logger and self.epoch % self.log_interval == 0:
                 self.log_results()
 
             # Check whether there are still agents alive
-            if self.get_agent_count() <= 0:
+            if self.get_agent_count() <= 1:
                 break
 
             # Update the resource and epoch

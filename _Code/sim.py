@@ -17,23 +17,58 @@ import json
 import os, sys
 from collections import defaultdict
 
+# Constant values for loading and saving scenarios. 
 SCENARIO_DIR = 'scenarios'
 PARAM_NAME = 'params.json'
 FIG_NAME = 'figure.pdf'
 
 
 def test(args):
-    pass
+    """Test method for debugging purposes.
+
+    This method can be called directly from the CLI.
+
+    Parameters
+    ----------
+    args : `argparse.Namespace`
+        The command-line arguments.
+    """
+
+    print(args)
 
 
 def dd_factory(d = None):
-    if d:
-        return defaultdict(dd_factory, d)
-    else:
-        return defaultdict(dd_factory)
+    """A defaultdict generator method. 
+    
+    Generates a defaultdict that returns a defaultdict whenever a 
+    non-existent key is called.
+
+    Parameters 
+    ----------
+    d : `dict`, optional,
+        Pre-fill the defaultdict with the given dictionary.
+
+    Returns
+    -------
+    `defaultdict`,
+        either empty or pre-filled with the key-values in `d`. 
+    """
+
+    return defaultdict(dd_factory, d) if d else defaultdict(dd_factory)
 
 
 def run(args):
+    """This method is called when `sim.py run` is run. 
+    
+    This method reads out all command-line arguments parses them and 
+    starts a simulation from the `cpr_simulation` package. 
+
+    Parameters
+    ----------
+    args : `argparse.Namespace`
+        The command-line arguments.
+    """
+
     if args.name:
         path = '%s\\%s\\%s' % (SCENARIO_DIR, args.name, PARAM_NAME)
 
@@ -70,6 +105,17 @@ def run(args):
 
 
 def save(args):
+    """This method is called when `sim.py save` is run. 
+    
+    This method saves the parameters of the last run non-batch or 
+    non-range simulation, if it exists. 
+
+    Parameters
+    ----------
+    args : `argparse.Namespace`
+        The command-line arguments.
+    """
+
     if not os.path.isdir(SCENARIO_DIR):
         os.mkdir(SCENARIO_DIR)
 
@@ -104,12 +150,36 @@ def save(args):
 
 
 def llist(_):
+    """This method is called when `sim.py list` is run. 
+    
+    This method lists all saved scenarios as saved by the save method. 
+
+    Parameters
+    ----------
+    args : `argparse.Namespace`
+        The command-line arguments.
+    """
     print('\n'.join(
         sorted([path for path in os.listdir(SCENARIO_DIR) if \
                 os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
 
 
 def str2bool(v):
+    """Converts a string representation of a truth value to a boolean
+    type. This method is case-insensitive. 
+
+    Parameters
+    ----------
+    v : `str`,
+        The input string that represents a truth value. Should be one of
+        the following: yes/no, true/false, t/f, y/n, 1/0. 
+
+    Returns
+    -------
+    `bool`,
+        The output boolean. 
+    """
+
     if v is None:
         return None
     if isinstance(v, bool):
@@ -122,6 +192,22 @@ def str2bool(v):
 
 
 def str2locint(x):
+    """Converts a string to a parameter tuple. 
+
+    Parameters
+    ----------
+    x : `str`,
+        The input string. Should follow this syntax: 
+        `root:nest:nest=int`.
+
+    Returns
+    -------
+    `(str, int)`,
+        `str` represents the literal location of the parameter in the 
+        dictionary, and `int` represents the value this parameter should
+        get. 
+    """
+
     try:
         (param, val) = tuple(x.split('='))
         return ("[\'" + "\'][\'".join(param.split(':')) + "\']", int(val))
@@ -130,6 +216,22 @@ def str2locint(x):
 
 
 def str2locrange(x):
+    """Converts a string to a parameter tuple. 
+
+    Parameters
+    ----------
+    x : `str`,
+        The input string. Should follow this syntax: 
+        `root:nest:nest=from,to,incr`.
+
+    Returns
+    -------
+    `(str, tup)`,
+        `str` represents the literal location of the parameter in the 
+        dictionary, and `tup` represents the valu e range this parameter 
+        should get. 
+    """
+    
     try:
         (param, val) = tuple(x.split('='))
         return ("[\'" + "\'][\'".join(param.split(':')) + "\']", 
@@ -139,15 +241,29 @@ def str2locrange(x):
 
 
 if __name__ == '__main__':
-    # Define possible arguments
+    '''Main script fuction'''
+
+    # Define possible CL arguments
     parser = argparse.ArgumentParser()
     parser.add_argument(
         'command', choices=['run', 'save', 'list', 'test'], 
         help='run: run a simulation; save: save the previous simulation; ' +
              'list: list all saved simulations; test: for testing purposes')
     parser.add_argument(
+        '-b', '--batch', required=False, default=1, type=int, metavar='amount',
+        help='the amount of times the same experiment should be run ' 
+        + '(defaults to 1)')
+    parser.add_argument(
+        '-r', '--range', required=False, nargs='+', type=str2locrange,
+        metavar='item', help="add parameters to run the simulation with a " +
+         "range of values, e.g. resource:start_amount=300,601,100")
+    parser.add_argument(
+        '-p', '--param', required=False, nargs='+', type=str2locint, 
+        metavar='item', help='add parameters to override its value, ' +
+        'e.g. resource:start_amount=600')
+    parser.add_argument(
         '-n', '--name', required=False, type=str, metavar='scenario',
-        help='the scenario name to load from, or to save to')
+        help='the name of the scenario to load or to save')
     parser.add_argument(
         '-o', '--out', required=False, type=str, metavar='file_path',
         help='the output path for CSV logging')
@@ -158,30 +274,14 @@ if __name__ == '__main__':
         '-v', '--verbose', required=False, default=None, const=True, 
         type=str2bool, nargs='?', metavar='bool',
         help="whether to enter verbose mode")
-    parser.add_argument(
-        '-b', '--batch', required=False, default=1, type=int, metavar='amount',
-        help='the amount of times the same experiment should be run (def. 1)')
-    parser.add_argument(
-        '-r', '--range', required=False, nargs='+', type=str2locrange,
-        metavar='param=from,to,incr',
-        help="add parameters to run the simulation with a range of values")
-    parser.add_argument(
-        '-p', '--param', required=False, nargs='+', type=str2locint, 
-        metavar='param=value', help="add parameters to override its value")
 
 
-    # Parse the inputted arguments
+    # Parse the arguments that were input
     args = parser.parse_args()
 
-    # print(args)
-    # sys.exit(1)
-
-    # Run the right method, based on CL argument
+    # Run the right method, based on CL arguments
     # We had to rename the method `list`, as otherwise it would have 
-    # conflicted with the type.
+    # conflicted with the `list` type.
     if args.command=='list':
         args.command='llist'
-    eval(args.command)(args)
-
-
-        
+    eval(args.command)(args)  

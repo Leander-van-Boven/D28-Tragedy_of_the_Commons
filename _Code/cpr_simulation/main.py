@@ -27,31 +27,28 @@ def run(override_params=dict(), params_to_range:list=None,
         The ranges (organized by index) that the params_to_range will 
         range over.
 
-    out_dir : `str`, optional,
+    log_dir : `str`, optional,
         The directory where to save the output, by default None.
 
     use_plot : `bool`, optional,
         Whether to use real time plotting, by default True.
     """
 
-    # if not override_params:
-    #     params = default_params
-    # else:
-    #     params = override_params
 
-    #TODO: Check if update_dict performs as expected
+    # Update the parameter dictionary with the override values
     assert isinstance(override_params, dict)
+    #TODO: Check if update_dict performs as expected
     params = update_dict(default_params, override_params)
 
-    #print(params)
-
+    # As we need to have at least one iteration, add a single value
+    # to the dictionaries if they aren't specified. 
     if not params_to_range:
         params_to_range = ['[run]']
         param_ranges = [(1,2,1)]
         
-
+    # Generate a CsvLogger class if log_dir is specified
     if log_dir:
-        #TODO Do something with experiment number?
+        #TODO Add more columns to log
         col_names = params_to_range + ['Epoch', 'Resource']
         for dist_name in params['agent_distributions']:
             col_names.append(dist_name)
@@ -59,41 +56,60 @@ def run(override_params=dict(), params_to_range:list=None,
     else:
         logger = None
 
-    # Generate all combinations of parameters we'll run
+    # Generate all discrete values for each ranged parameter
     param_values = [arange(*x) for x in param_ranges]
+
+    # Generate all possible combinations of these ranged values
     value_combis = it.product(*param_values)
+
+    # Calculate the total number of iterations 
     number_of_combis = prod([len(x) for x in param_values])
 
+    # Write the parameters to a json file to make saving possible
+    #TODO: Incorporate range and batch parameters to save. 
+    with open(".last.json", "w") as file:
+        file.write(json.dumps(params))
+
+    # Iterate
     for (run, combi) in enumerate(value_combis):
+        
+        # Provide run information if verbose mode is on
         if verbose:
             print('\n%s/%s' % (run+1, number_of_combis))
             print(', '.join(["%s = %s" % i 
                                   for i in zip(params_to_range, combi)]))
+        
+        # If not, keep a simple run counter
         else:
             print('%s/%s' % (run+1, number_of_combis), end='\r', flush=True)
 
+        # Add values of ranged parameters to the dictionary
         curr_params = params.copy()
         for param_pair in zip(params_to_range, combi):
             exec('curr_params%s=%s' % param_pair)
 
+        # If real-time plot is on, generate the ResultPrinter class
         printer = None if not use_plot else \
             ResultsPrinter(params['agent_distributions'],
                         params['resource']['max_amount'])
 
+        # Generate the Simulator class
         simulator = Simulator(curr_params, printer, logger, list(combi), 
                               verbose)
 
-        with open(".last.json", "w") as file:
-            file.write(json.dumps(curr_params))
-
+        # If we use real-time plotting, we need to pass the simulation
+        # to the printer.
         if use_plot:
             printer.start_printer(simulator.generate_simulation)
+
+        # If not, we neet to manually iterate over the simulation
         else:
             simulation = simulator.generate_simulation()
             while True:
                 try: next(simulation)
                 except StopIteration: break
 
+    # If we have a CsvLogger, then write it to a CSV file
     if log_dir:
         logger.write()
 

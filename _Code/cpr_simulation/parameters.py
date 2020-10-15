@@ -104,31 +104,36 @@ run : `int`,
 default_params = {
     "agent_distributions" : {
         "proself" : {
+            "standard_param_deviation" : .1,
+
             "line_style" : ':',
             "agent_count" : 50,
             "min_social_value" : 0,
-            "max_social_value" : .25,
+            "max_social_value" : .25,  
 
-            "standard_param_deviation" : .1,
-            "start_energy_multiplier" : 3,
             "metabolism" : 1,
             "consumption" : 2,
-            "maximum_age" : 100,
 
             "procreate_req" : 10,
             "procreate_cost" : 5,
         },
+        "neutral" : {
+            "standard_param_deviation" : .1,
+
+            "line_style" : '-.',
+            "min_social_value" : .25,
+            "max_social_value" : .75,
+        },
         "prosocial" : {
+            "standard_param_deviation" : .1,
+
             "line_style" : '--',
             "agent_count" : 50,
             "min_social_value" : .75,
             "max_social_value" : 1,
 
-            "standard_param_deviation" : .1,
-            "start_energy_multiplier" : 3,
             "metabolism" : 1,
             "consumption" : 2,
-            "maximum_age" : 100,
 
             "procreate_req" : 10,
             "procreate_cost" : 5
@@ -136,11 +141,11 @@ default_params = {
     },
 
     "resource" : {
-        "start_amount" : 500,
-        "max_amount" : 500,
+        "start_amount" : 1000,
+        "max_amount" : 1000,
         "min_amount" : 50,
         "cooldown" : 5,
-        "growth_rate" : .2
+        "growth_rate" : .25
     },
 
     "simulation" : {
