@@ -43,7 +43,7 @@ def run(override_params=dict(), params_to_range:list=None,
     # As we need to have at least one iteration, add a single value
     # to the dictionaries if they aren't specified. 
     if not params_to_range:
-        params_to_range = ['[run]']
+        params_to_range = ['[\'batch\']']
         param_ranges = [(1,2,1)]
         
     # Generate a CsvLogger class if log_dir is specified
@@ -75,13 +75,14 @@ def run(override_params=dict(), params_to_range:list=None,
         
         # Provide run information if verbose mode is on
         if verbose:
-            print('\n%s/%s' % (run+1, number_of_combis))
-            print(', '.join(["%s = %s" % i 
-                                  for i in zip(params_to_range, combi)]))
+            print('\nIteration: %s/%s' % (run+1, number_of_combis))
+            print('Params: ' + ', '.join(["%s = %s" % i 
+                                         for i in zip(params_to_range, combi)]))
         
         # If not, keep a simple run counter
         else:
-            print('%s/%s' % (run+1, number_of_combis), end='\r', flush=True)
+            print('Iteration: %s/%s' % (run+1, number_of_combis), end='\r', 
+                  flush=True)
 
         # Add values of ranged parameters to the dictionary
         curr_params = params.copy()

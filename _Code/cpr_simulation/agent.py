@@ -10,10 +10,10 @@ class Agent:
     start_energy_multiplier = 3
     standard_param_deviation = .1
     social_value_orientation = 0
-    metabolism = 2
-    consumption = 1
-    procreate_req = 10
-    procreate_cost = 5
+    metabolism = 3
+    consumption = 15
+    procreate_req = 20
+    procreate_cost = 15
     maximum_age = 100
     mutation_factor = .1
 
@@ -32,8 +32,8 @@ class Agent:
 
     # Restricted Model Parameters
     res_limit_factor = 2
-    caught_chance = .5
-    cooldown = 10
+    caught_chance = .25
+    cooldown = 20
     cur_cooldown = 0
 
 
@@ -159,8 +159,10 @@ class Agent:
             # If agent would die this epoch it is allowed to fish the
             # amount of fish to get at 1 energy at the end of the epoch.
             if self.energy <= 0:
+                # self.energy += sim.get_resource().consume_resource(
+                #     abs(self.energy) + 1)
                 self.energy += sim.get_resource().consume_resource(
-                    abs(self.energy) + 1)
+                    self.consumption)
             # Otherwise, determine based on SVO whether agent violates
             # the fishing rule.
             elif rnd.random() > self.social_value_orientation:
@@ -217,19 +219,24 @@ class Agent:
                                          parent2.social_value_orientation),
 
                 "metabolism" : genes.metabolism 
-                    + genes.metabolism*rnd.gauss(0,self.mutation_factor),
+                    #+ genes.metabolism*rnd.gauss(0,self.mutation_factor),
+                    ,
                 "consumption" : genes.consumption 
-                    + genes.consumption*rnd.gauss(0,self.mutation_factor),
+                    #+ genes.consumption*rnd.gauss(0,self.mutation_factor),
+                    ,
                 "maximum_age" : genes.maximum_age 
-                    + genes.maximum_age*rnd.gauss(0,self.mutation_factor),
+                    #+ genes.maximum_age*rnd.gauss(0,self.mutation_factor),
+                    ,
 
                 "procreate_req" : genes.procreate_req
-                    + genes.procreate_req*rnd.gauss(0,self.mutation_factor),
+                    #+ genes.procreate_req*rnd.gauss(0,self.mutation_factor),
+                    ,
                 "procreate_cost" : genes.procreate_cost
-                    + genes.procreate_cost*rnd.gauss(0,self.mutation_factor),
+                    #+ genes.procreate_cost*rnd.gauss(0,self.mutation_factor),
+                    ,
 
-                "mutation_factor" : self.mutation_factor
-                    + self.mutation_factor*rnd.gauss(0,self.mutation_factor),
+                # "mutation_factor" : self.mutation_factor
+                #     + self.mutation_factor*rnd.gauss(0,self.mutation_factor),
             }
             sim.add_agent(Agent(child))
 

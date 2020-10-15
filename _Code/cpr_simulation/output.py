@@ -100,6 +100,10 @@ class ResultsPrinter:
             self.ax_resource.set_xlim(xmin, 2*xmax)
             self.ax_agent.figure.canvas.draw()
             self.ax_resource.figure.canvas.draw()
+        ymin, ymax = self.ax_agent.get_ylim()
+        if max(a) > ymax:
+            self.ax_agent.set_ylim(ymin, 2*ymax)
+            self.ax_agent.figure.canvas.draw()
 
         # Update the actual lines
         for i in range(len(self.yagents)):

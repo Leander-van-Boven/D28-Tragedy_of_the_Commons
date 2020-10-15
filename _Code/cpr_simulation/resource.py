@@ -46,7 +46,7 @@ class Resource:
         #     self.amount = self.min_amount
         if self.in_cooldown:
             self.cur_cooldown -= 1
-            if self.cur_cooldown == 0:
+            if self.cur_cooldown <= 0:
                 self.in_cooldown = False
                 self.amount = self.min_amount
             return

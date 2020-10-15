@@ -83,7 +83,7 @@ def run(args):
 
 
     param_ranges = [(1,args.batch+1,1)]
-    params_to_range = ["[run]"]
+    params_to_range = ["[\'batch\']"]
 
     if args.range:
         names, ranges = zip(*args.range)

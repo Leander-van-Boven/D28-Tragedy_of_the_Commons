@@ -1,4 +1,4 @@
-# Proposal Agent resource function
+# Proposal Agent Fishing Function
 Take, for some simulation $S$, the set of all epochs $T_S$ and the set of all agents $A_S$. We want to define a function $f$, such that:
 $$f : T_S \times A_S \mapsto [0,1]$$
 In other words, $f$ denotes the fraction of the available energy an agent $a_S\in A_S$ will take, based on the epoch $t_S\in T_S$. The maximum amount of energy an agent will take is a pre-defined parameter $\epsilon_{max}\in\mathbb{N}$. However, we need to make sure this amount of energy is available in the current epoch. We denote this value as $\epsilon_{t_S}\in\mathbb{N}$. The true amount of energy an agent will take at a certain epoch can then be described by the function $E : T_S \times A_S \mapsto \mathbb{N}$ such that:

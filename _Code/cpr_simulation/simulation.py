@@ -165,6 +165,8 @@ class Simulator:
                 if agent.energy <= 0:
                     self.remove_agent(agent)
                 #TODO check if agent is removed due to its age
+                # if agent.age > agent.maximum_age:
+                #     self.remove_agent(agent)
                 if agent.energy >= agent.procreate_req:
                     parents.append(agent)
 
@@ -192,12 +194,17 @@ class Simulator:
             #time.sleep(0.5) 
         
         # While loop finished, maximum epoch reached
+        print('', flush=True)
+        print(flush=False)
         # Some agents stayed alive
-        if self.get_agent_count() > 0:
+        if self.get_agent_count() > 1:
             self.result = ("Maximum epoch reached, you managed to keep " +
                         str(self.get_agent_count()) +
                         " agents alive!\n" +
                         "Last stats: " + self.cur_stats)
+        elif self.get_agent_count() == 1:
+            self.result = ("Only one lonely agent managed to survive.\n" +
+                           "Last stats: " + self.cur_stats)
         else:
             self.result = ("All agents are dead :( " + 
                         "there is no hope left for the village, " + 

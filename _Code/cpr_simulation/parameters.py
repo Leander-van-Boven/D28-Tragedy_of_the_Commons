@@ -109,43 +109,44 @@ default_params = {
             "line_style" : ':',
             "agent_count" : 50,
             "min_social_value" : 0,
-            "max_social_value" : .25,  
+            "max_social_value" : .5,  
 
-            "metabolism" : 1,
-            "consumption" : 2,
+            "metabolism" : 3,
+            "consumption" : 10,
 
-            "procreate_req" : 10,
-            "procreate_cost" : 5,
+            "procreate_req" : 20,
+            "procreate_cost" : 15,
         },
-        "neutral" : {
-            "standard_param_deviation" : .1,
+        # "neutral" : {
+        #     "standard_param_deviation" : .1,
 
-            "line_style" : '-.',
-            "min_social_value" : .25,
-            "max_social_value" : .75,
-        },
+        #     "line_style" : '-.',
+        #     "agent_count" : 50,
+        #     "min_social_value" : .25,
+        #     "max_social_value" : .75,
+        # },
         "prosocial" : {
             "standard_param_deviation" : .1,
 
             "line_style" : '--',
             "agent_count" : 50,
-            "min_social_value" : .75,
+            "min_social_value" : .5,
             "max_social_value" : 1,
 
-            "metabolism" : 1,
-            "consumption" : 2,
+            "metabolism" : 3,
+            "consumption" : 10,
 
-            "procreate_req" : 10,
-            "procreate_cost" : 5
+            "procreate_req" : 20,
+            "procreate_cost" : 15
         },
     },
 
     "resource" : {
-        "start_amount" : 1000,
-        "max_amount" : 1000,
-        "min_amount" : 50,
-        "cooldown" : 5,
-        "growth_rate" : .25
+        "start_amount" : 10000,
+        "max_amount" : 10000,
+        "min_amount" : 500,
+        "cooldown" : 2,
+        "growth_rate" : .5
     },
 
     "simulation" : {
@@ -161,5 +162,5 @@ default_params = {
         "print_interval" : 1
     },
 
-    "run" : 1,
+    "batch" : 1,
 }
