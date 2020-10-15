@@ -15,6 +15,7 @@ import cpr_simulation as cpr
 import argparse
 import json
 import os, sys
+from collections import defaultdict
 
 SCENARIO_DIR = 'scenarios'
 PARAM_NAME = 'params.json'
@@ -23,6 +24,13 @@ FIG_NAME = 'figure.pdf'
 
 def test(args):
     pass
+
+
+def dd_factory(d = None):
+    if d:
+        return defaultdict(dd_factory, d)
+    else:
+        return defaultdict(dd_factory)
 
 
 def run(args):
@@ -34,18 +42,22 @@ def run(args):
             sys.exit(1)
 
         with open(path) as file:
-            param_dict = json.loads(file.read())
+            param_dict = dd_factory(json.loads(file.read()))
     else: 
-        param_dict = dict()
+        param_dict = dd_factory()
 
 
     param_ranges = [(1,args.batch+1,1)]
-    params_to_range = ["run"]
+    params_to_range = ["[run]"]
 
     if args.range:
-        names, ranges = zip(*[pair.split(':=') for pair in args.range])
+        names, ranges = zip(*args.range)
         params_to_range += list(names)
-        param_ranges += [tuple(map(int, x.split(','))) for x in ranges]
+        param_ranges += list(ranges)
+
+    if args.param:
+        for param_pair in args.param:
+            exec('param_dict%s=%s' % param_pair)
 
     plot = args.plot if args.plot is not None else \
         not (args.range or args.batch-1)
@@ -92,8 +104,10 @@ def save(args):
 
 
 def llist(_):
-    print('\n'.join(sorted([path for path in os.listdir(SCENARIO_DIR) if \
-                            os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
+    print('\n'.join(
+        sorted([path for path in os.listdir(SCENARIO_DIR) if \
+                os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
+
 
 def str2bool(v):
     if v is None:
@@ -105,6 +119,24 @@ def str2bool(v):
     if v.lower() in ('no', 'false', 'f', 'n', '0'):
         return False
     raise argparse.ArgumentTypeError('Boolean value expected.')
+
+
+def str2locint(x):
+    try:
+        (param, val) = tuple(x.split('='))
+        return ("[\'" + "\'][\'".join(param.split(':')) + "\']", int(val))
+    except ValueError:
+        raise argparse.ArgumentTypeError("Invalid argument syntax")
+
+
+def str2locrange(x):
+    try:
+        (param, val) = tuple(x.split('='))
+        return ("[\'" + "\'][\'".join(param.split(':')) + "\']", 
+                map(int, val.split(',')))
+    except ValueError:
+        raise argparse.ArgumentTypeError("Invalid argument syntax")
+
 
 if __name__ == '__main__':
     # Define possible arguments
@@ -120,7 +152,7 @@ if __name__ == '__main__':
         '-o', '--out', required=False, type=str, metavar='file_path',
         help='the output path for CSV logging')
     parser.add_argument(
-        '-p', '--plot', required=False, default=None, const=True, type=str2bool,
+        '-P', '--plot', required=False, default=None, const=True, type=str2bool,
         nargs='?', metavar='bool', help='whether to show a real-time plot')
     parser.add_argument(
         '-v', '--verbose', required=False, default=None, const=True, 
@@ -130,13 +162,19 @@ if __name__ == '__main__':
         '-b', '--batch', required=False, default=1, type=int, metavar='amount',
         help='the amount of times the same experiment should be run (def. 1)')
     parser.add_argument(
-        '-r', '--range', required=False, nargs='+', type=str,
-        metavar='param:=from,to,incr',
+        '-r', '--range', required=False, nargs='+', type=str2locrange,
+        metavar='param=from,to,incr',
         help="add parameters to run the simulation with a range of values")
+    parser.add_argument(
+        '-p', '--param', required=False, nargs='+', type=str2locint, 
+        metavar='param=value', help="add parameters to override its value")
 
 
     # Parse the inputted arguments
     args = parser.parse_args()
+
+    # print(args)
+    # sys.exit(1)
 
     # Run the right method, based on CL argument
     # We had to rename the method `list`, as otherwise it would have 
