@@ -10,6 +10,6 @@ $$D = \{d(\mu, svo_a) | \mu \in \Mu\}$$
 For some pre-determined distance function, such as: absolute, quadratic, etc. 
 We can now define $f$ as
 $$f(t_S, a_S) = \text{combine}(B(t_S, a_S), D))$$
-Where $B(t_S, a_S) = \{b(t_S, a_S)|b\in B\}$, and $\text{combine} : [0,1]\times M \mapsto [0,1]$ is a function that combines all the behaviours based on the values in $\Mu$. This can be done in multiple ways, for instance by taking the weighted average of $B$ with $1-D$ as weights, or by taking the behaviour with the smallest distance. 
+Where $B(t_S, a_S) = \{b(t_S, a_S)|b\in B\}$, and $\text{combine} : [0,1]^n\times [0,1]^n \mapsto [0,1]$ is a function that combines all the behaviours based on the values in $\Mu$. This can be done in multiple ways, for instance by taking the weighted average of $B$ with $1-D$ as weights, or by taking the behaviour with the smallest distance. 
 
 The behaviours we've currently implemented can each be converted into a $b\in B$ with a corresponding $\mu\in\Mu$. Aport from this making the impacts continuous instead of discrete, I also think this will scale very well if we want to add behaviours later on. Additionally, this will make the behaviours not mutually exclusive, which I think is more realistic and will result in more complex and interesting results. 

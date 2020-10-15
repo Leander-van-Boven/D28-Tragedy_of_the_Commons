@@ -25,11 +25,13 @@ FIG_NAME = 'figure.pdf'
 def test(args):
     pass
 
+
 def dd_factory(d = None):
     if d:
         return defaultdict(dd_factory, d)
     else:
         return defaultdict(dd_factory)
+
 
 def run(args):
     if args.name:
@@ -102,8 +104,10 @@ def save(args):
 
 
 def llist(_):
-    print('\n'.join(sorted([path for path in os.listdir(SCENARIO_DIR) if \
-                            os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
+    print('\n'.join(
+        sorted([path for path in os.listdir(SCENARIO_DIR) if \
+                os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
+
 
 def str2bool(v):
     if v is None:
@@ -116,12 +120,14 @@ def str2bool(v):
         return False
     raise argparse.ArgumentTypeError('Boolean value expected.')
 
+
 def str2locint(x):
     try:
         (param, val) = tuple(x.split('='))
         return ("[\'" + "\'][\'".join(param.split(':')) + "\']", int(val))
     except ValueError:
         raise argparse.ArgumentTypeError("Invalid argument syntax")
+
 
 def str2locrange(x):
     try:
@@ -130,6 +136,7 @@ def str2locrange(x):
                 map(int, val.split(',')))
     except ValueError:
         raise argparse.ArgumentTypeError("Invalid argument syntax")
+
 
 if __name__ == '__main__':
     # Define possible arguments
