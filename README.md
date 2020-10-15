@@ -67,3 +67,4 @@ Below are listed some features that aren't implemented right now, but that we ai
 [here](https://htmlpreview.github.io/?https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/agentfunc_prop.html). 
 * In light of the model above, we also want to implement more kinds of realistic behaviours. 
 * We want to incorporate a simple form of mutation and evolution in our procreate function. 
+* We want to add more columns to our CSV logging infrastructure, lest we can make more informative and thurough comparisons and visualizations. 
