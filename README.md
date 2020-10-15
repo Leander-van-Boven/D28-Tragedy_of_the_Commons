@@ -62,4 +62,8 @@ After following the steps to install the simulation, open your favourite termina
   * The `save` command currently doesn't support scenarios with `-b`/`--batch`, `-p`/`--param` or `-r`/`--range` arguments specified. This will be implemented for the final model. 
 
 ## Goals for the Final Model
-[Proposal agent function](https://htmlpreview.github.io/?https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/agentfunc.html). 
+Below are listed some features that aren't implemented right now, but that we aim to have implemented for the final model. 
+* Right now, the energy function (the function that decides how much resource the agent will take for himself this epoch) is to a high degree discrete. In fact, at this moment we have implemented two functions: A base function (that was used in the report) and a restricted version that provides more complex information (For more information on that function, read its docstring in [`agent.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/cpr_simulation/agent.py)). We want to make this function more continuous, and make it so that multiple kinds of (contradicting) behaviours can be active at once. We are working on a way to implement this, and its proposal can be found 
+[here](https://htmlpreview.github.io/?https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/_Code/agentfunc_prop.html). 
+* In light of the model above, we also want to implement more kinds of realistic behaviours. 
+* We want to incorporate a simple form of mutation and evolution in our procreate function. 
