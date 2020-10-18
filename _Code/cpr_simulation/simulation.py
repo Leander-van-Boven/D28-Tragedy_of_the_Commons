@@ -203,7 +203,8 @@ class Simulator:
             #time.sleep(0.5) 
         
         # While loop finished, maximum epoch reached
-        print()
+        if self.verbose:
+            print()
         # Some agents stayed alive
         if self.get_agent_count() > 1:
             self.result = ("Maximum epoch reached, you managed to keep " +
