@@ -82,8 +82,12 @@ def run(args):
         param_dict = dd_factory()
 
 
-    param_ranges = [(1,args.batch+1,1)]
-    params_to_range = ["[\'batch\']"]
+    param_ranges = []
+    params_to_range = []
+
+    if args.batch > 1:
+        param_ranges.append((1,args.batch+1,1))
+        params_to_range.append("[\'batch\']")
 
     if args.range:
         names, ranges = zip(*args.range)
@@ -207,10 +211,9 @@ def str2locint(x):
         dictionary, and `int` represents the value this parameter should
         get. 
     """
-
     try:
         (param, val) = tuple(x.split('='))
-        return ("[\'" + "\'][\'".join(param.split(':')) + "\']", int(val))
+        return ("[\'" + "\'][\'".join(param.split(':')) + "\']", float(val))
     except ValueError:
         raise argparse.ArgumentTypeError("Invalid argument syntax")
 

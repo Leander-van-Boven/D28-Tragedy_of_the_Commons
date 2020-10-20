@@ -175,6 +175,25 @@ class Agent:
         else:
             self.energy += sim.get_resource().consume_resource(self.consumption)
 
+    def new_energy_function(self, sim):
+        # Functions:
+        def prosocial(_):
+            return self.consumption
+
+        def proself(sim):
+            fish = sim.get_resource().get_amount()
+            population = sim.get_agent_count()
+            if fish/population < self.scarcity:
+                return self.consumption*self.greed3
+            else:
+                return self.consumption
+
+        # Behaviour library:
+        behaviours = [
+            (0.9, prosocial),
+            (0.1, proself),
+        ]
+
 
     def procreate(self, sim, parents):
         """This is the procreate function of the agent.
