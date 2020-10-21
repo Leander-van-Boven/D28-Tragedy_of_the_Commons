@@ -1,4 +1,6 @@
 import random as rnd
+import numpy as np
+import scipy.stats as ss
 
 class Agent:
     # Attributes
@@ -36,7 +38,7 @@ class Agent:
     cur_cooldown = 0
 
 
-    def __init__(self, params):
+    def __init__(self, params, svo=None):
         """Initialises the agent with the provided parameters.
 
         If a parameter is not specified, its default value (set above)
@@ -57,8 +59,16 @@ class Agent:
         self.procreate_req = params.get('procreate_req', self.procreate_req)
         self.procreate_cost = params.get('procreate_cost', self.procreate_cost)
 
-        self.social_value_orientation = rnd.uniform(
-            params.get('min_social_value',0), params.get('max_social_value',1))
+        # #TODO: Check syntax 
+        # self.social_value_orientation = params.get('svo', 
+        #     rnd.uniform(params.get('min_social_value',0), 
+        #         params.get('max_social_value',1)))
+
+        if svo is not None:
+            self.social_value_orientation = svo
+        else:
+            self.social_value_orientation = rnd.uniform(
+                params.get('min_social_value',0), params.get('max_social_value',1))
 
         self.energy = self.metabolism * params.get('start_energy_multiplier',
                                                    self.start_energy_multiplier)
@@ -70,6 +80,62 @@ class Agent:
         self.caught_cooldown = params.get('caught_cooldown',
                                           self.caught_cooldown)
         
+
+    @classmethod
+    def from_svo_distribution(cls, dist_params, n, agent_params=dict()):
+        """Generate a list of agent with their SVOs drawn from a 
+        multimodal distribution.
+
+        Parameters
+        ----------
+        dist_params : `list[list[float]]`
+            The collection of normal distribution parameters. Sould be
+            formatted as follows: dist_params[i][0] denotes the mean and
+            dist_params[i][1] the variance of the i'th distribution, for 
+            any i >= 0.
+        n : `int/float`
+            The desired number of agents.
+        agent_params : `dict`, optional
+            The parameter dictionary that will be passed on to each
+            agent, by default dict().
+
+        Returns
+        -------
+        list[csp_simulation.Agent]
+            The list of Agents.
+        """
+        
+        # We'll use numpy-specific functions, so we convert to np.array
+        dist_params = np.array(dist_params)
+        
+        # The shape of dist_params should be (x,2) with x>0
+        assert dist_params.shape[0] > 0
+        assert dist_params.shape[1] == 2
+
+        # It is possible that type(n)=float. We thus need to cast to int
+        n = int(n)
+        n_dist = dist_params.shape[0]
+
+        # For now, each distribution is weighed equally to get an
+        # unbiased gaussian mixture.
+        weights = np.ones(n_dist, dtype=np.float64) / float(n_dist)
+
+        # Sample for each agent, the index of the distribution its SVO
+        # will be drawn from. 
+        agent_dist_index = np.random.choice(len(weights), size=n, replace=True, 
+                                            p=weights)
+
+        # For each agent, draw its SVO from the right normal distribution
+        agent_svos = np.fromiter(
+            (ss.norm.rvs(*(dist_params[i])) for i in agent_dist_index), 
+            dtype=np.float64)
+
+        # Clip the SVOs to values between 0 and 1
+        np.clip(agent_svos, 0, 1, out=agent_svos)
+
+        # Return the list of Agent with the right SVOs
+        return [Agent(agent_params, svo) for svo in agent_svos]
+
    
     def act(self, sim):
         """This is the act function of the agent.

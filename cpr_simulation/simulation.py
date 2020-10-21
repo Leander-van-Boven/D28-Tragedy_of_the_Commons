@@ -58,6 +58,9 @@ class Simulator:
 
         self.agent_distributions = param_dict['agent_distributions']
         self.resource_params = param_dict['resource']
+        self.svo_distributions = param_dict['svo_distributions']
+        self.n_agents = param_dict['agent']['count']
+        self.agent_params = param_dict['agent']['params']
 
 
     def get_agent_count(self, min_social_value=0, max_social_value=1):
@@ -145,11 +148,15 @@ class Simulator:
                 and the current amount of the common resource.
         """
 
-        # Initialise the agents
-        for dist_name in self.agent_distributions:
-            dist = self.agent_distributions[dist_name]
-            for _ in range(dist.get('agent_count',0)):
-                self.add_agent(Agent(dist))
+        # Generate agents
+        self.agents = Agent.from_svo_distribution(
+            self.svo_distributions, self.n_agents, self.agent_params)
+
+        # # Initialise the agents
+        # for dist_name in self.agent_distributions:
+        #     dist = self.agent_distributions[dist_name]
+        #     for _ in range(dist.get('agent_count',0)):
+        #         self.add_agent(Agent(dist))
 
         # Initialise the resource
         self.resource = Resource(self.resource_params)

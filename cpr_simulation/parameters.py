@@ -153,6 +153,28 @@ default_params = {
         },
     },
 
+    "agent" : {
+        "count" : 100,
+        "params" : {
+            "metabolism" : 3,
+            "consumption" : 15,
+
+            "procreate_req" : 20,
+            "procreate_cost" : 15,
+
+            # Restricted Model Parameters
+            "res_limit_factor" : 2,
+            "caught_chance" : .25,
+            "caught_cooldown" : 20,
+        }
+    },
+
+    "svo_distributions" : [
+        # [mean_i, variance_i]
+        [0.25, 0.125],
+        [0.75, 0.125]
+    ],
+
     "resource" : {
         "start_amount" : 10000,
         "max_amount" : 10000,
