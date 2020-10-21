@@ -257,14 +257,41 @@ class Simulator:
         self.cur_stats += f"res: {self.resource.get_amount():.2f}"
         print(self.cur_stats, end = "\r", flush = True)
 
-
     def log_results(self):
-        '''Adds a new row to the log.'''
-
+    '''Adds a new row to the log.'''
+        
         row = self.log_row_head + [self.epoch, self.resource.get_amount()]
-        for dist_name in self.agent_distributions:
-            dist = self.agent_distributions[dist_name]
-            row.append(self.get_agent_count(dist['min_social_value'],
-                                            dist['max_social_value']))
+        #for dist_name in self.agent_distributions:
+        #    dist = self.agent_distributions[dist_name]
+        #    row.append(self.get_agent_count(dist['min_social_value'],
+        #                                    dist['max_social_value']))
+        
+        
+        a = 0
+        b = 0
+        c = 0
+        d = 0
+        e = 0
+        
+        
+        for agent in self.agents:
+            svo = agent.social_value_orientation
+            if svo <= .2:
+                a += 1
+            if svo > .2 and svo <= .4 :
+                b += 1
+            if svo > .4 and svo <= .6 :
+                c += 1
+            if svo > .6 and svo <= .8 :
+                d += 1
+            else:
+                e += 1
+    
+    
+        row.append(a)
+        row.append(b)
+        row.append(c)
+        row.append(d)
+        row.append(e)
 
-        self.logger.add_row(row)
+    self.logger.add_row(row)

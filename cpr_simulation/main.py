@@ -46,9 +46,9 @@ def run(override_params=dict(), params_to_range=None,
     # Generate a CsvLogger class if log_dir is specified
     if log_dir:
         #TODO Add more columns to log
-        col_names = param_names + ['Epoch', 'Resource']
-        for dist_name in params['agent_distributions']:
-            col_names.append(dist_name)
+        col_names = param_names + ['Epoch', 'Resource', 'A', 'B', 'C', 'D', 'E']
+        #for dist_name in params['agent_distributions']:
+        #   col_names.append(dist_name)
         logger = CsvLogger(params['logger_params'], col_names, log_dir)
     else:
         logger = None
