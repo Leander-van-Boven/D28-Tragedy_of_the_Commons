@@ -258,7 +258,7 @@ class Simulator:
         print(self.cur_stats, end = "\r", flush = True)
 
     def log_results(self):
-    '''Adds a new row to the log.'''
+        '''Adds a new row to the log.'''
         
         row = self.log_row_head + [self.epoch, self.resource.get_amount()]
         #for dist_name in self.agent_distributions:
@@ -294,4 +294,4 @@ class Simulator:
         row.append(d)
         row.append(e)
 
-    self.logger.add_row(row)
+        self.logger.add_row(row)
