@@ -297,10 +297,10 @@ class Agent:
             mutation_array[0] = 1
             rnd.shuffle(mutation_array)
             child = {
-                "min_social_value": min(parent1.social_value_orientation,
-                                        parent2.social_value_orientation),
-                "max_social_value": max(parent1.social_value_orientation,
-                                        parent2.social_value_orientation),
+                # "min_social_value": min(parent1.social_value_orientation,
+                #                         parent2.social_value_orientation),
+                # "max_social_value": max(parent1.social_value_orientation,
+                #                         parent2.social_value_orientation),
 
                 "metabolism": genes.metabolism +
                               mutation_array[0] * genes.metabolism * rnd.gauss(0, self.mutation_factor),
@@ -323,8 +323,20 @@ class Agent:
             # Ensure that no value is <= 0, is this happens we just set the parent gene.
             for gene in child:
                 if child[gene] <= 0:
-                    child[gene] = genes[gene]
-            sim.add_agent(Agent(child))
+                    #child[gene] = genes[gene]
+                    exec("child[gene]=genes.%s" % gene)
+
+            min_svo = min(parent1.social_value_orientation,
+                          parent2.social_value_orientation)
+            max_svo = min(parent1.social_value_orientation,
+                          parent2.social_value_orientation)
+            svo = min_svo + (max_svo - min_svo) * rnd.random()
+
+            # svo = (parent1.social_value_orientation * parent1.energy 
+            #     + parent2.social_value_orientation * parent2.energy) \
+            #     / (parent1.energy + parent2.energy)
+
+            sim.add_agent(Agent(child, svo))
 
 
 
