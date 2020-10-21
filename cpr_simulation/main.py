@@ -39,10 +39,14 @@ def run(override_params=dict(), params_to_range=None,
     #TODO: Check if update_dict performs as expected
     params = update_dict(default_params, override_params)
         
+    # Get more print-friendly parameter locations
+    param_names = [
+        ':'.join(x.split('\'][\''))[2:-2] for x in params_to_range]
+
     # Generate a CsvLogger class if log_dir is specified
     if log_dir:
         #TODO Add more columns to log
-        col_names = params_to_range + ['Epoch', 'Resource']
+        col_names = param_names + ['Epoch', 'Resource']
         for dist_name in params['agent_distributions']:
             col_names.append(dist_name)
         logger = CsvLogger(params['logger_params'], col_names, log_dir)
@@ -89,9 +93,6 @@ def run(override_params=dict(), params_to_range=None,
 
         # Calculate the total number of iterations 
         number_of_combis = prod([len(x) for x in param_values])
-
-        # Get more print-friendly parameter locations
-        param_names = [':'.join(x.split('\'][\''))[2:-2] for x in params_to_range]
 
         # Write the parameters to a json file to make saving possible
         #TODO: Incorporate range and batch parameters to save. 
