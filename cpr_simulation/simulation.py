@@ -166,7 +166,8 @@ class Simulator:
         self.cur_stats = ''
 
         # Plot starting situation
-        yield self.plot_results()
+        if self.printer:
+            yield self.plot_results()
         if self.verbose:
             self.print_results()
 
@@ -227,7 +228,6 @@ class Simulator:
 
         if self.printer:
             self.printer.save_fig('.lastplot.pdf')
-
         if self.verbose:
             print(self.result)
 
@@ -238,10 +238,8 @@ class Simulator:
         """
 
         return (self.epoch,
-                [self.get_agent_count(
-                    self.agent_distributions[dist_name]['min_social_value'],
-                    self.agent_distributions[dist_name]['max_social_value'])
-                 for dist_name in self.agent_distributions],
+                len(self.agents),
+                [agent.social_value_orientation for agent in self.agents],
                 self.resource.get_amount())
 
 

@@ -121,7 +121,7 @@ default_params = {
             "line_style" : ':',
             "agent_count" : 50,
             "min_social_value" : 0,
-            "max_social_value" : .5,  
+            "max_social_value" : .25,  
 
             "metabolism" : 3,
             "consumption" : 15,
@@ -137,7 +137,7 @@ default_params = {
         "prosocial" : {
             "line_style" : '--',
             "agent_count" : 50,
-            "min_social_value" : .5,
+            "min_social_value" : .75,
             "max_social_value" : 1,
 
             "metabolism" : 3,
@@ -184,10 +184,14 @@ default_params = {
     },
 
     "simulation" : {
-        "max_epoch" : 1000,
+        "max_epoch" : 250,
         "plot_interval" : 1,
         "print_interval" : 1,
         "log_interval" : 1
+    },
+
+    "plotter_params" : {
+        "svo_bar_count" : 20,
     },
 
     "logger_params" : {
