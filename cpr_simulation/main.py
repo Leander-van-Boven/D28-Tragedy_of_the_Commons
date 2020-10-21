@@ -1,5 +1,5 @@
 from .simulation import Simulator
-from .output import ResultsPrinter
+from .output import ResultsPlotter
 from .logger import CsvLogger
 from .parameters import default_params
 from .util import update_dict
@@ -54,8 +54,11 @@ def run(override_params=dict(), params_to_range=None,
     def _run_sim(p, c=[]):
         # If real-time plot is on, generate the ResultPrinter class
         printer = None if not use_plot else \
-            ResultsPrinter(params['agent_distributions'],
-                           params['resource']['max_amount'])
+            ResultsPlotter(
+                sum(params['agent_distributions'][dist].get('agent_count', 0) 
+                    for dist in params['agent_distributions']),
+                params['plotter_params']['svo_bar_count'],
+                params['resource']['max_amount'])
 
         # Generate the Simulator class
         simulator = Simulator(p, printer, logger, list(c), 

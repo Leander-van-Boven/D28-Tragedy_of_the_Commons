@@ -3,8 +3,8 @@ import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib import animation
 
-class ResultsPrinter:
-    def __init__(self, agent_distributions, max_resource):        
+class ResultsPlotter:
+    def __init__(self, max_agent, svo_bar_count, max_resource):        
         """Sets up the real-time plot.
 
         Parameters
@@ -17,33 +17,35 @@ class ResultsPrinter:
                 used to set the y-axis range appropiately.
         """
 
-        # Initialise self properties
-        self.max_agent = sum(agent_distributions[dist].get('agent_count', 0) 
-                             for dist in agent_distributions)
+        self.max_agent = max_agent
+        #self.svo_bar_count = svo_bar_count
         self.max_resource = max_resource
-        self.xdata, self.yagents, self.yresource = [], [[]], []
+        self.xdata, self.yagent, self.yresource = [], [], []
 
         # Create figure
-        self.fig, (self.ax_agent, self.ax_resource) = plt.subplots(
-            nrows=2, figsize=(16,8))
+        self.fig, (self.ax_agent, self.ax_svo, self.ax_resource) = plt.subplots(
+            nrows=3, figsize=(16,8))
         self.fig.tight_layout(h_pad=3, pad=4)
 
         # Setup agent subplot
-        self.agent_lines = []
-        for dist_name in agent_distributions:
-            dist = agent_distributions[dist_name]
-            self.agent_lines.append(
-                self.ax_agent.plot([], [], 
-                                   lw=2, label=dist_name, 
-                                   linestyle=dist.get('line_style', '-'))[0])
+        self.agent_line, = self.ax_agent.plot([], [], lw=2, color='blue')
         self.ax_agent.set_title('Real time plot of agent count')
         self.ax_agent.set_ylabel('agent count')
         self.ax_agent.set_xlabel('epochs')
-        self.ax_agent.legend()
+        #self.ax_agent.legend()
         self.ax_agent.grid()
+
+        # Setup svo subplot
+        _, ticks, self.svo_bars = self.ax_svo.hist(
+            [], bins=svo_bar_count, range=(0,1), color='blue')
+        self.ax_svo.set_title('Real time SVO distribution')
+        self.ax_svo.set_ylabel('agent count')
+        self.ax_svo.set_xlabel('SVO')
+        self.ax_svo.set_xticks(ticks)
+        #self.ax_svo.grid()
         
         # Setup resource subplot
-        self.resource_line, = self.ax_resource.plot([], [], lw=3, color='green')
+        self.resource_line, = self.ax_resource.plot([], [], lw=2, color='green')
         self.ax_resource.set_title('Real time plot of resource supply')
         self.ax_resource.set_ylabel('resource supply')
         self.ax_resource.set_xlabel('epochs')        
@@ -56,18 +58,23 @@ class ResultsPrinter:
         # Set axis ranges
         self.ax_agent.set_ylim(-.1, self.max_agent + 1)
         self.ax_agent.set_xlim(0, 10)
+        self.ax_svo.set_ylim(0, 1)
+        self.ax_svo.set_xlim(0, 1)
         self.ax_resource.set_ylim(-.1, self.max_resource + 1)
         self.ax_resource.set_xlim(0, 10)
 
         # Reset all data
         del self.xdata[:]
-        self.yagents = [[] for i in range(len(self.agent_lines))]
+        del self.yagent[:]
         del self.yresource[:]
-        self.zero_flags = np.repeat(0, len(self.agent_lines))
-
-        for agent_line in self.agent_lines:
-            agent_line.set_data(self.xdata, [])           
+        self.zero_flag = 0
+   
+        self.agent_line.set_data(self.xdata, self.yagent)     
         self.resource_line.set_data(self.xdata, self.yresource)
+
+        initialised = [self.agent_line, self.resource_line]
+        [initialised.append(bar) for bar in self.svo_bars]
+        return initialised
 
 
     def update(self, data):
@@ -83,17 +90,20 @@ class ResultsPrinter:
         """
 
         # Append the data to the correct lists
-        t, a, r = data
+        t, a, s, r = data
+        # print('===')
+        # print('t', t)
+        # print('a', a)
+        # print('s', s)
+        # print('r', r)
         self.xdata.append(t)
-        for i in range(len(a)):
-            if a[i] == 0 and self.zero_flags[i] == 0:
-                self.zero_flags[i] = 1
-                self.ax_agent.axvline(x=t, c=self.agent_lines[i].get_c(), 
-                                      alpha=.5)
-            self.yagents[i].append(a[i]) 
+        self.yagent.append(a)
+        counts, _ = np.histogram(s, bins=len(self.svo_bars), range=(0,1))
+        total = sum(counts)
+        counts = [count/total for count in counts]
         self.yresource.append(r)
 
-        # Resize window if current epoch exceeds x_max
+        # Resize window if current epoch exceeds x_max        
         xmin, xmax = self.ax_agent.get_xlim()
         if t >= xmax:
             self.ax_agent.set_xlim(xmin, 2*xmax)
@@ -101,14 +111,24 @@ class ResultsPrinter:
             self.ax_agent.figure.canvas.draw()
             self.ax_resource.figure.canvas.draw()
         ymin, ymax = self.ax_agent.get_ylim()
-        if max(a) > ymax:
+        # Increase y axis limit if current value exceeds y_max
+        if a > ymax:
             self.ax_agent.set_ylim(ymin, 2*ymax)
             self.ax_agent.figure.canvas.draw()
+        ymin, ymax = self.ax_resource.get_ylim()
+        if r > ymax:
+            self.ax_resource.set_ylim(ymin, 2*ymax)
+            self.ax_resource.figure.canvas.draw()
 
         # Update the actual lines
-        for i in range(len(self.yagents)):
-            self.agent_lines[i].set_data(self.xdata, self.yagents[i])
+        self.agent_line.set_data(self.xdata, self.yagent)
+        for i, bar in enumerate(self.svo_bars):
+            bar.set_height(counts[i])
         self.resource_line.set_data(self.xdata, self.yresource)
+        #self.save_fig('.lastplot.pdf')
+        updated = [self.agent_line, self.resource_line]
+        [updated.append(bar) for bar in self.svo_bars]
+        return updated
 
 
     def start_printer(self, data_gen):
@@ -120,9 +140,10 @@ class ResultsPrinter:
             The function that yields the data to plot.
         """
 
-        _ = animation.FuncAnimation(self.fig, self.update, data_gen, 
-                                blit=False, interval=1, repeat=False, 
-                                init_func=self.init_plot)
+        self.animation = animation.FuncAnimation(
+            self.fig, self.update, data_gen, 
+            blit=True, interval=1, repeat=False, 
+            init_func=self.init_plot)
         plt.show()
         
 
@@ -134,5 +155,5 @@ class ResultsPrinter:
         path : `str`,
             The path to save the plot to.
         """
-        
+
         plt.savefig(path)
