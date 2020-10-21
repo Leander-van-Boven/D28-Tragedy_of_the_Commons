@@ -1,5 +1,6 @@
 import random as rnd
 
+
 class Agent:
     # Attributes
     age = 0
@@ -35,7 +36,6 @@ class Agent:
     caught_cooldown = 20
     cur_cooldown = 0
 
-
     def __init__(self, params):
         """Initialises the agent with the provided parameters.
 
@@ -51,14 +51,14 @@ class Agent:
         self.metabolism = params.get('metabolism', self.metabolism)
         self.consumption = params.get('consumption', self.consumption)
         self.maximum_age = params.get('maximum_age', self.maximum_age)
-        self.mutation_factor = params.get('mutation_factor', 
+        self.mutation_factor = params.get('mutation_factor',
                                           self.mutation_factor)
 
         self.procreate_req = params.get('procreate_req', self.procreate_req)
         self.procreate_cost = params.get('procreate_cost', self.procreate_cost)
 
         self.social_value_orientation = rnd.uniform(
-            params.get('min_social_value',0), params.get('max_social_value',1))
+            params.get('min_social_value', 0), params.get('max_social_value', 1))
 
         self.energy = self.metabolism * params.get('start_energy_multiplier',
                                                    self.start_energy_multiplier)
@@ -69,8 +69,7 @@ class Agent:
         self.caught_chance = params.get('caught_chance', self.caught_chance)
         self.caught_cooldown = params.get('caught_cooldown',
                                           self.caught_cooldown)
-        
-   
+
     def act(self, sim):
         """This is the act function of the agent.
         It updates the status of the agent depending on multiple factors.
@@ -82,15 +81,14 @@ class Agent:
         """
 
         # Life cycle
-        #TODO Metabolism increases as agent gets older
+        # TODO Metabolism increases as agent gets older
         self.energy -= self.metabolism
         self.age += 1
         # Execute behaviour to compensate lost energy from metabolism
-        #TODO Change this to execute the behaviour set as parameter
-        #TODO Implement more behaviours
-        #self.base_energy_function(sim)
+        # TODO Change this to execute the behaviour set as parameter
+        # TODO Implement more behaviours
+        # self.base_energy_function(sim)
         self.restricted_energy_function(sim)
-        
 
     def base_energy_function(self, sim):
         """This is the base model energy function for our agent.
@@ -116,14 +114,13 @@ class Agent:
         else:
             fish = sim.get_resource().get_amount()
             population = sim.get_agent_count()
-            if fish/population < self.scarcity:
+            if fish / population < self.scarcity:
                 self.energy += sim.get_resource().consume_resource(
-                    self.consumption*self.greed3)
+                    self.consumption * self.greed3)
             else:
                 self.energy += sim.get_resource().consume_resource(
                     self.consumption)
 
-    
     def restricted_energy_function(self, sim):
         """Agent behaviour based on restrictions on the common resource.
 
@@ -153,8 +150,8 @@ class Agent:
             return
 
         # Check whether the resources dropped below restriction limit.
-        if (sim.get_resource().get_amount() < 
-            sim.get_agent_count()*self.res_limit_factor):
+        if (sim.get_resource().get_amount() <
+                sim.get_agent_count() * self.res_limit_factor):
             # If agent would die this epoch it is allowed to fish the
             # amount of fish to get at 1 energy at the end of the epoch.
             if self.energy <= 0:
@@ -170,8 +167,8 @@ class Agent:
                     self.cur_cooldown = self.caught_cooldown
                 else:
                     self.energy += sim.get_resource().consume_resource(
-                        self.consumption)    
-        # 'Plenty' of fish
+                        self.consumption)
+                    # 'Plenty' of fish
         else:
             self.energy += sim.get_resource().consume_resource(self.consumption)
 
@@ -183,8 +180,8 @@ class Agent:
         def proself(sim):
             fish = sim.get_resource().get_amount()
             population = sim.get_agent_count()
-            if fish/population < self.scarcity:
-                return self.consumption*self.greed3
+            if fish / population < self.scarcity:
+                return self.consumption * self.greed3
             else:
                 return self.consumption
 
@@ -193,7 +190,6 @@ class Agent:
             (0.9, prosocial),
             (0.1, proself),
         ]
-
 
     def procreate(self, sim, parents):
         """This is the procreate function of the agent.
@@ -226,39 +222,45 @@ class Agent:
             # genes = parent1 if parent1.age >= parent2.age else parent 2
             genes = parent1 if parent1.energy >= parent2.energy else parent2
 
-            # Create the child with winning genes
-            # Added genetic transmission of stronger parent with 
-            # randomized coefficient.
-            mutation = 0
+            # Decide which gene gets mutated, each gene has a 1 in 25 chance of mutation.
+            # So therefore there is 5/25 or 1/5 chances at a mutation, and 4/5 chances of
+            # no mutation occurring. The first 5 positions of the array represent the 5 genes.
+            mutation_array = 25 * [0]
+            mutation_array[0] = 1
+            rnd.shuffle(mutation_array)
             child = {
-                "min_social_value" : min(parent1.social_value_orientation, 
-                                         parent2.social_value_orientation),
-                "max_social_value" : max(parent1.social_value_orientation, 
-                                         parent2.social_value_orientation),
+                "min_social_value": min(parent1.social_value_orientation,
+                                        parent2.social_value_orientation),
+                "max_social_value": max(parent1.social_value_orientation,
+                                        parent2.social_value_orientation),
 
-                "metabolism" : genes.metabolism 
-                    #+ genes.metabolism*rnd.gauss(0,self.mutation_factor),
-                    ,
-                "consumption" : genes.consumption 
-                    #+ genes.consumption*rnd.gauss(0,self.mutation_factor),
-                    ,
-                "maximum_age" : genes.maximum_age 
-                    #+ genes.maximum_age*rnd.gauss(0,self.mutation_factor),
-                    ,
+                "metabolism": genes.metabolism +
+                              mutation_array[0] * genes.metabolism * rnd.gauss(0, self.mutation_factor),
 
-                "procreate_req" : genes.procreate_req
-                    #+ genes.procreate_req*rnd.gauss(0,self.mutation_factor),
-                    ,
-                "procreate_cost" : genes.procreate_cost
-                    #+ genes.procreate_cost*rnd.gauss(0,self.mutation_factor),
-                    ,
+                "consumption": genes.consumption +
+                               mutation_array[1] * genes.consumption * rnd.gauss(0, self.mutation_factor),
+
+                "maximum_age": genes.maximum_age +
+                               mutation_array[2] * genes.maximum_age * rnd.gauss(0, self.mutation_factor),
+
+                "procreate_req": genes.procreate_req +
+                                 mutation_array[3] * genes.procreate_req * rnd.gauss(0, self.mutation_factor),
+
+                "procreate_cost": genes.procreate_cost +
+                                  mutation_array[4] * genes.procreate_cost * rnd.gauss(0, self.mutation_factor),
 
                 # "mutation_factor" : self.mutation_factor
-                #     + self.mutation_factor*rnd.gauss(0,self.mutation_factor),
+                #     + mutation_array[5]*self.mutation_factor*rnd.gauss(0,self.mutation_factor),
             }
+            # Ensure that no value is <= 0, is this happens we just set the parent gene.
+            for gene in child:
+                if child[gene] <= 0:
+                    child[gene] = genes[gene]
             sim.add_agent(Agent(child))
 
-    #TODO implement more energy functions / behaviours
+
+
+    # TODO implement more energy functions / behaviours
     # def secondary_energy_function(self, res):
     """
     Built of base model.
@@ -308,7 +310,7 @@ class Agent:
     #       reproduce += 1
     #   return reproduce
 
-    #TODO
+    # TODO
     # implement high-reward high-risk functions 
     #   that have possible punishments:
     #   "An agent is not allowed to go fishing 
