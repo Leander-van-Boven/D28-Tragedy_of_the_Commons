@@ -59,8 +59,7 @@ def run(override_params=dict(), params_to_range=None,
         # If real-time plot is on, generate the ResultPrinter class
         printer = None if not use_plot else \
             ResultsPlotter(
-                sum(params['agent_distributions'][dist].get('agent_count', 0) 
-                    for dist in params['agent_distributions']),
+                params['agent']['count'],
                 params['plotter_params']['svo_bar_count'],
                 params['resource']['max_amount'])
 

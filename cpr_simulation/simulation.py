@@ -56,7 +56,6 @@ class Simulator:
         self.print_interval = self.params['print_interval']
         self.log_interval = self.params['log_interval']
 
-        self.agent_distributions = param_dict['agent_distributions']
         self.resource_params = param_dict['resource']
         self.svo_distributions = param_dict['svo_distributions']
         self.n_agents = param_dict['agent']['count']
@@ -176,26 +175,24 @@ class Simulator:
         while (self.epoch < self.max_epoch):
             parents = []
             # Update the agents
-            for agent in self.agents:
+            for num, agent in enumerate(self.agents):
+                #print(f'\t\t{num}. {agent}.act()')
                 agent.act(self)
-                # Check whether agent has died from his actions
+                # Check impact of actions
                 if agent.energy <= 0:
                     self.remove_agent(agent)
-                #TODO check if agent is removed due to its age
-                # if agent.age > agent.maximum_age:
-                #     self.remove_agent(agent)
-                if agent.energy >= agent.procreate_req:
+                elif agent.age > agent.maximum_age:
+                    self.remove_agent(agent)                               
+                elif agent.energy >= agent.procreate_req:
                     parents.append(agent)
-
-            agent.procreate(self, parents)
+            Agent.procreate(self, parents)
 
             # Print the current stats of the simulation
-            if self.verbose and self.epoch % self.print_interval == 0:
+            if self.verbose and self.epoch%self.print_interval == 0:
                 self.print_results()
-            if self.printer and self.epoch % self.plot_interval == 0:
+            if self.printer and self.epoch%self.plot_interval == 0:
                 yield self.plot_results()
-            #print(self.logger is None, self.epoch%self.log_interval)
-            if self.logger and self.epoch % self.log_interval == 0:
+            if self.logger and self.epoch%self.log_interval == 0:
                 self.log_results()
 
             # Check whether there are still agents alive
@@ -246,15 +243,17 @@ class Simulator:
     def print_results(self):
         '''Prints the current stats of the simulation.'''
 
-        self.cur_stats = f"epoch: {self.epoch}, "
-        for dist_name in self.agent_distributions:
-            dist = self.agent_distributions[dist_name]
-            self.cur_stats += (
-                f"{dist_name}: " + 
-                str(self.get_agent_count(dist['min_social_value'], 
-                                         dist['max_social_value'])) + 
-                ", ")
-        self.cur_stats += f"res: {self.resource.get_amount():.2f}"
+        self.cur_stats = f"epoch: {self.epoch}, " + \
+                         f"agent count: {self.get_agent_count()}, " + \
+                         f"resource: {self.get_resource().get_amount():.2f}"
+        # for dist_name in self.agent_distributions:
+        #     dist = self.agent_distributions[dist_name]
+        #     self.cur_stats += (
+        #         f"{dist_name}: " + 
+        #         str(self.get_agent_count(dist['min_social_value'], 
+        #                                  dist['max_social_value'])) + 
+        #         ", ")
+        #self.cur_stats += f"res: {self.resource.get_amount():.2f}"
         print(self.cur_stats, end = "\r", flush = True)
 
     def log_results(self):

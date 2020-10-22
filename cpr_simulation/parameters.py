@@ -116,54 +116,31 @@ run : `int`,
 """
 
 default_params = {
-    "agent_distributions" : {
-        "proself" : {
-            "line_style" : ':',
-            "agent_count" : 50,
-            "min_social_value" : 0,
-            "max_social_value" : .25,  
-
-            "metabolism" : 3,
-            "consumption" : 15,
-
-            "procreate_req" : 20,
-            "procreate_cost" : 15,
-
-            # Restricted Model Parameters
-            "res_limit_factor" : 2,
-            "caught_chance" : .25,
-            "caught_cooldown" : 20,
-        },
-        "prosocial" : {
-            "line_style" : '--',
-            "agent_count" : 50,
-            "min_social_value" : .75,
-            "max_social_value" : 1,
-
-            "metabolism" : 3,
-            "consumption" : 15,
-
-            "procreate_req" : 20,
-            "procreate_cost" : 15,
-
-            # Restricted Model Parameters
-            "res_limit_factor" : 2,
-            "caught_chance" : .25,
-            "caught_cooldown" : 20,
-        },
-    },
-
     "agent" : {
         "count" : 100,
         "params" : {
-            "metabolism" : 3,
-            "consumption" : 15,
+            "mutation_factor" : .1,
 
-            "procreate_req" : 20,
-            "procreate_cost" : 15,
+            "metabolism" : 5,
+            "consumption_factor" : 3,
+            "procreate_cost_factor" : 4,
+            "procreate_req_factor" : 5,
+            "start_energy_factor" : 3,
+
+            "maximum_age" : 10,
+            
+            
+            "behaviour" : "restricted_energy_function", 
+            # possible values: "base_energy_function", 
+            #                  "restricted_energy_function"
+
+            # Base Model Parameters
+            "scarcity" : 10,
+            "greed" : 5,
 
             # Restricted Model Parameters
             "res_limit_factor" : 2,
+            "res_unlimit_factor" : 3,
             "caught_chance" : .25,
             "caught_cooldown" : 20,
         }
@@ -171,20 +148,20 @@ default_params = {
 
     "svo_distributions" : [
         # [mean_i, variance_i]
-        [0.25, 0.125],
-        [0.75, 0.125]
+        [0.5, 0.5],
+        [0.9, 0.001],
     ],
 
     "resource" : {
-        "start_amount" : 10000,
+        "start_amount" : 5000,
         "max_amount" : 10000,
-        "min_amount" : 500,
-        "cooldown" : 2,
-        "growth_rate" : .5
+        "min_amount" : 100,
+        "cooldown" : 10,
+        "growth_rate" : .25
     },
 
     "simulation" : {
-        "max_epoch" : 250,
+        "max_epoch" : 1000,
         "plot_interval" : 1,
         "print_interval" : 1,
         "log_interval" : 1
