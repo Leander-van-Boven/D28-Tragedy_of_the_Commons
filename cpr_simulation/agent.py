@@ -301,6 +301,7 @@ class Agent:
                 #                         parent2.social_value_orientation),
                 # "max_social_value": max(parent1.social_value_orientation,
                 #                         parent2.social_value_orientation),
+                #TODO: PEP8'ify
 
                 "metabolism": genes.metabolism +
                               mutation_array[0] * genes.metabolism * rnd.gauss(0, self.mutation_factor),
