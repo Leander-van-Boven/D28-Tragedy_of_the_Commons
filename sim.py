@@ -239,7 +239,7 @@ def str2locrange(x):
         (param, val) = tuple(x.split('='))
         return ("[\'" + "\'][\'".join(param.split(':')) + "\']", 
                 map(int, val.split(',')))
-    except ValueError:
+    except ValueError as e:
         raise argparse.ArgumentTypeError("Invalid argument syntax")
 
 
