@@ -18,13 +18,16 @@ class ResultsPlotter:
         """
 
         self.max_agent = max_agent
-        #self.svo_bar_count = svo_bar_count
         self.max_resource = max_resource
         self.xdata, self.yagent, self.yresource = [], [], []
 
         # Create figure
-        self.fig, (self.ax_agent, self.ax_svo, self.ax_resource) = plt.subplots(
-            nrows=3, figsize=(16,8))
+        # self.fig, (self.ax_agent, self.ax_svo, self.ax_resource) = plt.subplots(
+        #     nrows=3, figsize=(16,8))
+        self.fig = plt.figure(figsize=[15,10])
+        self.ax_agent = plt.subplot(222)
+        self.ax_resource = plt.subplot(224)
+        self.ax_svo = plt.subplot(121)
         self.fig.tight_layout(h_pad=3, pad=4)
 
         # Setup agent subplot
@@ -36,12 +39,12 @@ class ResultsPlotter:
         self.ax_agent.grid()
 
         # Setup svo subplot
-        _, ticks, self.svo_bars = self.ax_svo.hist(
+        _, _, self.svo_bars = self.ax_svo.hist(
             [], bins=svo_bar_count, range=(0,1), color='blue')
         self.ax_svo.set_title('Real time SVO distribution')
         self.ax_svo.set_ylabel('agent count')
         self.ax_svo.set_xlabel('SVO')
-        self.ax_svo.set_xticks(ticks)
+        self.ax_svo.set_xticks(np.arange(0,1, step=1/(svo_bar_count/2)))
         #self.ax_svo.grid()
         
         # Setup resource subplot
@@ -73,7 +76,8 @@ class ResultsPlotter:
         self.resource_line.set_data(self.xdata, self.yresource)
 
         initialised = [self.agent_line, self.resource_line]
-        [initialised.append(bar) for bar in self.svo_bars]
+        for bar in self.svo_bars:
+            initialised.append(bar)
         return initialised
 
 
@@ -91,11 +95,6 @@ class ResultsPlotter:
 
         # Append the data to the correct lists
         t, a, s, r = data
-        # print('===')
-        # print('t', t)
-        # print('a', a)
-        # print('s', s)
-        # print('r', r)
         self.xdata.append(t)
         self.yagent.append(a)
         counts, _ = np.histogram(s, bins=len(self.svo_bars), range=(0,1))
@@ -127,7 +126,8 @@ class ResultsPlotter:
         self.resource_line.set_data(self.xdata, self.yresource)
         #self.save_fig('.lastplot.pdf')
         updated = [self.agent_line, self.resource_line]
-        [updated.append(bar) for bar in self.svo_bars]
+        for bar in self.svo_bars:
+            updated.append(bar)
         return updated
 
 
@@ -156,4 +156,4 @@ class ResultsPlotter:
             The path to save the plot to.
         """
 
-        plt.savefig(path)
+        #plt.savefig(path)

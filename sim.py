@@ -231,7 +231,7 @@ def str2locrange(x):
     -------
     `(str, tup)`,
         `str` represents the literal location of the parameter in the 
-        dictionary, and `tup` represents the valu e range this parameter 
+        dictionary, and `tup` represents the value range this parameter 
         should get. 
     """
     

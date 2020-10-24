@@ -101,3 +101,63 @@ def test():
                 else:
                     self.energy += sim.get_resource().consume_resource(
                         abs(self.energy) + 1)
+
+
+###### POSSIBLE ENERGY FUNCTION ######
+# TODO implement more energy functions / behaviours
+# def secondary_energy_function(self, res):
+"""
+Built of base model.
+
+Accounts for deliberation time contraints based on age, hunger,
+    and scarcity
+
+These time contraints inspire increasingly greedy behaviour in 
+    proself agents
+
+Additional greed coefficients are weighted at a diminishing value
+"""
+#
+#   self.energy -= self.metabolism
+#   
+#   # Prosocial
+#   if self.social_value_orientation >= .5:
+#       self.energy += res.consume_resource(self.consumption)
+#
+#   # Proself
+#   fish = res.get_amount()
+#   population = self.simulation.get_agent_count()
+#
+#   scarce_bool = fish/population < self.scarcity
+#   age_bool = self.age > self.elderly
+#   hungry_bool = self.energy < self.hungry
+#
+#   if scarce_bool and age_bool and hungry_bool:
+#       self.energy += res.consume_resource(
+#           self.consumption*self.greed1*greed2*greed3)
+#   elif (scarce_bool and age_bool) or 
+#        (scarce_bool and hungry_bool) or 
+#        (age_bool and hungry_bool):
+#       self.energy += res.consume_resource(
+#           self.consumption*self.greed1*greed2)
+#   elif scare_bool or age_bool or hungry_bool:
+#       self.energy += res.consume_resource(
+#           self.consumption*self.greed1)
+#   else:
+#       self.energy += res.consume_resource(self.consumption)
+#
+#   self.age += 1
+#   
+#   ### Addition of Reproduction to the model
+#   reproduce = 0
+#   if self.energy > self.procreate_req:
+#       reproduce += 1
+#   return reproduce
+
+# TODO
+# implement high-reward high-risk functions 
+#   that have possible punishments:
+#   "An agent is not allowed to go fishing 
+#       when the amount of fish is below x",
+#   Punishment: If caught, the agent is not allowed to fish 
+#       or y amount of days
