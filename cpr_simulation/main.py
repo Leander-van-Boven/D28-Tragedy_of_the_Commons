@@ -44,7 +44,7 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
         ':'.join(x.split('\'][\''))[2:-2] for x in params_to_range]
 
     # Generate a CsvLogger class if log_dir is specified
-    if log_dir:
+    if log_dir and n_jobs<=1:
         #TODO Add more columns to log
         col_names = \
             ['Exp Num'] + param_names + \
@@ -57,7 +57,7 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
 
     # Local method that generates and runs a simulation. Is called twice,
     # which is why we make it a function beforehand. 
-    def _run_sim(p, c=[0]):
+    def _run_sim(p, c=[0], l=None):
         # If real-time plot is on, generate the ResultPrinter class
         printer = None if not use_plot else \
             ResultsPlotter(
@@ -66,7 +66,7 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
                 params['resource']['max_amount'])
 
         # Generate the Simulator class
-        simulator = Simulator(p, printer, logger, list(c), 
+        simulator = Simulator(p, printer, l or logger, list(c), 
                               verbose)
 
         # If we use real-time plotting, we need to pass the simulation
@@ -121,14 +121,28 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
                 _run_sim(curr_params, [run] + list(combi))
         else:
             from joblib import Parallel, delayed
-            done = 0
+            print("Running %s instances..." % number_of_combis)
             def _run_parallel(run, combi):
+                if log_dir and os.path.isdir(log_dir):
+                    col_names = \
+                        ['Exp Num'] + param_names + \
+                        ['Epoch', 'Resource', 'A', 'B', 'C', 'D', 'E']
+                    #for dist_name in params['agent_distributions']:
+                    #   col_names.append(dist_name)
+                    path = log_dir + '\\run%s.csv' % run
+                    _logger = CsvLogger(params['logger_params'], col_names, path)
+                else:
+                    _logger = None
+
                 # Add values of ranged parameters to the dictionary
                 curr_params = params.copy()
                 for param_pair in zip(params_to_range, combi):
                     exec('curr_params%s=%s' % param_pair)
 
-                _run_sim(curr_params, [run] + list(combi))
+                _run_sim(curr_params, [run] + list(combi), _logger)
+
+                if _logger:
+                    _logger.write()
             #     done += 1
             #     print('Done: %s/%s' % (done, number_of_combis),
             #         end='\n', flush=True)
@@ -140,7 +154,7 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
 
 
     # If we have a CsvLogger, then write it to a CSV file
-    if log_dir:
+    if log_dir and n_jobs <= 1:
         logger.write()
 
 

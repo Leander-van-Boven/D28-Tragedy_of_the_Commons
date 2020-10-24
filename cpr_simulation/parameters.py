@@ -140,7 +140,7 @@ default_params = {
             "res_limit_factor" : 2,
             "res_unlimit_factor" : 3,
             "caught_chance" : .25,
-            "caught_cooldown" : 7,
+            "caught_cooldown_factor" : 0.1,
         }
     },
 

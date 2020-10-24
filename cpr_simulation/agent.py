@@ -52,7 +52,8 @@ class Agent:
         self.res_limit_factor = params['res_limit_factor']
         self.res_unlimit_factor = params['res_unlimit_factor']
         self.caught_chance = params['caught_chance']
-        self.caught_cooldown = params['caught_cooldown']
+        self.caught_cooldown = params['caught_cooldown_factor'] \
+                                * params['maximum_age']
         
 
     @property

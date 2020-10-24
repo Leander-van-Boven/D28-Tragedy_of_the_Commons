@@ -258,7 +258,7 @@ if __name__ == '__main__':
         + '(defaults to 1)')
     parser.add_argument(
         '-r', '--range', required=False, nargs='+', type=str2locrange,
-        metavar='item', help="add parameters to run the simulation with a " +
+        metavar='item',  help="add parameters to run the simulation with a " +
          "range of values, e.g. resource:start_amount=300,601,100")
     parser.add_argument(
         '-p', '--param', required=False, nargs='+', type=str2locint, 
