@@ -171,8 +171,8 @@ default_params = {
 
     "svo_distributions" : [
         # [mean_i, variance_i]
-        [0.25, 0.125],
-        [0.75, 0.125]
+        [0.25, 0.05],
+        [0.75, 0.05]
     ],
 
     "resource" : {

@@ -182,8 +182,8 @@ class Simulator:
                 if agent.energy <= 0:
                     self.remove_agent(agent)
                 #TODO check if agent is removed due to its age
-                # if agent.age > agent.maximum_age:
-                #     self.remove_agent(agent)
+                if agent.age > agent.maximum_age:
+                    self.remove_agent(agent)
                 if agent.energy >= agent.procreate_req:
                     parents.append(agent)
 

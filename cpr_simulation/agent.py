@@ -16,7 +16,7 @@ class Agent:
     consumption = 15
     procreate_req = 20
     procreate_cost = 15
-    maximum_age = 100
+    maximum_age = 5
     mutation_factor = .1
 
     # Base Model Parameters
