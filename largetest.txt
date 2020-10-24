@@ -1,0 +1,5 @@
+python sim.py run `
+--jobs 15 --out "big_test" `
+--param simulation:max_epoch=500 `
+--range agent:svo_convergence_factor=0.5,4.1,0.5 `
+agent:params:metabolism=5,16,5
