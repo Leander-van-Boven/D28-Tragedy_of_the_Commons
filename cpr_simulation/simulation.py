@@ -61,6 +61,9 @@ class Simulator:
         self.n_agents = param_dict['agent']['count']
         self.agent_params = param_dict['agent']['params']
 
+        self.svo_mutation_factor = \
+            param_dict['agent']['svo_convergence_factor'] / 3
+
 
     def get_agent_count(self, min_social_value=0, max_social_value=1):
         """Returns the amount of all agents if no params are specified.

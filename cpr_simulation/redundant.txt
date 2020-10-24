@@ -161,3 +161,19 @@ Additional greed coefficients are weighted at a diminishing value
 #       when the amount of fish is below x",
 #   Punishment: If caught, the agent is not allowed to fish 
 #       or y amount of days
+
+# inherited_attr = [
+#     'consumption', 'procreate_cost',
+#     'social_value_orientation']
+# def inherit(property):
+#     val = ((parent1.energy*getattr(parent1,property)
+#             +parent2.energy*getattr(parent2,property)) 
+#            / (parent1.energy+parent2.energy))
+#     setattr(child, property, val)
+# for attr in inherited_attr:
+#     inherit(attr)
+# m_attr = rnd.choice(inherited_attr)
+# mutation_factor = sim.agent_params['mutation_factor']
+# m_ftr = rnd.gauss(0, mutation_factor)      
+# val = max(getattr(child, m_attr) + getattr(child, m_attr)*m_ftr, 1)
+# setattr(child, m_attr, val)

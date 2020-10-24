@@ -118,6 +118,7 @@ run : `int`,
 default_params = {
     "agent" : {
         "count" : 100,
+        "svo_convergence_factor" : 4,
         "params" : {
             "mutation_factor" : .1,
 
@@ -127,7 +128,7 @@ default_params = {
             "procreate_req_factor" : 5,
             "start_energy_factor" : 3,
 
-            "maximum_age" : 10,
+            "maximum_age" : 15,
             
             
             "behaviour" : "restricted_energy_function", 
@@ -142,14 +143,14 @@ default_params = {
             "res_limit_factor" : 2,
             "res_unlimit_factor" : 3,
             "caught_chance" : .25,
-            "caught_cooldown" : 20,
+            "caught_cooldown" : 7,
         }
     },
 
     "svo_distributions" : [
         # [mean_i, variance_i]
-        [0.25, 0.05],
-        [0.75, 0.05]
+        [0.25, 0.125],
+        [0.75, 0.125],
     ],
 
     "resource" : {
@@ -164,7 +165,7 @@ default_params = {
         "max_epoch" : 1000,
         "plot_interval" : 1,
         "print_interval" : 1,
-        "log_interval" : 1
+        "log_interval" : 1,
     },
 
     "plotter_params" : {

@@ -247,24 +247,17 @@ class Agent:
 
             child = Agent(sim.agent_params)
             child.energy = parent1.procreate_cost + parent2.procreate_cost
-            inherited_attr = [
-                'consumption', 'procreate_cost',
-                'social_value_orientation']
-            def inherit(property):
-                val = ((parent1.energy*getattr(parent1,property)
-                        +parent2.energy*getattr(parent2,property)) 
-                       / (parent1.energy+parent2.energy))
-                setattr(child, property, val)
-            for attr in inherited_attr:
-                inherit(attr)
-            # m_attr = rnd.choice(inherited_attr)
-            # mutation_factor = sim.agent_params['mutation_factor']
-            # m_ftr = rnd.gauss(0, mutation_factor)      
-            # val = max(getattr(child, m_attr) + getattr(child, m_attr)*m_ftr, 1)
-            # setattr(child, m_attr, val)
+            svo_mean = \
+                (parent1.social_value_orientation*parent1.energy \
+                    + parent2.social_value_orientation*parent2.energy) \
+                    / (parent1.energy+parent2.energy)
+            base_svo_std = max(abs(svo_mean-parent1.social_value_orientation), 
+                               abs(svo_mean-parent2.social_value_orientation))
+            svo_std = base_svo_std * sim.svo_mutation_factor
+            child.social_value_orientation = \
+                max(min(rnd.gauss(svo_mean, svo_std), 1), 0)
             
             sim.add_agent(child)
 
-            child.energy = (parent1.energy+parent2.energy) / 2
             parent1.energy -= parent1.procreate_cost
             parent2.energy -= parent2.procreate_cost
