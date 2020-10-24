@@ -7,6 +7,6 @@ agent:params:consumption_factor=1,5,1 `
 agent:params:procreate_cost_factor=1,11,2 `
 agent:params:procreate_req_factor=1,4,1 `
 agent:params:start_energy_factor=1,5,1 `
-agent:params:caught_chance=0.15,0.35,0.5 `
+agent:params:caught_chance=0.1,0.6,0.1 `
 agent:params:caught_cooldown_factor=0.01,0.3,0.05 `
 agent:params:maximum_age=10,51,10
