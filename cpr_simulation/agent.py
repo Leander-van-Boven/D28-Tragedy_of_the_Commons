@@ -1,8 +1,8 @@
 import random as rnd
+
 import numpy as np
-import math
 import scipy.stats as ss
-from copy import deepcopy
+
 
 class Agent:
     # Attributes
@@ -211,10 +211,10 @@ class Agent:
 
         # Check whether the resources dropped below restriction limit.
         if sim.get_resource().get_amount() > \
-           sim.get_agent_count()*self.res_unlimit_factor*self.consumption:
+            sim.get_agent_count()*self.res_unlimit_factor*self.consumption:
             self.restriction_active = False
         elif sim.get_resource().get_amount() < \
-             sim.get_agent_count()*self.res_limit_factor*self.consumption:
+            sim.get_agent_count()*self.res_limit_factor*self.consumption:
             self.restriction_active = True
 
         if self.restriction_active:

@@ -9,7 +9,7 @@ import shutil
 from numpy import arange, prod
 import itertools as it
 
-def run(override_params=dict(), params_to_range=None, 
+def run(override_params=dict(), params_to_range=None, n_jobs=1,
         param_ranges=None, log_dir=None, use_plot=True, verbose=True):
     """Reads and generates param dicts and runs the simulation with them.
 
@@ -47,8 +47,7 @@ def run(override_params=dict(), params_to_range=None,
     if log_dir:
         #TODO Add more columns to log
         col_names = \
-            ['Exp Num'] + \
-            param_names + \
+            ['Exp Num'] + param_names + \
             ['Epoch', 'Resource', 'A', 'B', 'C', 'D', 'E']
         #for dist_name in params['agent_distributions']:
         #   col_names.append(dist_name)
@@ -101,24 +100,44 @@ def run(override_params=dict(), params_to_range=None,
         with open(".last.json", "w") as file:
             file.write(json.dumps(params))
 
-        # Iterate
-        for (run, combi) in enumerate(value_combis):       
-            # Provide run information if verbose mode is on
-            if verbose:
-                print('\nIteration: %s/%s' % (run+1, number_of_combis))
-                print('Params: ' + ', '.join(["%s = %s" % i 
-                                            for i in zip(param_names, combi)]))     
-            # If not, keep a simple run counter
-            else:
-                print('Iteration: %s/%s' % (run+1, number_of_combis), 
-                    end='\r', flush=True)
+        if n_jobs <= 1:
+            # Iterate
+            for (run, combi) in enumerate(value_combis):       
+                # Provide run information if verbose mode is on
+                if verbose:
+                    print('\nIteration: %s/%s' % (run+1, number_of_combis))
+                    print('Params: ' + ', '.join(["%s = %s" % i 
+                                                for i in zip(param_names, combi)]))     
+                # If not, keep a simple run counter
+                else:
+                    print('Iteration: %s/%s' % (run+1, number_of_combis), 
+                        end='\r', flush=True)
 
-            # Add values of ranged parameters to the dictionary
-            curr_params = params.copy()
-            for param_pair in zip(params_to_range, combi):
-                exec('curr_params%s=%s' % param_pair)
+                # Add values of ranged parameters to the dictionary
+                curr_params = params.copy()
+                for param_pair in zip(params_to_range, combi):
+                    exec('curr_params%s=%s' % param_pair)
 
-            _run_sim(curr_params, [run] + list(combi))
+                _run_sim(curr_params, [run] + list(combi))
+        else:
+            from joblib import Parallel, delayed
+            done = 0
+            def _run_parallel(run, combi):
+                # Add values of ranged parameters to the dictionary
+                curr_params = params.copy()
+                for param_pair in zip(params_to_range, combi):
+                    exec('curr_params%s=%s' % param_pair)
+
+                _run_sim(curr_params, [run] + list(combi))
+            #     done += 1
+            #     print('Done: %s/%s' % (done, number_of_combis),
+            #         end='\n', flush=True)
+           
+            # print('Done: %s/%s' % (done, number_of_combis),
+            #     end='\r', flush=True)
+            Parallel(n_jobs=n_jobs, verbose=10)(delayed(_run_parallel)(*tup) \ 
+            for tup in enumerate(value_combis))
+
 
     # If we have a CsvLogger, then write it to a CSV file
     if log_dir:

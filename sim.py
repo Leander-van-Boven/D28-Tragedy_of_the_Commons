@@ -104,8 +104,8 @@ def run(args):
     verbose = args.verbose if args.verbose is not None else \
         not (args.range or args.batch-1)
 
-    cpr.run(param_dict, params_to_range, param_ranges, args.out, plot, 
-            verbose)
+    cpr.run(param_dict, params_to_range, args.jobs, param_ranges, args.out, 
+            plot, verbose)
 
 
 def save(args):
@@ -277,6 +277,9 @@ if __name__ == '__main__':
         '-v', '--verbose', required=False, default=None, const=True, 
         type=str2bool, nargs='?', metavar='bool',
         help="whether to enter verbose mode")
+    parser.add_argument(
+        '--jobs', required=False, default=1, type=int, metavar='n_jobs',
+        help="the amount of parallel processes in range or batch mode")
 
 
     # Parse the arguments that were input
