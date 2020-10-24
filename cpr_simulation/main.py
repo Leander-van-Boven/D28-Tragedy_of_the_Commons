@@ -135,8 +135,8 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
            
             # print('Done: %s/%s' % (done, number_of_combis),
             #     end='\r', flush=True)
-            Parallel(n_jobs=n_jobs, verbose=10)(delayed(_run_parallel)(*tup) \ 
-            for tup in enumerate(value_combis))
+            Parallel(n_jobs=n_jobs, verbose=10)(
+                delayed(_run_parallel)(*tup) for tup in enumerate(value_combis))
 
 
     # If we have a CsvLogger, then write it to a CSV file
