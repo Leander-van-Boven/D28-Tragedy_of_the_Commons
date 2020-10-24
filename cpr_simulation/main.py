@@ -46,7 +46,10 @@ def run(override_params=dict(), params_to_range=None,
     # Generate a CsvLogger class if log_dir is specified
     if log_dir:
         #TODO Add more columns to log
-        col_names = param_names + ['Epoch', 'Resource', 'A', 'B', 'C', 'D', 'E']
+        col_names = \
+            ['Exp Num'] + \
+            param_names + \
+            ['Epoch', 'Resource', 'A', 'B', 'C', 'D', 'E']
         #for dist_name in params['agent_distributions']:
         #   col_names.append(dist_name)
         logger = CsvLogger(params['logger_params'], col_names, log_dir)
@@ -55,7 +58,7 @@ def run(override_params=dict(), params_to_range=None,
 
     # Local method that generates and runs a simulation. Is called twice,
     # which is why we make it a function beforehand. 
-    def _run_sim(p, c=[]):
+    def _run_sim(p, c=[0]):
         # If real-time plot is on, generate the ResultPrinter class
         printer = None if not use_plot else \
             ResultsPlotter(
@@ -115,7 +118,7 @@ def run(override_params=dict(), params_to_range=None,
             for param_pair in zip(params_to_range, combi):
                 exec('curr_params%s=%s' % param_pair)
 
-            _run_sim(curr_params, combi)
+            _run_sim(curr_params, [run] + list(combi))
 
     # If we have a CsvLogger, then write it to a CSV file
     if log_dir:

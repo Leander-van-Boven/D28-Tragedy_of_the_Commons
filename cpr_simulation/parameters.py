@@ -120,17 +120,14 @@ default_params = {
         "count" : 100,
         "svo_convergence_factor" : 4,
         "params" : {
-            "mutation_factor" : .1,
-
             "metabolism" : 5,
+            "maximum_age" : 15,
+
             "consumption_factor" : 3,
             "procreate_cost_factor" : 4,
             "procreate_req_factor" : 5,
             "start_energy_factor" : 3,
-
-            "maximum_age" : 15,
-            
-            
+                   
             "behaviour" : "restricted_energy_function", 
             # possible values: "base_energy_function", 
             #                  "restricted_energy_function"

@@ -249,9 +249,9 @@ class Agent:
             child.energy = parent1.procreate_cost + parent2.procreate_cost
             svo_mean = \
                 (parent1.social_value_orientation*parent1.energy \
-                    + parent2.social_value_orientation*parent2.energy) \
-                    / (parent1.energy+parent2.energy)
-            base_svo_std = max(abs(svo_mean-parent1.social_value_orientation), 
+                + parent2.social_value_orientation*parent2.energy) \
+                / (parent1.energy+parent2.energy)
+            base_svo_std = min(abs(svo_mean-parent1.social_value_orientation), 
                                abs(svo_mean-parent2.social_value_orientation))
             svo_std = base_svo_std * sim.svo_mutation_factor
             child.social_value_orientation = \
