@@ -4,3 +4,4 @@ __pycache__/
 .defaults.json
 .last.json
 .lastplot.pdf
+.Rproj.user
