@@ -5,3 +5,6 @@ __pycache__/
 .last.json
 .lastplot.pdf
 .Rproj.user
+._full.csv
+.RData
+.Rhistory

@@ -208,7 +208,7 @@ class Simulator:
             self.epoch += 1
 
             # Uncomment below to slow down the simulation/plotting speed
-            #time.sleep(0.5) 
+            time.sleep(0.5) 
         
         # While loop finished, maximum epoch reached
         if self.verbose:
