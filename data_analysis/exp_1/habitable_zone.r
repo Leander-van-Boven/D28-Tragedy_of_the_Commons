@@ -35,7 +35,8 @@ top5 <- top %>%
   filter(rank %in% 1:5)
 
 # Plot top 5 experiments
-top5 %>% 
+worst <- top[(118*500+1):(123*500),]
+worst %>% 
   group_by(Exp.Num) %>% 
   arrange(desc(score)) %>%
   melt(id.vars=c('Exp.Num', 'Epoch'), measure.vars=c('A', 'B', 'C', 'D', 'E')) %>% 
@@ -64,3 +65,21 @@ top5[1:10,] %>%
   ggplot(aes(x=Epoch, y=value, fill=variable)) +
   geom_area() +
   theme_minimal()
+
+
+top5_batch_path <- '../../top5_batch'
+top5_batch_params <- data.frame()
+
+i <- 1
+for (file in list.files(top5_batch_path, full.names=TRUE)){
+  print(file)
+  f <- file %>% 
+    read.csv() %>% 
+    mutate(no.agents=A+B+C+D+E) %>%
+    group_by(Exp.Num) %>% 
+    mutate(score = mean(no.agents)/sd(no.agents))
+  top5_batch_params <- rbind(top5_batch_params,
+                             data.frame(i, mean(f$score)))
+  i <- i+1
+}
+

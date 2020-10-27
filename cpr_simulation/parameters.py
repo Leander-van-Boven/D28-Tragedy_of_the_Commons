@@ -118,15 +118,15 @@ run : `int`,
 default_params = {
     "agent" : {
         "count" : 100,
-        "svo_convergence_factor" : 4,
+        "svo_convergence_factor" : 1,
         "params" : {
             "metabolism" : 5,
-            "maximum_age" : 15,
+            "maximum_age" : 10,
 
-            "consumption_factor" : 3,
-            "procreate_cost_factor" : 4,
-            "procreate_req_factor" : 5,
-            "start_energy_factor" : 3,
+            "consumption_factor" : 1,
+            "procreate_cost_factor" : 1,
+            "procreate_req_factor" : 1,
+            "start_energy_factor" : 2,
                    
             "behaviour" : "restricted_energy_function", 
             # possible values: "base_energy_function", 
@@ -139,8 +139,8 @@ default_params = {
             # Restricted Model Parameters
             "res_limit_factor" : 2,
             "res_unlimit_factor" : 3,
-            "caught_chance" : .25,
-            "caught_cooldown_factor" : 0.1,
+            "caught_chance" : 0.2,
+            "caught_cooldown_factor" : 0.2,
         }
     },
 
