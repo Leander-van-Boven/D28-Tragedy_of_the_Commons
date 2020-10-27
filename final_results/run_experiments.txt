@@ -1,12 +1,12 @@
 # Unimodal Experiments
 python sim.py run --batch 12 `
---out '../final_results/final_csv/unimodal.csv'
+--out 'final_results/final_csv/unimodal.csv' `
 --param agent:svo_dist:d1:m=.5 agent:svo_dist:d1:s=0.25 `
 --range agent:svo_dist:d1:m=0,1.1,0.25 agent:svo_dist:d1:s=0.01,0.51,0.24
 
 # Bimodal Experiments
 python sim.py run --batch 12 `
---out '../final_results/final_csv/bimodal.csv'
+--out 'final_results/final_csv/bimodal.csv' `
 --param agent:svo_dist:d1:m=.5 agent:svo_dist:d1:s=.25 `
 agent:svo_dist:d2:m=.5 agent:svo_dist:d2:s=.25 `
 --range agent:svo_dist:d1:m=0,0.41,0.2 agent:svo_dist:d1:s=0.01,0.21,0.09 `
@@ -14,7 +14,7 @@ agent:svo_dist:d2:m=0.6,1.1,0.2 agent:svo_dist:d2:s=0.01,0.21,0.1
 
 # Trimodal Experiments
 python sim.py run --batch 12 `
---out '../final_results/final_csv/trimodal.csv'
+--out 'final_results/final_csv/trimodal.csv' `
 --param agent:svo_dist:d1:m=.5 agent:svo_dist:d1:s=.25 `
 agent:svo_dist:d2:m=.5 agent:svo_dist:d2:s=.25 `
 agent:svo_dist:d3:m=.5 agent:svo_dist:d3:s=.25 `
