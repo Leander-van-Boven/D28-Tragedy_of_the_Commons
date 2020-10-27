@@ -274,25 +274,48 @@ class Simulator:
         d = 0
         e = 0
         
-        
+        agents_now = []
+        agent_svo_rounded = []
+
         for agent in self.agents:
             svo = agent.social_value_orientation
+            agents_now.append(svo)
+            #agent_svo_rounded.append(np.round(svo,2))
             if svo <= .2:
                 a += 1
-            if svo > .2 and svo <= .4 :
+            if (svo > .2 and svo <= .4) :
                 b += 1
-            if svo > .4 and svo <= .6 :
+            if (svo > .4 and svo <= .6) :
                 c += 1
-            if svo > .6 and svo <= .8 :
+            if (svo > .6 and svo <= .8) :
                 d += 1
-            else:
+            if (svo > .8 and svo <= 1):
                 e += 1
-    
-    
+
+        #agent_svo_rounded = np.round(agents_now, 2)
+
+        median = np.median(agents_now)
+
+        below = []
+        above = []
+
+        for agent in self.agents:
+            svo = agent.social_value_orientation
+            if svo < median:
+                below.append(svo)
+            if svo > median:
+                above.append(svo)
+
+
         row.append(a)
         row.append(b)
         row.append(c)
         row.append(d)
         row.append(e)
+        row.append(median)
+        row.append(np.percentile(agents_now,40))
+        row.append(np.percentile(agents_now,60))
+        row.append(np.mean(agents_now))
+        row.append(np.std(agents_now))
 
         self.logger.add_row(row)
