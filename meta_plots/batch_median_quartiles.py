@@ -21,9 +21,6 @@ median = df['Median'].to_numpy()
 above = (df['Above'].to_numpy())
 below = (df['Below'].to_numpy())
 
-print(len(median), len(above), len(below))
-
-print(above[100:110])
 
 interval = int(m/total_batch)
 
@@ -44,16 +41,7 @@ plt.title('Median SVO ± 25th percentile')
 plt.xlabel('Epoch')
 plt.ylabel('SVO')
 plt.show()
-"""
 
-x = [1,2,3,4,5,6,7,8,9,10]
-x2 = [2,4,6,8,10,None,None,None,None,None]
-
-#plt.hold(True)
-plt.plot(x, x)
-plt.plot(x, x2)
-plt.show()
-"""
 
 
 
