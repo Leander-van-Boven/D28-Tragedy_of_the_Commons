@@ -45,6 +45,7 @@ for (i in seq(0, final, iter)){
 
 # Summarize and score each experiment. Warning: This WILL use >28GB of memory.
 # If you don't have at least 32GB or memory, R will crash.
+## EDIT: turns out even 32GB is not enough...
 d %>% 
   group_by(across(0:no_params+1)) %>% 
   summarise(across(Resource:no.agents, list(mean=mean, sd=sd))) %>% 

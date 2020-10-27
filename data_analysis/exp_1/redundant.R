@@ -49,5 +49,11 @@ d_gr <- d %>%
   ) %>% 
   select(Exp.Num, Exp.Id)
 
-
+t <- f %>%
+  group_by(Exp.Num) %>% 
+  mutate(score=mean(no.agents)/sd(no.agents)) %>% 
+  ungroup() %>% 
+  mutate(rank = dense_rank(desc(score))) %>% 
+  filter(rank %in% 1:5) %>% 
+  select(-rank)
 
