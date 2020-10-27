@@ -144,11 +144,7 @@ default_params = {
         }
     },
 
-    "svo_distributions" : [
-        # [mean_i, variance_i]
-        [0.25, 0.125],
-        [0.75, 0.125],
-    ],
+    "svo_dist" : {},
 
     "resource" : {
         "start_amount" : 5000,
@@ -163,6 +159,7 @@ default_params = {
         "plot_interval" : 1,
         "print_interval" : 1,
         "log_interval" : 1,
+        "sleep" : 0
     },
 
     "plotter_params" : {

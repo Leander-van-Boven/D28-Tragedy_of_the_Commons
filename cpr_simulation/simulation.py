@@ -57,7 +57,7 @@ class Simulator:
         self.log_interval = self.params['log_interval']
 
         self.resource_params = param_dict['resource']
-        self.svo_distributions = param_dict['svo_distributions']
+        self.svo_distributions = param_dict['svo_dist']
         self.n_agents = param_dict['agent']['count']
         self.agent_params = param_dict['agent']['params']
 
@@ -207,8 +207,7 @@ class Simulator:
             np.random.shuffle(self.agents)
             self.epoch += 1
 
-            # Uncomment below to slow down the simulation/plotting speed
-            time.sleep(0.5) 
+            time.sleep(self.params['sleep'])
         
         # While loop finished, maximum epoch reached
         if self.verbose:

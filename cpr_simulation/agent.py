@@ -67,6 +67,7 @@ class Agent:
 
         Parameters
         ----------
+        #TODO update docstring dist_params -> dict...
         dist_params : `list[list[float]]`
             The collection of normal distribution parameters. Sould be
             formatted as follows: dist_params[i][0] denotes the mean and
@@ -84,6 +85,19 @@ class Agent:
             The list of Agents.
         """
         
+        if not dist_params:
+            dist_params = {
+                "d1" : {
+                    "m" : .25,
+                    "s" : .125
+                },
+                "d2" : {
+                    "m" : .75,
+                    "s" : .125
+                }
+            }
+               
+        dist_params = [list(d.values()) for d in dist_params.values()]
         # We'll use numpy-specific functions, so we convert to np.array
         dist_params = np.array(dist_params)
         

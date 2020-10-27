@@ -42,7 +42,7 @@ class ResultsPlotter:
         _, _, self.svo_bars = self.ax_svo.hist(
             [], bins=svo_bar_count, range=(0,1), color='blue')
         self.ax_svo.set_title('Real time SVO distribution')
-        self.ax_svo.set_ylabel('agent count')
+        self.ax_svo.set_ylabel('fraction of agent count')
         self.ax_svo.set_xlabel('SVO')
         self.ax_svo.set_xticks(np.arange(0,1, step=1/(svo_bar_count/2)))
         #self.ax_svo.grid()

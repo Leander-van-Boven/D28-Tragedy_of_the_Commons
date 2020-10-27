@@ -281,7 +281,6 @@ if __name__ == '__main__':
         '--jobs', required=False, default=1, type=int, metavar='n_jobs',
         help="the amount of parallel processes in range or batch mode")
 
-
     # Parse the arguments that were input
     args = parser.parse_args()
 
