@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-df = pd.read_csv('RyanCSV')
+df = pd.read_csv('SingleCSV')
 
 m, n = df.shape
 
@@ -33,8 +33,9 @@ pal = ["#9b59b6", "#e74c3c", "#34495e", "#2ecc71", "#34495e", "#2ecc71"]
 
 plt.legend(loc='upper right')
 plt.legend(title='SVO')
-plt.title('Fantastic Plot')
-plt.xlim(0, 20)
+plt.title('Stack Area Plot')
+#plt.xlim(0, 20)
+plt.xlim(0, 100)
 plt.xlabel('Epoch')
 plt.ylabel('Agent Count')
 
