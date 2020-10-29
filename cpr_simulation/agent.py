@@ -282,7 +282,7 @@ class Agent:
                                abs(svo_mean-parent2.social_value_orientation))
             svo_std = base_svo_std * sim.svo_mutation_factor
             child.social_value_orientation = \
-                svo_mean # max(min(rnd.gauss(svo_mean, svo_std), 1), 0)
+                max(min(rnd.gauss(svo_mean, svo_std), 1), 0)
             
             sim.add_agent(child)
 
