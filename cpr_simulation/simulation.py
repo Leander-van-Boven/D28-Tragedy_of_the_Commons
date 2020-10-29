@@ -172,14 +172,15 @@ class Simulator:
             yield self.plot_results()
         if self.verbose:
             self.print_results()
-
+        self.epoch = 1
         #TODO We might want to add self.epoch = 1 here.
         # Run the simulations for max_epoch amounts
         while (self.epoch < self.max_epoch):
+            #print('=====\nEpoch:', self.epoch)
             parents = []
             # Update the agents
             for num, agent in enumerate(self.agents):
-                #print(f'\t\t{num}. {agent}.act()')
+                #print(f'-agent{num}.act(), energy: {agent.energy}, svo: %.2f' % agent.social_value_orientation)
                 agent.act(self)
                 # Check impact of actions
                 if agent.energy <= 0:
