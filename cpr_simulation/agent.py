@@ -88,11 +88,11 @@ class Agent:
         if not dist_params:
             dist_params = {
                 "d1" : {
-                    "m" : .25,
+                    "m" : 0.25,
                     "s" : .125
                 },
                 "d2" : {
-                    "m" : .75,
+                    "m" : 0.75,
                     "s" : .125
                 }
             }
@@ -270,7 +270,7 @@ class Agent:
                                abs(svo_mean-parent2.social_value_orientation))
             svo_std = base_svo_std * sim.svo_mutation_factor
             child.social_value_orientation = \
-                max(min(rnd.gauss(svo_mean, svo_std), 1), 0)
+                svo_mean # max(min(rnd.gauss(svo_mean, svo_std), 1), 0)
             
             sim.add_agent(child)
 

@@ -118,15 +118,15 @@ run : `int`,
 default_params = {
     "agent" : {
         "count" : 100,
-        "svo_convergence_factor" : 1,
+        "svo_convergence_factor" : 4,
         "params" : {
             "metabolism" : 5,
-            "maximum_age" : 10,
+            "maximum_age" : 25,
 
-            "consumption_factor" : 1,
-            "procreate_cost_factor" : 1,
-            "procreate_req_factor" : 1,
-            "start_energy_factor" : 2,
+            "consumption_factor" : 2,
+            "procreate_cost_factor" : 2.2,
+            "procreate_req_factor" : 1.8,
+            "start_energy_factor" : 1.1,
                    
             "behaviour" : "restricted_energy_function", 
             # possible values: "base_energy_function", 
@@ -137,21 +137,34 @@ default_params = {
             "greed" : 5,
 
             # Restricted Model Parameters
-            "res_limit_factor" : 2,
-            "res_unlimit_factor" : 3,
-            "caught_chance" : 0.2,
-            "caught_cooldown_factor" : 0.2,
+            "res_limit_factor" : 3,
+            "res_unlimit_factor" : 4,
+            "caught_chance" : 0.5,
+            "caught_cooldown_factor" : 0.6,
         }
     },
 
-    "svo_dist" : {},
+    "svo_dist" : {
+        "d1" : {
+            "m" : 0,
+            "s" : .05
+        },
+        "d2" : {
+            "m" : 0.5,
+            "s" : .05
+        },
+        "d3": {
+            "m": 1,
+            "s": .05
+        }
+    },
 
     "resource" : {
-        "start_amount" : 5000,
-        "max_amount" : 10000,
-        "min_amount" : 100,
-        "cooldown" : 10,
-        "growth_rate" : .25
+        "start_amount" : 4000,
+        "max_amount" : 5000,
+        "min_amount" : 2000,
+        "cooldown" : 7,
+        "growth_rate" : .17
     },
 
     "simulation" : {
