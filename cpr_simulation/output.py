@@ -25,7 +25,7 @@ class ResultsPlotter:
         # Create figure
         # self.fig, (self.ax_agent, self.ax_svo, self.ax_resource) = plt.subplots(
         #     nrows=3, figsize=(16,8))
-        self.fig = plt.figure(figsize=[15,10])
+        self.fig = plt.figure()
         self.ax_agent = plt.subplot(222)
         self.ax_resource = plt.subplot(224)
         self.ax_svo = plt.subplot(121)
@@ -51,7 +51,7 @@ class ResultsPlotter:
         # Setup resource subplot
         self.resource_line, = self.ax_resource.plot([], [], lw=2, color='green')
         self.res_limit_line, = self.ax_resource.plot([], [], lw=1, color='red', linestyle='--')
-        self.res_unlimit_line, = self.ax_resource.plot([], [], lw=1, color='yellow', linestyle='--')
+        self.res_unlimit_line, = self.ax_resource.plot([], [], lw=1, color='purple', linestyle='--')
         self.ax_resource.set_title('Real time plot of resource supply')
         self.ax_resource.set_ylabel('resource supply')
         self.ax_resource.set_xlabel('epochs')        
@@ -155,6 +155,8 @@ class ResultsPlotter:
             self.fig, self.update, data_gen, 
             blit=True, interval=1, repeat=False, 
             init_func=self.init_plot)
+        mng = plt.get_current_fig_manager()
+        mng.window.state('zoomed')
         plt.show()
         
 

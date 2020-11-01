@@ -275,7 +275,7 @@ class Simulator:
                 input("Press enter to continue...")
 
             # Check whether there are still agents alive
-            if self.get_agent_count() <= 1:
+            if self.n_agents == 0 or len(self.agents) <= 1:
                 break
         
         # While loop finished, maximum epoch reached
@@ -317,6 +317,10 @@ class Simulator:
         self.cur_stats = f"epoch: {self.epoch}, " + \
                          f"agent count: {self.get_agent_count()}, " + \
                          f"resource: {self.get_resource().get_amount():.2f}"
+        if self.restriction_mode:
+            self.cur_stats += f"restriction: "
+            self.cur_stats += \
+                "ACTIVE  " if self.restriction_active else "INACTIVE"
         # for dist_name in self.agent_distributions:
         #     dist = self.agent_distributions[dist_name]
         #     self.cur_stats += (
