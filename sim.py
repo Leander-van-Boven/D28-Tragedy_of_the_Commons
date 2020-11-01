@@ -101,8 +101,8 @@ def run(args):
     plot = args.plot if args.plot is not None else \
         not (args.range or args.batch-1)
 
-    verbose = args.verbose if args.verbose is not None else \
-        not (args.range or args.batch-1)
+    verbose = args.verbose if args.verbose > 1 else \
+        not int(args.range or args.batch-1)
 
     cpr.run(param_dict, params_to_range, args.jobs, param_ranges, args.out, 
             plot, verbose)
@@ -274,8 +274,8 @@ if __name__ == '__main__':
         '-P', '--plot', required=False, default=None, const=True, type=str2bool,
         nargs='?', metavar='bool', help='whether to show a real-time plot')
     parser.add_argument(
-        '-v', '--verbose', required=False, default=None, const=True, 
-        type=str2bool, nargs='?', metavar='bool',
+        '-v', '--verbose', required=False, default=-1, const=True, 
+        type=int, nargs='?', metavar='0-2',
         help="whether to enter verbose mode")
     parser.add_argument(
         '--jobs', required=False, default=1, type=int, metavar='n_jobs',

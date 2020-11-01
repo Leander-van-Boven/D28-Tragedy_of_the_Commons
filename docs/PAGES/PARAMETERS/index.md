@@ -1,6 +1,6 @@
 ---
 layout: page
-title: The Model
+title: Parameters
 ---
 
 1. toc

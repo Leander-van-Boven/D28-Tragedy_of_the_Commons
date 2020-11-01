@@ -10,7 +10,7 @@ from numpy import arange, prod
 import itertools as it
 
 def run(override_params=dict(), params_to_range=None, n_jobs=1,
-        param_ranges=None, log_dir=None, use_plot=True, verbose=True):
+        param_ranges=None, log_dir=None, use_plot=True, verbose=1):
     """Reads and generates param dicts and runs the simulation with them.
 
     Parameters
@@ -67,7 +67,7 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
 
         # Generate the Simulator class
         simulator = Simulator(p, printer, l or logger, list(c), 
-                              verbose)
+                              int(verbose))
 
         # If we use real-time plotting, we need to pass the simulation
         # to the printer.
@@ -104,7 +104,7 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
             # Iterate
             for (run, combi) in enumerate(value_combis):       
                 # Provide run information if verbose mode is on
-                if verbose:
+                if verbose == 1:
                     print('\nIteration: %s/%s' % (run+1, number_of_combis))
                     print('Params: ' + ', '.join(["%s = %s" % i 
                                                 for i in zip(param_names, combi)]))     

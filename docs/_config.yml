@@ -30,10 +30,10 @@ hydejack:
 #     always: false
 
 menu:
-  - title: The Implementation
-    url: /PAGES/IMPLEMENTATION
-  - title: The Model
-    url: /PAGES/MODEL
+  - title: Interaction with the Model
+    url: /pages/introduction.md
+  - title: Parameters
+    url: /pages/parameters.md
 
 exclude:
   - .jekyll-cache

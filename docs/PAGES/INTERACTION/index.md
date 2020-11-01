@@ -1,6 +1,6 @@
 ---
 layout: page
-title: The Implementation
+title: Interaction with the Model
 ---
 
 1. toc
