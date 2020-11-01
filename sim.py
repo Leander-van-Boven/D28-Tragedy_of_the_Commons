@@ -1,10 +1,10 @@
-'''This module is the connection between the user and the simulation.
+"""This module is the connection between the user and the simulation.
 
 It parses the commandline arguments and starts the simulation accordingly.
 The possible commandline arguments can be requested and reviewed by
-running: 
+running:
 >>> python3 sim.py --help
-'''
+"""
 
 # TODO:
 # - Check behavior of output path for csv logger
@@ -14,7 +14,8 @@ running:
 import cpr_simulation as cpr
 import argparse
 import json
-import os, sys
+import os
+import sys
 
 # Constant values for loading and saving scenarios. 
 SCENARIO_DIR = 'scenarios'
@@ -125,7 +126,7 @@ def save(args):
         name = 'scenario%s' % i
         path = '%s/%s' % (SCENARIO_DIR, name)
 
-        while (os.path.isfile(path)):
+        while os.path.isfile(path):
             i += 1
             name = 'scenario%s' % i
             path = '%s/%s' % (SCENARIO_DIR, name)
@@ -148,7 +149,7 @@ def llist(_):
 
     Parameters
     ----------
-    args : `argparse.Namespace`
+    _ : `argparse.Namespace`
         The command-line arguments.
     """
     print('\n'.join(
@@ -203,9 +204,9 @@ def str2locval(x):
         (param, val) = tuple(x.split('='))
         res = "[\'" + "\'][\'".join(param.split(':')) + "\']"
         try:
-            return (res, type(eval('cpr.default_params' + res))(val))
+            return res, type(eval('cpr.default_params' + res))(val)
         except KeyError:
-            return (res, float(val))
+            return res, float(val)
 
     except ValueError:
         raise argparse.ArgumentTypeError("Invalid argument syntax")
