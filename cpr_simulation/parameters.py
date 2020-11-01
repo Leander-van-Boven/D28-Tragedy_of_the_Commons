@@ -117,16 +117,17 @@ run : `int`,
 
 default_params = {
     "agent" : {
-        "count" : 100,
-        "svo_convergence_factor" : 1,
+        "count" : 5,
+        "svo_convergence_factor" : 0.09,
         "params" : {
             "metabolism" : 5,
-            "maximum_age" : 10,
+            "maximum_age" : 30,
+            "maximum_age_std_factor" : 0.05,
 
-            "consumption_factor" : 1,
-            "procreate_cost_factor" : 1,
-            "procreate_req_factor" : 1,
-            "start_energy_factor" : 2,
+            "consumption_factor" : 1.3,
+            "procreate_cost_factor" : 3.9,
+            "procreate_req_factor" : 1.2,
+            "start_energy_factor" : 1.5,
                    
             "behaviour" : "restricted_energy_function", 
             # possible values: "base_energy_function", 
@@ -137,21 +138,37 @@ default_params = {
             "greed" : 5,
 
             # Restricted Model Parameters
-            "res_limit_factor" : 2,
-            "res_unlimit_factor" : 3,
-            "caught_chance" : 0.2,
+            "res_limit_factor" : 1.3,
+            "res_unlimit_factor" : 2,
+            "caught_chance" : 0.7,
             "caught_cooldown_factor" : 0.2,
         }
     },
 
-    "svo_dist" : {},
+    "svo_dist" : {
+
+    },
 
     "resource" : {
-        "start_amount" : 5000,
-        "max_amount" : 10000,
-        "min_amount" : 100,
-        "cooldown" : 10,
-        "growth_rate" : .25
+        "start_amount" : 1,
+        #"max_amount" : 1500,
+        "min_amount" : 1,
+        "cooldown" : 50,
+        "growth_rate" : .25,
+        "min_growth_rate" : 1,
+        "max_growth_rate" : 2,
+
+        "growth_function" : "nroot", # "exponential", "nroot",  logarithmic"
+        "gf_params" : {
+            "exp_rate" : .25,
+            "log_init_jump" : 100,
+            "log_scale" : 15,
+            "log_offset" : 0,
+            "root_scale" : 2500,
+            "root_xoffset" : 0,
+            "root_yoffset" : 1400,
+            "root_base" : 16,
+        }
     },
 
     "simulation" : {

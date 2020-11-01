@@ -63,7 +63,7 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
             ResultsPlotter(
                 params['agent']['count'],
                 params['plotter_params']['svo_bar_count'],
-                params['resource']['max_amount'])
+                params['resource']['start_amount'])
 
         # Generate the Simulator class
         simulator = Simulator(p, printer, l or logger, list(c), 

@@ -176,19 +176,48 @@ class Simulator:
         #TODO We might want to add self.epoch = 1 here.
         # Run the simulations for max_epoch amounts
         while (self.epoch < self.max_epoch):
+            print('\n---    EPOCH %s    ---\n' % self.epoch)
+            print(f"Agent count: {len(self.agents)}, available resource: {self.resource.get_amount():.2f}")
+
             parents = []
+            eol = []
+
             # Update the agents
             for num, agent in enumerate(self.agents):
                 #print(f'\t\t{num}. {agent}.act()')
+                print(f"{num:3.0f}\tid={agent.id}\tsvo={agent.social_value_orientation:3.2f}\tpre={agent.energy:3.2f}",
+                    end='')
                 agent.act(self)
+                print(f'\tpost={agent.energy:.2f}', end='')
                 # Check impact of actions
                 if agent.energy <= 0:
-                    self.remove_agent(agent)
+                    print('\tSTARVED')
+                    eol.append(agent)
                 elif agent.age > agent.maximum_age:
-                    self.remove_agent(agent)                               
+                    print('\tEOL')
+                    eol.append(agent)                              
                 elif agent.energy >= agent.procreate_req:
+                    print('\tPROCEATE')
                     parents.append(agent)
+                else:
+                    print('\tLIVE')
+
+            for agent in eol:
+                self.agents.remove(agent)
+
+            print('\nPost act agent count: %s' % self.get_agent_count())
+            print('Procreate: %s (tot %s)' % (
+                ', '.join([str(a.id) for a in parents]),
+                len(parents)
+            ))
             Agent.procreate(self, parents)
+            print('Post-proc agent count: %s\n' % len(self.agents))
+            # Update the resource and epoch
+            self.resource.grow_resource() 
+            np.random.shuffle(self.agents)
+            self.epoch += 1
+
+            time.sleep(self.params['sleep'])
 
             # Print the current stats of the simulation
             if self.verbose and self.epoch%self.print_interval == 0:
@@ -198,16 +227,11 @@ class Simulator:
             if self.logger and self.epoch%self.log_interval == 0:
                 self.log_results()
 
+            input("Press enter to continue...")
+
             # Check whether there are still agents alive
             if self.get_agent_count() <= 1:
-                break
-
-            # Update the resource and epoch
-            self.resource.grow_resource() 
-            np.random.shuffle(self.agents)
-            self.epoch += 1
-
-            time.sleep(self.params['sleep'])
+                pass#break
         
         # While loop finished, maximum epoch reached
         if self.verbose:

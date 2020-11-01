@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from matplotlib import animation
 
 class ResultsPlotter:
-    def __init__(self, max_agent, svo_bar_count, max_resource):        
+    def __init__(self, max_agent, svo_bar_count, start_resource):        
         """Sets up the real-time plot.
 
         Parameters
@@ -18,8 +18,8 @@ class ResultsPlotter:
         """
 
         self.max_agent = max_agent
-        self.max_resource = max_resource
         self.xdata, self.yagent, self.yresource = [], [], []
+        self.start_resource = start_resource
 
         # Create figure
         # self.fig, (self.ax_agent, self.ax_svo, self.ax_resource) = plt.subplots(
@@ -63,7 +63,7 @@ class ResultsPlotter:
         self.ax_agent.set_xlim(0, 10)
         self.ax_svo.set_ylim(0, 1)
         self.ax_svo.set_xlim(0, 1)
-        self.ax_resource.set_ylim(-.1, self.max_resource + 1)
+        self.ax_resource.set_ylim(-.1, self.start_resource * 1.5)
         self.ax_resource.set_xlim(0, 10)
 
         # Reset all data

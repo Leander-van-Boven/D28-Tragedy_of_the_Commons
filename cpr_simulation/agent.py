@@ -13,6 +13,7 @@ class Agent:
     # Restricted Energy Function attributes
     restriction_active = False
     cur_cooldown = 0
+    id=-1
 
 
     # variable = Agent(params);
@@ -34,7 +35,10 @@ class Agent:
                               * params['procreate_cost_factor']
         self.procreate_req_factor = params['procreate_req_factor']
         self.energy = params['metabolism'] * params['start_energy_factor']
-        self.maximum_age = params['maximum_age']
+        self.maximum_age = int(round(rnd.gauss(
+            params['maximum_age'], 
+            params['maximum_age'] * params['maximum_age_std_factor'])))
+
 
         #self.behaviour = eval(params['behaviour'] + '(sim)')
         self.behaviour = params['behaviour']
@@ -43,6 +47,9 @@ class Agent:
             self.social_value_orientation = kwargs['svo']
         else:
             self.social_value_orientation = .5
+
+        if 'id' in kwargs:
+            self.id = kwargs['id']
 
         # Base energy function parameters
         self.scarcity = params['scarcity']
@@ -127,7 +134,8 @@ class Agent:
         np.clip(agent_svos, 0, 1, out=agent_svos)
 
         # Return the list of Agent with the right SVOs
-        return [Agent(agent_params, svo=svo) for svo in agent_svos]
+        return [Agent(agent_params, svo=svo, id=id) for (id,svo) in 
+                enumerate(agent_svos)]
    
     def act(self, sim):
         """This is the act function of the agent.
@@ -144,8 +152,20 @@ class Agent:
         # * (1 + exp(self.age - self.max_age/2))
         self.energy -= self.metabolism  
         self.age += 1
+        print(f'\t-met={self.energy:.2f}', end='')
         # Execute behaviour to compensate lost energy from metabolism
         eval('self.' + self.behaviour)(sim)
+        print(f'\t+beh={self.energy:.2f}', end='')
+
+    def new_energy_function(self, sim):
+
+        if sim.get_resource().get_amount() >= sim.get_agent_count() * self.consumption:
+            self.energy += sim.get_resource().consume_resource(self.consumption)
+        elif sim.get_resource().get_amount() >= sim.get_agent_count() * self.metabolism:
+            self.energy += sim.get_resource().consume_resource(self.metabolism)
+        else:
+            available_frac = sim.get_resource().get_amount() / sim.get_agent_count() * self.metabolism
+            self.energy += sim.get_resource().consume_resource(self.metabolism * available_frac)
 
 
     def base_energy_function(self, sim):
@@ -249,7 +269,8 @@ class Agent:
         parents : [],
             An array of agents with energy > procreate_req
         """
-
+        if parents:
+            s_id = max([a.id for a in parents]) + 1
         rnd.shuffle(parents)
         while len(parents) > 1:
             # Select parent 1, update its attributes
@@ -260,19 +281,31 @@ class Agent:
             parent2 = parents.pop()           
             parent2.child_count += 1
 
-            child = Agent(sim.agent_params)
-            child.energy = parent1.procreate_cost + parent2.procreate_cost
-            svo_mean = \
-                (parent1.social_value_orientation*parent1.energy \
-                + parent2.social_value_orientation*parent2.energy) \
-                / (parent1.energy+parent2.energy)
-            base_svo_std = min(abs(svo_mean-parent1.social_value_orientation), 
-                               abs(svo_mean-parent2.social_value_orientation))
-            svo_std = base_svo_std * sim.svo_mutation_factor
-            child.social_value_orientation = \
-                max(min(rnd.gauss(svo_mean, svo_std), 1), 0)
+            if rnd.random() < parent1.energy / (parent1.energy + parent2.energy):
+                svo= rnd.gauss(parent1.social_value_orientation, 
+                    sim.svo_mutation_factor)
+            else:
+                svo= rnd.gauss(parent2.social_value_orientation, 
+                    sim.svo_mutation_factor)
+
+            svo = max(min(svo, 1), 0)
+
+            child = Agent(sim.agent_params, id=s_id, svo=svo)
+            child.energy = (parent1.procreate_cost + parent2.procreate_cost) / 2
+
+            # svo_mean = \
+            #     (parent1.social_value_orientation*parent1.energy \
+            #     + parent2.social_value_orientation*parent2.energy) \
+            #     / (parent1.energy+parent2.energy)
+            # base_svo_std = min(abs(svo_mean-parent1.social_value_orientation), 
+            #                    abs(svo_mean-parent2.social_value_orientation))
+            # svo_std = base_svo_std * sim.svo_mutation_factor
+            # child.social_value_orientation = \
+            #     max(min(rnd.gauss(svo_mean, svo_std), 1), 0)
             
             sim.add_agent(child)
 
             parent1.energy -= parent1.procreate_cost
             parent2.energy -= parent2.procreate_cost
+
+            s_id += 1
