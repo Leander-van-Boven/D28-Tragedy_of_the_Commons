@@ -118,7 +118,7 @@ class ResultsPlotter:
         self.yagent.append(a)
         counts, _ = np.histogram(s, bins=len(self.svo_bars), range=(0,1))
         total = sum(counts)
-        counts = [c/total for c in counts] if total > 0 else len(counts)*0
+        counts = [c/total for c in counts] if total > 0 else len(counts)*[0]
         self.yresource.append(r)
         self.limitresource.append(l)
         self.unlimitresource.append(u)
