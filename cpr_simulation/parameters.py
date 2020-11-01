@@ -4,7 +4,7 @@ Explanation of parameters
 -------------------------
 
 agent_distributions : `dict`,
-    Contians the different groups of agents, 
+    Contains the different groups of agents,
         with their respective parameter values.
     The key for each group denotes it label (this is also shown as line
         label in the legend of the real-time plot).
@@ -116,89 +116,89 @@ run : `int`,
 """
 
 default_params = {
-    "agent" : {
-        "count" : 100,
-        "svo_convergence_factor" : 0.15,
-        "params" : {
-            "metabolism" : 5,
-            "maximum_age" : 30,
-            "maximum_age_std_factor" : 0.05,
+    "agent": {
+        "count": 100,
+        "svo_convergence_factor": 0.15,
+        "params": {
+            "metabolism": 5,
+            "maximum_age": 30,
+            "maximum_age_std_factor": 0.05,
 
-            "consumption_factor" : 1.8,
-            "procreate_cost_factor" : 3.9,
-            "procreate_req_factor" : 1.2,
-            "start_energy_factor" : 1.3,
-                   
-            "behaviour" : "restricted_energy_function", 
+            "consumption_factor": 1.8,
+            "procreate_cost_factor": 3.9,
+            "procreate_req_factor": 1.2,
+            "start_energy_factor": 1.3,
+
+            "behaviour": "restricted_energy_function",
             # possible values: "base_energy_function", 
             #                  "restricted_energy_function"
 
             # Base Model Parameters
-            "scarcity" : 10,
-            "greed" : 5,
+            "scarcity": 10,
+            "greed": 5,
 
             # Restricted Model Parameters
-            "caught_chance" : 0.2,
-            "caught_cooldown_factor" : 0.3,
+            "caught_chance": 0.2,
+            "caught_cooldown_factor": 0.3,
         }
     },
 
-    "svo_dist" : {
-        "d1" : {
-            "m" : 0.5,
-            "s" : .1
+    "svo_dist": {
+        "d1": {
+            "m": 0.5,
+            "s": .1
         },
-        "d2" : {
-            "m" : 0.5,
-            "s" : .1
+        "d2": {
+            "m": 0.5,
+            "s": .1
         }
     },
 
-    "resource" : {
-        "start_amount" : 4000,
-        #"max_amount" : 1500,
-        "min_amount" : 1,
-        "cooldown" : 50,
-        "growth_rate" : .25,
-        "min_growth_rate" : 1,
-        "max_growth_rate" : 2,
+    "resource": {
+        "start_amount": 4000,
+        # "max_amount" : 1500,
+        "min_amount": 1,
+        "cooldown": 50,
+        "growth_rate": .25,
+        "min_growth_rate": 1,
+        "max_growth_rate": 2,
 
-        "growth_function" : "logarithmic", # "exponential", "nroot",  logarithmic"
-        "gf_params" : {
-            "exp_rate" : .25,
-            "log_init_jump" : 3,
-            "log_scale" : 6,
-            "log_offset" : 0,
-            "root_scale" : 2500,
-            "root_xoffset" : 0,
-            "root_yoffset" : 1400,
-            "root_base" : 16,
+        "growth_function": "logarithmic",  # "exponential", "nroot",  logarithmic"
+        "gf_params": {
+            "exp_rate": .25,
+            "log_init_jump": 3,
+            "log_scale": 6,
+            "log_offset": 0,
+            "root_scale": 2500,
+            "root_xoffset": 0,
+            "root_yoffset": 1400,
+            "root_base": 16,
         }
     },
 
-    "simulation" : {
-        "max_epoch" : 1000,
-        "plot_interval" : 1,
-        "print_interval" : 1,
-        "log_interval" : 1,
-        "sleep" : 0,
+    "simulation": {
+        "max_epoch": 1000,
+        "plot_interval": 1,
+        "print_interval": 1,
+        "log_interval": 1,
+        "sleep": 0,
 
         # Restriction check parameters
-        "res_limit_factor" : 3,
-        "res_unlimit_factor" : 4,
+        "res_limit_factor": 3,
+        "res_unlimit_factor": 4,
     },
 
-    "plotter_params" : {
-        "svo_bar_count" : 20,
+    "plotter_params": {
+        "svo_bar_count": 20,
     },
 
-    "logger_params" : {
-        "separator" : ',',
-        "separator_replacement" : ' ',
-        "print_interval" : 1
+    "logger_params": {
+        "separator": ',',
+        "separator_replacement": ' ',
+        "print_interval": 1
     },
 
     # Do not override this value!
     # For internal purposes only
-    "batch" : 1,
+    "batch": 1,
 }

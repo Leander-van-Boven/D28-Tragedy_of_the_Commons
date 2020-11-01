@@ -4,6 +4,7 @@ from .agent import Agent
 from .resource import Resource
 from .util import do_nothing
 
+
 class Simulator:
     """Main class that manages the agents and resource.
 
@@ -47,7 +48,7 @@ class Simulator:
 
     def __init__(self, param_dict, printer=None, logger=None, row_head=[],
                  verbose=True):
-        '''Initializes the simulation with the provided parameter dict.'''
+        """Initializes the simulation with the provided parameter dict."""
 
         self.printer = printer
         self.logger = logger
@@ -67,13 +68,13 @@ class Simulator:
 
         self.resource_limit_factor = \
             self.params['res_limit_factor'] * \
-                self.agent_params['consumption_factor'] * \
-                self.agent_params['metabolism']
+            self.agent_params['consumption_factor'] * \
+            self.agent_params['metabolism']
 
         self.resource_unlimit_factor = \
             self.params['res_unlimit_factor'] * \
-                self.agent_params['consumption_factor'] * \
-                self.agent_params['metabolism']
+            self.agent_params['consumption_factor'] * \
+            self.agent_params['metabolism']
 
         self.restriction_mode = \
             self.agent_params['behaviour'] == "restricted_energy_function"
@@ -93,7 +94,6 @@ class Simulator:
         self.agent_params['print'] = self.v2_print
         self.resource_params['print'] = self.v2_print
 
-
     def get_agent_count(self, min_social_value=0, max_social_value=1):
         """Returns the amount of all agents if no params are specified.
         
@@ -108,22 +108,20 @@ class Simulator:
             The upper limit of the SVO of the agent (inclusive).
         """
 
-        return len([agent 
-                    for agent in self.agents 
-                    if min_social_value 
-                        <= agent.social_value_orientation 
-                        <= max_social_value])
-
+        return len([agent
+                    for agent in self.agents
+                    if min_social_value
+                    <= agent.social_value_orientation
+                    <= max_social_value])
 
     def get_agents(self):
-        '''Creates a histogram with an agent count for each unique SVO.'''
+        """Creates a histogram with an agent count for each unique SVO."""
 
         classes = {}
-        for agent in self.agents:   
-          svo = agent.social_value_orientation()
-          classes[svo] = classes.get(svo, 0) + 1
-        return classes   
-
+        for agent in self.agents:
+            svo = agent.social_value_orientation()
+            classes[svo] = classes.get(svo, 0) + 1
+        return classes
 
     def add_agent(self, agent):
         """Adds an agent to the list of agents.
@@ -135,7 +133,6 @@ class Simulator:
         """
 
         self.agents.append(agent)
-
 
     def remove_agent(self, agent):
         """Removes the agent from the simulation.
@@ -151,18 +148,14 @@ class Simulator:
 
         self.agents.remove(agent)
 
-
     def get_resource(self):
         return self.resource
-        
-    
+
     def get_result(self):
         return self.result
 
-
     def get_epoch(self):
         return self.epoch
-
 
     def generate_simulation(self):
         """Generates the simulation.
@@ -202,13 +195,13 @@ class Simulator:
         if self.verbose:
             self.print_results()
         self.epoch = 1
-        #TODO We might want to add self.epoch = 1 here.
+        # TODO We might want to add self.epoch = 1 here.
         # Run the simulations for max_epoch amounts
-        while (self.epoch < self.max_epoch):
+        while self.epoch < self.max_epoch:
             self.v2_print('\n---    EPOCH %s    ---\n' % self.epoch)
             self.v2_print(f"Agent count: {len(self.agents)}")
             self.v2_print("Available resource: " +
-                         f"{self.resource.get_amount():.2f}")
+                          f"{self.resource.get_amount():.2f}")
             self.v2_print(f"Restriction: ", end='')
 
             parents = []
@@ -216,11 +209,11 @@ class Simulator:
 
             if self.restriction_mode:
                 if self.resource.get_amount() > \
-                    len(self.agents)*self.resource_unlimit_factor:
-                        self.restriction_active = False
+                        len(self.agents) * self.resource_unlimit_factor:
+                    self.restriction_active = False
                 if self.resource.get_amount() < \
-                    len(self.agents)*self.resource_limit_factor:
-                        self.restriction_active = True
+                        len(self.agents) * self.resource_limit_factor:
+                    self.restriction_active = True
 
             if self.restriction_active:
                 self.v2_print(f"ACTIVE")
@@ -229,10 +222,10 @@ class Simulator:
 
             # Update the agents
             for num, agent in enumerate(self.agents):
-                #print(f'\t\t{num}. {agent}.act()')
+                # print(f'\t\t{num}. {agent}.act()')
                 self.v2_print(f"{num:3.0f}\tid={agent.id}\t" + \
-                    f"svo={agent.social_value_orientation:3.2f}\t" + \
-                    f"pre={agent.energy:3.2f}", end='')
+                              f"svo={agent.social_value_orientation:3.2f}\t" + \
+                              f"pre={agent.energy:3.2f}", end='')
                 agent.act(self)
                 self.v2_print(f'\tpost={agent.energy:.2f}', end='')
                 # Check impact of actions
@@ -241,9 +234,9 @@ class Simulator:
                     eol.append(agent)
                 elif agent.age > agent.maximum_age:
                     self.v2_print('\tEOL')
-                    eol.append(agent)                              
+                    eol.append(agent)
                 elif agent.energy >= agent.procreate_req:
-                    self.v2_print('\tPROCEATE')
+                    self.v2_print('\tPROCREATE')
                     parents.append(agent)
                 else:
                     self.v2_print('\tLIVE')
@@ -259,17 +252,17 @@ class Simulator:
             Agent.procreate(self, parents)
             self.v2_print('Post-proc agent count: %s\n' % len(self.agents))
             # Update the resource and epoch
-            self.resource.grow_resource() 
+            self.resource.grow_resource()
             np.random.shuffle(self.agents)
 
             time.sleep(self.params['sleep'])
 
             # Print the current stats of the simulation
-            if self.verbose and self.epoch%self.print_interval == 0:
+            if self.verbose and self.epoch % self.print_interval == 0:
                 self.print_results()
-            if self.printer and self.epoch%self.plot_interval == 0:
+            if self.printer and self.epoch % self.plot_interval == 0:
                 yield self.plot_results()
-            if self.logger and self.epoch%self.log_interval == 0:
+            if self.logger and self.epoch % self.log_interval == 0:
                 self.log_results()
 
             if self.verbose == 2:
@@ -280,7 +273,7 @@ class Simulator:
                 break
 
             self.epoch += 1
-        
+
         # While loop finished, maximum epoch reached
         self.v_print()
         # Some agents stayed alive
@@ -292,15 +285,14 @@ class Simulator:
             self.result = ("Only one lonely agent managed to survive\n" +
                            "He will stay on this forgotten island forever.")
         else:
-            self.result = ("All agents are dead :( " + 
-                           "there is no hope left for the village, " + 
+            self.result = ("All agents are dead :( " +
+                           "there is no hope left for the village, " +
                            "just darkness.")
 
         if self.printer:
             self.printer.save_fig('.lastplot.pdf')
         self.v_print(self.result)
 
-    
     def plot_results(self):
         """Creates a tuple of the current stats of the simulation.
         This tuple then needs to be yielded to get plotted.
@@ -313,9 +305,8 @@ class Simulator:
                 len(self.agents) * self.resource_limit_factor,
                 len(self.agents) * self.resource_unlimit_factor)
 
-
     def print_results(self):
-        '''Prints the current stats of the simulation.'''
+        """Prints the current stats of the simulation."""
         self.cur_stats = ''
         if self.restriction_mode:
             self.cur_stats += f"restriction: "
@@ -332,43 +323,42 @@ class Simulator:
         #         str(self.get_agent_count(dist['min_social_value'], 
         #                                  dist['max_social_value'])) + 
         #         ", ")
-        #self.cur_stats += f"res: {self.resource.get_amount():.2f}"
-        self.v1_print(self.cur_stats, end = "\r", flush = True)
+        # self.cur_stats += f"res: {self.resource.get_amount():.2f}"
+        self.v1_print(self.cur_stats, end="\r", flush=True)
 
     def log_results(self):
-        '''Adds a new row to the log.'''
-        
+        """Adds a new row to the log."""
+
         row = self.log_row_head + [self.epoch, self.resource.get_amount()]
-        #for dist_name in self.agent_distributions:
+        # for dist_name in self.agent_distributions:
         #    dist = self.agent_distributions[dist_name]
         #    row.append(self.get_agent_count(dist['min_social_value'],
         #                                    dist['max_social_value']))
-        
-        
+
         a = 0
         b = 0
         c = 0
         d = 0
         e = 0
-        
+
         agents_now = []
         agent_svo_rounded = []
 
         for agent in self.agents:
             svo = agent.social_value_orientation
             agents_now.append(svo)
-            #agent_svo_rounded.append(np.round(svo,2))
+            # agent_svo_rounded.append(np.round(svo,2))
             if svo <= .2:
                 a += 1
-            elif (svo > .2 and svo <= .4) :
+            elif .2 < svo <= .4:
                 b += 1
-            elif (svo > .4 and svo <= .6) :
+            elif .4 < svo <= .6:
                 c += 1
-            elif (svo > .6 and svo <= .8) :
+            elif .6 < svo <= .8:
                 d += 1
-            elif (svo > .8 and svo <= 1):
+            elif .8 < svo <= 1:
                 e += 1
-                
+
         row.append(len(self.agents))
         row.append(a)
         row.append(b)
@@ -376,10 +366,10 @@ class Simulator:
         row.append(d)
         row.append(e)
 
-        if len(agents_now) > 0:        
+        if len(agents_now) > 0:
             row.append(np.median(agents_now))
-            row.append(np.percentile(agents_now,40))
-            row.append(np.percentile(agents_now,60))
+            row.append(np.percentile(agents_now, 40))
+            row.append(np.percentile(agents_now, 60))
             row.append(np.mean(agents_now))
             row.append(np.std(agents_now))
             row.append(len(self.agents) * self.resource_limit_factor)
@@ -390,9 +380,7 @@ class Simulator:
             row.append(0)
             row.append(0)
             row.append(0)
-            row.append(0)   
-            row.append(0)  
+            row.append(0)
+            row.append(0)
 
         self.logger.add_row(row)
-
-

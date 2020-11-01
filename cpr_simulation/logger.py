@@ -1,4 +1,5 @@
-import os,sys
+import os, sys
+
 
 class CsvLogger:
     """Helper class that constructs a CSV table.
@@ -31,14 +32,13 @@ class CsvLogger:
     `write(path)`
     """
 
-
     def __init__(self, params, col_names, path=None, append=False):
         """Initializes the CsvLogger class.
         
         Parameters
         ----------
         params : `dict`,
-            A dictionary containing paramaters for the logger.
+            A dictionary containing parameters for the logger.
 
         path : `str`, 
             The path to which the output should be written.
@@ -61,7 +61,6 @@ class CsvLogger:
         self.table = list()
         self.append = append
 
-
     def add_row(self, row):
         """Adds a row to the table.
 
@@ -80,7 +79,6 @@ class CsvLogger:
         )
         self.n_rows += 1
 
-
     def write(self, path=None):
         """Writes the table as a CSV file to the specified path.
 
@@ -92,7 +90,7 @@ class CsvLogger:
         """
         if not self.append:
             with open(path or self.path or '.log.csv', 'w') as file:
-                file.write(self.separator.join(self.head) + '\n') 
+                file.write(self.separator.join(self.head) + '\n')
                 # file.write('\n'.join([self.separator.join(row) 
                 #                       for row in self.table]))
                 file.write('\n'.join(self.table))

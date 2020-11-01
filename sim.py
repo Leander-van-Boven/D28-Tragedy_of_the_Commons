@@ -6,7 +6,7 @@ running:
 >>> python3 sim.py --help
 '''
 
-#TODO:
+# TODO:
 # - Check behavior of output path for csv logger
 # - Implement plot default true if single exp, default false if batch or
 #   range. 
@@ -57,15 +57,14 @@ def run(args):
 
         with open(path) as file:
             param_dict = cpr.util.dd_factory(json.loads(file.read()))
-    else: 
+    else:
         param_dict = cpr.util.dd_factory()
-
 
     param_ranges = []
     params_to_range = []
 
     if args.batch > 1:
-        param_ranges.append((1,args.batch+1,1))
+        param_ranges.append((1, args.batch + 1, 1))
         params_to_range.append("[\'batch\']")
 
     if args.range:
@@ -74,26 +73,26 @@ def run(args):
         param_ranges += list(ranges)
 
     if args.param:
-        for key,val in args.param:
+        for key, val in args.param:
             if type(val) == str:
                 val = "str('%s')" % val
-            exec("param_dict%s=%s" % (key,val))
+            exec("param_dict%s=%s" % (key, val))
 
     if args.verbose >= 0:
         verbose = args.verbose
-    elif args.range or (args.batch>1):
+    elif args.range or (args.batch > 1):
         verbose = 0
     else:
         verbose = 1
-        
+
     if args.plot is not None:
         plot = args.plot
     elif verbose == 2:
         plot = False
     else:
-        plot = not (args.range or args.batch-1)
+        plot = not (args.range or args.batch - 1)
 
-    cpr.run(param_dict, params_to_range, param_ranges, 
+    cpr.run(param_dict, params_to_range, param_ranges,
             args.out, plot, args.jobs, args.fullscreen, verbose)
 
 
@@ -117,22 +116,22 @@ def save(args):
 
         if os.path.isdir(path):
             print("A scenario named \'%s\' already exists" % args.name)
-            sys.exit(1)  
+            sys.exit(1)
 
         name = args.name
-        os.mkdir(path)         
+        os.mkdir(path)
     else:
-        i=0
+        i = 0
         name = 'scenario%s' % i
         path = '%s/%s' % (SCENARIO_DIR, name)
 
-        while(os.path.isfile(path)):
+        while (os.path.isfile(path)):
             i += 1
             name = 'scenario%s' % i
             path = '%s/%s' % (SCENARIO_DIR, name)
 
         os.mkdir(path)
-        
+
     param_path = '%s/%s' % (path, PARAM_NAME)
     fig_path = '%s/%s' % (path, FIG_NAME)
 
@@ -230,7 +229,7 @@ def str2locrange(x):
     """
     try:
         (param, val) = tuple(x.split('='))
-        return ("[\'" + "\'][\'".join(param.split(':')) + "\']", 
+        return ("[\'" + "\'][\'".join(param.split(':')) + "\']",
                 map(float, val.split(',')))
     except ValueError:
         raise argparse.ArgumentTypeError("Invalid argument syntax")
@@ -242,21 +241,21 @@ if __name__ == '__main__':
     # Define possible CL arguments
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'command', choices=['run', 'save', 'list', 'test'], 
+        'command', choices=['run', 'save', 'list', 'test'],
         help='run: run a simulation; save: save the previous simulation; ' +
              'list: list all saved simulations; test: for testing purposes')
     parser.add_argument(
         '-b', '--batch', required=False, default=1, type=int, metavar='amount',
-        help='the amount of times the same experiment should be run ' 
-        + '(defaults to 1)')
+        help='the amount of times the same experiment should be run '
+             + '(defaults to 1)')
     parser.add_argument(
         '-r', '--range', required=False, nargs='+', type=str2locrange,
-        metavar='item',  help="add parameters to run the simulation with a " +
-         "range of values, e.g. resource:start_amount=300,601,100")
+        metavar='item', help="add parameters to run the simulation with a " +
+                             "range of values, e.g. resource:start_amount=300,601,100")
     parser.add_argument(
-        '-p', '--param', required=False, nargs='+', type=str2locval, 
+        '-p', '--param', required=False, nargs='+', type=str2locval,
         metavar='item', help='add parameters to override its value, ' +
-        'e.g. resource:start_amount=600')
+                             'e.g. resource:start_amount=600')
     parser.add_argument(
         '-n', '--name', required=False, type=str, metavar='scenario',
         help='the name of the scenario to load or to save')
@@ -267,11 +266,11 @@ if __name__ == '__main__':
         '-P', '--plot', required=False, default=None, const=True, type=str2bool,
         nargs='?', metavar='bool', help='whether to show a real-time plot')
     parser.add_argument(
-        '-f', '--fullscreen', required=False, default=False, const=True, 
-        type=str2bool, nargs='?', metavar='bool', 
+        '-f', '--fullscreen', required=False, default=False, const=True,
+        type=str2bool, nargs='?', metavar='bool',
         help='whether to show the plot in fullscreen')
     parser.add_argument(
-        '-v', '--verbose', required=False, default=-1, const=1, 
+        '-v', '--verbose', required=False, default=-1, const=1,
         type=int, nargs='?', metavar='0, 1 or 2',
         help="whether to enter verbose mode")
     parser.add_argument(
@@ -284,6 +283,6 @@ if __name__ == '__main__':
     # Run the right method, based on CL arguments
     # We had to rename the method `list`, as otherwise it would have 
     # conflicted with the `list` type.
-    if args.command=='list':
-        args.command='llist'
-    eval(args.command)(args)  
+    if args.command == 'list':
+        args.command = 'llist'
+    eval(args.command)(args)
