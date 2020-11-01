@@ -1,11 +1,10 @@
 import numpy as np
 import matplotlib
-matplotlib.use('TKagg')
 from matplotlib import pyplot as plt
 from matplotlib import animation
 
 class ResultsPlotter:
-    def __init__(self, max_agent, svo_bar_count, start_resource):        
+    def __init__(self, max_agent, svo_bar_count, start_resource, fullscreen):        
         """Sets up the real-time plot.
 
         Parameters
@@ -26,11 +25,23 @@ class ResultsPlotter:
         # Create figure
         # self.fig, (self.ax_agent, self.ax_svo, self.ax_resource) = plt.subplots(
         #     nrows=3, figsize=(16,8))
-        self.fig = plt.figure()
+        self.fig = plt.figure(figsize=(10,7))
         self.ax_agent = plt.subplot(222)
         self.ax_resource = plt.subplot(224)
         self.ax_svo = plt.subplot(121)
-        self.fig.tight_layout(h_pad=3, pad=4)
+        self.fig.tight_layout(h_pad=3, w_pad=2, pad=2)
+        
+        # Maximize plot if required
+        if fullscreen:
+            backend = matplotlib.get_backend().lower()
+            if backend == 'tkagg':      
+                mng = plt.get_current_fig_manager()
+                mng.window.state('zoomed')
+            elif backend == 'macosx':
+                mng = plt.get_current_fig_manager()
+                mng.Maximize(True)
+            elif backend == 'qt5agg':
+                self.fig.canvas.manager.window.showMaximized()
 
         # Setup agent subplot
         self.agent_line, = self.ax_agent.plot([], [], lw=2, color='blue')
@@ -107,7 +118,7 @@ class ResultsPlotter:
         self.yagent.append(a)
         counts, _ = np.histogram(s, bins=len(self.svo_bars), range=(0,1))
         total = sum(counts)
-        counts = [count/total for count in counts]
+        counts = [c/total for c in counts] if total > 0 else len(counts)*0
         self.yresource.append(r)
         self.limitresource.append(l)
         self.unlimitresource.append(u)
@@ -156,9 +167,6 @@ class ResultsPlotter:
             self.fig, self.update, data_gen, 
             blit=True, interval=1, repeat=False, 
             init_func=self.init_plot)
-        plt.switch_backend('TkAgg')
-        mng = plt.get_current_fig_manager()
-        mng.window.state('zoomed')
         plt.show()
         
 

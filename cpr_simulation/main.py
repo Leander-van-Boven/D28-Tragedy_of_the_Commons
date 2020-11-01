@@ -9,8 +9,8 @@ import shutil
 from numpy import arange, prod
 import itertools as it
 
-def run(override_params=dict(), params_to_range=None, n_jobs=1,
-        param_ranges=None, log_dir=None, use_plot=True, verbose=1):
+def run(override_params=dict(), params_to_range=None, param_ranges=None, 
+        log_dir=None, use_plot=True, n_jobs=1, fullscreen_plot=True, verbose=1):
     """Reads and generates param dicts and runs the simulation with them.
 
     Parameters
@@ -63,7 +63,8 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
             ResultsPlotter(
                 params['agent']['count'],
                 params['plotter_params']['svo_bar_count'],
-                params['resource']['start_amount'])
+                params['resource']['start_amount'],
+                fullscreen_plot)
 
         # Generate the Simulator class
         simulator = Simulator(p, printer, l or logger, list(c), 

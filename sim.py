@@ -15,8 +15,6 @@ import cpr_simulation as cpr
 import argparse
 import json
 import os, sys
-from collections import defaultdict
-from functools import partial
 
 # Constant values for loading and saving scenarios. 
 SCENARIO_DIR = 'scenarios'
@@ -36,26 +34,6 @@ def test(args):
     """
 
     print(args)
-
-
-def dd_factory(d = None):
-    """A defaultdict generator method. 
-    
-    Generates a defaultdict that returns a defaultdict whenever a 
-    non-existent key is called.
-
-    Parameters 
-    ----------
-    d : `dict`, optional,
-        Pre-fill the defaultdict with the given dictionary.
-
-    Returns
-    -------
-    `defaultdict`,
-        either empty or pre-filled with the key-values in `d`. 
-    """
-
-    return defaultdict(dd_factory, d) if d else defaultdict(dd_factory)
 
 
 def run(args):
@@ -78,9 +56,9 @@ def run(args):
             sys.exit(1)
 
         with open(path) as file:
-            param_dict = dd_factory(json.loads(file.read()))
+            param_dict = cpr.util.dd_factory(json.loads(file.read()))
     else: 
-        param_dict = dd_factory()
+        param_dict = cpr.util.dd_factory()
 
 
     param_ranges = []
@@ -96,27 +74,27 @@ def run(args):
         param_ranges += list(ranges)
 
     if args.param:
-        for param_pair in args.param:
-            exec('param_dict%s=%s' % param_pair)
-
-    plot = args.plot if args.plot is not None else \
-        not (args.range or args.batch-1)
-
-    verbose = args.verbose if args.verbose > 1 else \
-        not args.range or args.batch==0
+        for key,val in args.param:
+            if type(val) == str:
+                val = "str('%s')" % val
+            exec("param_dict%s=%s" % (key,val))
 
     if args.verbose >= 0:
         verbose = args.verbose
-    elif (not args.range) or (args.batch==1):
-        print(args.range)
-        verbose = 0
-    else:
+    elif args.range or (args.batch==1):
         verbose = 1
+    else:
+        verbose = 0
+        
+    if args.plot is not None:
+        plot = args.plot
+    elif verbose == 2:
+        plot = False
+    else:
+        plot = not (args.range or args.batch-1)
 
-    print(verbose)
-
-    cpr.run(param_dict, params_to_range, args.jobs, param_ranges, args.out, 
-            plot, verbose)
+    cpr.run(param_dict, params_to_range, param_ranges, 
+            args.out, plot, args.jobs, args.fullscreen, verbose)
 
 
 def save(args):
@@ -225,8 +203,8 @@ def str2locval(x):
     try:
         (param, val) = tuple(x.split('='))
         res = "[\'" + "\'][\'".join(param.split(':')) + "\']"
-        if exec('cpr.default_param' + res):
-            return (res, type(exec('cpr.default_param' + res))(val))
+        if eval('cpr.default_params' + res):
+            return (res, type(eval('cpr.default_params' + res))(val))
         else:
             return (res, float(val))
 
@@ -250,13 +228,11 @@ def str2locrange(x):
         dictionary, and `tup` represents the value range this parameter 
         should get. 
     """
-    addtwo = partial(sum, 2)
-    addtwo(3) # = 5
     try:
         (param, val) = tuple(x.split('='))
         return ("[\'" + "\'][\'".join(param.split(':')) + "\']", 
                 map(float, val.split(',')))
-    except ValueError as e:
+    except ValueError:
         raise argparse.ArgumentTypeError("Invalid argument syntax")
 
 
@@ -291,8 +267,12 @@ if __name__ == '__main__':
         '-P', '--plot', required=False, default=None, const=True, type=str2bool,
         nargs='?', metavar='bool', help='whether to show a real-time plot')
     parser.add_argument(
-        '-v', '--verbose', required=False, default=-1, const=True, 
-        type=int, nargs='?', metavar='0-2',
+        '-f', '--fullscreen', required=False, default=False, const=True, 
+        type=str2bool, nargs='?', metavar='bool', 
+        help='whether to show the plot in fullscreen')
+    parser.add_argument(
+        '-v', '--verbose', required=False, default=-1, const=1, 
+        type=int, nargs='?', metavar='0, 1 or 2',
         help="whether to enter verbose mode")
     parser.add_argument(
         '--jobs', required=False, default=1, type=int, metavar='n_jobs',
