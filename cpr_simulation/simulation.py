@@ -261,7 +261,6 @@ class Simulator:
             # Update the resource and epoch
             self.resource.grow_resource() 
             np.random.shuffle(self.agents)
-            self.epoch += 1
 
             time.sleep(self.params['sleep'])
 
@@ -279,6 +278,8 @@ class Simulator:
             # Check whether there are still agents alive
             if self.n_agents == 0 or len(self.agents) <= 1:
                 break
+
+            self.epoch += 1
         
         # While loop finished, maximum epoch reached
         self.v_print()

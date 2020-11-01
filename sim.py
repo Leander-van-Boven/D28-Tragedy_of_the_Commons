@@ -203,9 +203,9 @@ def str2locval(x):
     try:
         (param, val) = tuple(x.split('='))
         res = "[\'" + "\'][\'".join(param.split(':')) + "\']"
-        if eval('cpr.default_params' + res):
+        try:
             return (res, type(eval('cpr.default_params' + res))(val))
-        else:
+        except KeyError:
             return (res, float(val))
 
     except ValueError:

@@ -37,9 +37,9 @@ class ResultsPlotter:
             if backend == 'tkagg':      
                 mng = plt.get_current_fig_manager()
                 mng.window.state('zoomed')
-            elif backend == 'macosx':
-                mng = plt.get_current_fig_manager()
-                mng.Maximize(True)
+            # elif backend == 'macosx':
+            #     mng = plt.get_current_fig_manager()
+            #     mng.Maximize(True)
             elif backend == 'qt5agg':
                 self.fig.canvas.manager.window.showMaximized()
 
