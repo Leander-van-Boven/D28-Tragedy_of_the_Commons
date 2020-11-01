@@ -5,7 +5,7 @@ remote_theme: hydecorp/hydejack@v9.0.5
 lang: en
 
 title: Tragedy of the Commons model Documentation
-description: Everything to know about this project in one place
+description: Everything to know about the implementation of this awesome project in one place
 keywords: []
 logo: /IMAGES/nemo_logo.png
 
@@ -16,12 +16,21 @@ author:
   social:
     github: https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons
 
+menu:
+  - title: Background of the Model
+    url: /pages/background/
+  - title: Interaction with the Model
+    url: /pages/interaction/
+  - title: Parameters
+    url: /pages/parameters/
+
 hydejack:
   no_mark_external: true
   no_page_style: true
 # PRO-Version only #
 # hydejack: 
 #   cookies_banner: true
+#   advertise: false
 #   dark_mode:
 #     dynamic: true
 #     sunrise: 6
@@ -29,17 +38,49 @@ hydejack:
 #     icon: true
 #     always: false
 
-menu:
-  - title: Interaction with the Model
-    url: /pages/introduction.md
-  - title: Parameters
-    url: /pages/parameters.md
-
 exclude:
   - .jekyll-cache
   - .sass-cache
   - Gemfile
   - Gemfile.lock
 
+
+###############
+### PLUGINS ###
+###############
 plugins:
+  - jekyll-default-layout
+  - jekyll-optional-front-matter
+  - jekyll-paginate
+  - jekyll-readme-index
+  - jekyll-redirect-from
+  - jekyll-relative-links
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-titles-from-headings
   - jekyll-include-cache
+  - jekyll-last-modified-at
+
+optional_front_matter:
+  remove_originals:    true
+
+readme_index:
+  remove_originals:    true
+  with_frontmatter:    true
+
+relative_links:
+  collections:         true
+
+titles_from_headings:
+  strip_title:         true
+  collections:         true
+
+compress_html:
+  comments:            ["<!-- ", " -->"]
+  clippings:           all
+  endings:             all
+  ignore:
+    envs:              [development]
+
+sass:
+  style:               compressed
