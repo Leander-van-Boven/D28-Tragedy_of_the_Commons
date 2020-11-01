@@ -299,7 +299,9 @@ class Simulator:
         return (self.epoch,
                 len(self.agents),
                 [agent.social_value_orientation for agent in self.agents],
-                self.resource.get_amount())
+                self.resource.get_amount(),
+                len(self.agents) * self.resource_limit_factor,
+                len(self.agents) * self.resource_unlimit_factor)
 
 
     def print_results(self):
