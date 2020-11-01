@@ -117,17 +117,17 @@ run : `int`,
 
 default_params = {
     "agent" : {
-        "count" : 5,
-        "svo_convergence_factor" : 0.09,
+        "count" : 100,
+        "svo_convergence_factor" : 0.15,
         "params" : {
             "metabolism" : 5,
             "maximum_age" : 30,
             "maximum_age_std_factor" : 0.05,
 
-            "consumption_factor" : 1.3,
+            "consumption_factor" : 1.8,
             "procreate_cost_factor" : 3.9,
             "procreate_req_factor" : 1.2,
-            "start_energy_factor" : 1.5,
+            "start_energy_factor" : 1.3,
                    
             "behaviour" : "restricted_energy_function", 
             # possible values: "base_energy_function", 
@@ -138,19 +138,24 @@ default_params = {
             "greed" : 5,
 
             # Restricted Model Parameters
-            "res_limit_factor" : 1.3,
-            "res_unlimit_factor" : 2,
-            "caught_chance" : 0.7,
-            "caught_cooldown_factor" : 0.2,
+            "caught_chance" : 0.2,
+            "caught_cooldown_factor" : 0.3,
         }
     },
 
     "svo_dist" : {
-
+        "d1" : {
+            "m" : 0.5,
+            "s" : .1
+        },
+        "d2" : {
+            "m" : 0.5,
+            "s" : .1
+        }
     },
 
     "resource" : {
-        "start_amount" : 100,
+        "start_amount" : 4000,
         #"max_amount" : 1500,
         "min_amount" : 1,
         "cooldown" : 50,
@@ -176,7 +181,11 @@ default_params = {
         "plot_interval" : 1,
         "print_interval" : 1,
         "log_interval" : 1,
-        "sleep" : 0
+        "sleep" : 0,
+
+        # Restriction check parameters
+        "res_limit_factor" : 3,
+        "res_unlimit_factor" : 4,
     },
 
     "plotter_params" : {

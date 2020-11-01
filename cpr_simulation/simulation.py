@@ -65,6 +65,21 @@ class Simulator:
         self.n_agents = param_dict['agent']['count']
         self.agent_params = param_dict['agent']['params']
 
+        self.resource_limit_factor = \
+            self.params['res_limit_factor'] * \
+                self.agent_params['consumption_factor'] * \
+                self.agent_params['metabolism']
+
+        self.resource_unlimit_factor = \
+            self.params['res_unlimit_factor'] * \
+                self.agent_params['consumption_factor'] * \
+                self.agent_params['metabolism']
+
+        self.restriction_mode = \
+            self.agent_params['behaviour'] == "restricted_energy_function"
+        self.restriction_active = \
+            None if not self.restriction_mode else False
+
         self.svo_mutation_factor = \
             param_dict['agent']['svo_convergence_factor'] / 3
 
@@ -196,6 +211,14 @@ class Simulator:
             parents = []
             eol = []
 
+            if self.restriction_mode:
+                if self.resource.get_amount() > \
+                    len(self.agents)*self.resource_unlimit_factor:
+                        self.restriction_active = False
+                if self.resource.get_amount() < \
+                    len(self.agents)*self.resource_limit_factor:
+                        self.restriction_active = True
+
             # Update the agents
             for num, agent in enumerate(self.agents):
                 #print(f'\t\t{num}. {agent}.act()')
@@ -246,7 +269,7 @@ class Simulator:
 
             # Check whether there are still agents alive
             if self.get_agent_count() <= 1:
-                break
+                pass#break
         
         # While loop finished, maximum epoch reached
         self.v_print()
@@ -276,7 +299,9 @@ class Simulator:
         return (self.epoch,
                 len(self.agents),
                 [agent.social_value_orientation for agent in self.agents],
-                self.resource.get_amount())
+                self.resource.get_amount(),
+                len(self.agents) * self.resource_limit_factor,
+                len(self.agents) * self.resource_unlimit_factor)
 
 
     def print_results(self):
