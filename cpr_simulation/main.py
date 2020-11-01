@@ -50,7 +50,7 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
             #TODO Add more columns to log
             col_names = \
                 ['Exp Num'] + param_names + \
-                ['Epoch', 'Resource', 'A', 'B', 'C', 'D', 'E', 'Median', 'Below', 'Above', 'Mean', 'STD', 'Resource Limit', 'Resource Unlimit']
+                ['Epoch', 'Resource', 'Count', 'A', 'B', 'C', 'D', 'E', 'Median', 'Below', 'Above', 'Mean', 'STD', 'Resource Limit', 'Resource Unlimit']
             #for dist_name in params['agent_distributions']:
             #   col_names.append(dist_name)
             logger = CsvLogger(params['logger_params'], col_names, log_dir, append)
