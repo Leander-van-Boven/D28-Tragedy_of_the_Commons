@@ -1,6 +1,6 @@
 # Unimodal Experiments
-python sim.py run --batch 12 `
---out 'final_results/nfinal_csv/unimodal.csv' `
+python sim.py run --batch 12 --verbose 0 `
+--out 'data_analysis/final_results/nfinal_csv/unimodal.csv' `
 --param svo_dist:d1:m=.5 svo_dist:d1:s=0.25 `
 simulation:max_epoch=1000 `
 --range svo_dist:d1:m=0,1.1,0.25 svo_dist:d1:s=0.05,0.16,0.1
