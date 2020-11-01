@@ -18,7 +18,8 @@ class ResultsPlotter:
         """
 
         self.max_agent = max_agent
-        self.xdata, self.yagent, self.yresource = [], [], []
+        self.xdata, self.yagent = [], []
+        self.yresource, self.limitresource, self.unlimitresource = [], [], []
         self.start_resource = start_resource
 
         # Create figure
@@ -49,6 +50,8 @@ class ResultsPlotter:
         
         # Setup resource subplot
         self.resource_line, = self.ax_resource.plot([], [], lw=2, color='green')
+        self.res_limit_line, = self.ax_resource.plot([], [], lw=1, color='red', linestyle='--')
+        self.res_unlimit_line, = self.ax_resource.plot([], [], lw=1, color='yellow', linestyle='--')
         self.ax_resource.set_title('Real time plot of resource supply')
         self.ax_resource.set_ylabel('resource supply')
         self.ax_resource.set_xlabel('epochs')        
@@ -70,10 +73,14 @@ class ResultsPlotter:
         del self.xdata[:]
         del self.yagent[:]
         del self.yresource[:]
+        del self.limitresource[:]
+        del self.unlimitresource[:]
         self.zero_flag = 0
    
         self.agent_line.set_data(self.xdata, self.yagent)     
         self.resource_line.set_data(self.xdata, self.yresource)
+        self.res_limit_line.set_data(self.xdata, self.limitresource)
+        self.res_unlimit_line.set_data(self.xdata, self.unlimitresource)
 
         initialised = [self.agent_line, self.resource_line]
         for bar in self.svo_bars:
@@ -94,13 +101,15 @@ class ResultsPlotter:
         """
 
         # Append the data to the correct lists
-        t, a, s, r = data
+        t, a, s, r, l, u = data
         self.xdata.append(t)
         self.yagent.append(a)
         counts, _ = np.histogram(s, bins=len(self.svo_bars), range=(0,1))
         total = sum(counts)
         counts = [count/total for count in counts]
         self.yresource.append(r)
+        self.limitresource.append(l)
+        self.unlimitresource.append(u)
 
         # Resize window if current epoch exceeds x_max        
         xmin, xmax = self.ax_agent.get_xlim()
@@ -124,6 +133,8 @@ class ResultsPlotter:
         for i, bar in enumerate(self.svo_bars):
             bar.set_height(counts[i])
         self.resource_line.set_data(self.xdata, self.yresource)
+        self.res_limit_line.set_data(self.xdata, self.limitresource)
+        self.res_unlimit_line.set_data(self.xdata, self.unlimitresource)
         #self.save_fig('.lastplot.pdf')
         updated = [self.agent_line, self.resource_line]
         for bar in self.svo_bars:
