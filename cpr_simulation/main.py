@@ -126,7 +126,7 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
                 if log_dir and os.path.isdir(log_dir):
                     col_names = \
                         ['Exp Num'] + param_names + \
-                        ['Epoch', 'Resource', 'A', 'B', 'C', 'D', 'E']
+                        ['Epoch', 'Resource', 'A', 'B', 'C', 'D', 'E', 'limit', 'unlimit']
                     #for dist_name in params['agent_distributions']:
                     #   col_names.append(dist_name)
                     path = log_dir + '\\run%s.csv' % run

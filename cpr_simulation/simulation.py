@@ -387,9 +387,20 @@ class Simulator:
         row.append(d)
         row.append(e)
         row.append(median)
-        row.append(np.percentile(agents_now,40))
-        row.append(np.percentile(agents_now,60))
+
+        if len(agents_now) > 0:        
+            row.append(np.percentile(agents_now,40))
+            row.append(np.percentile(agents_now,60))
+        else:
+            row.append(0)
+            row.append(0)
+        
         row.append(np.mean(agents_now))
         row.append(np.std(agents_now))
 
+        row.append(len(self.agents) * self.resource_limit_factor)
+        row.append(len(self.agents) * self.resource_unlimit_factor)
+
         self.logger.add_row(row)
+
+
