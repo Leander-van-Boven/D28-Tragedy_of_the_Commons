@@ -359,18 +359,14 @@ class Simulator:
             #agent_svo_rounded.append(np.round(svo,2))
             if svo <= .2:
                 a += 1
-            if (svo > .2 and svo <= .4) :
+            elif (svo > .2 and svo <= .4) :
                 b += 1
-            if (svo > .4 and svo <= .6) :
+            elif (svo > .4 and svo <= .6) :
                 c += 1
-            if (svo > .6 and svo <= .8) :
+            elif (svo > .6 and svo <= .8) :
                 d += 1
-            if (svo > .8 and svo <= 1):
+            elif (svo > .8 and svo <= 1):
                 e += 1
-
-        #agent_svo_rounded = np.round(agents_now, 2)
-
-        median = np.median(agents_now)
 
         below = []
         above = []
@@ -382,15 +378,14 @@ class Simulator:
             if svo > median:
                 above.append(svo)
 
-
         row.append(a)
         row.append(b)
         row.append(c)
         row.append(d)
         row.append(e)
-        row.append(median)
 
         if len(agents_now) > 0:        
+            row.append(np.median(agents_now))
             row.append(np.percentile(agents_now,40))
             row.append(np.percentile(agents_now,60))
             row.append(np.mean(agents_now))
@@ -403,7 +398,8 @@ class Simulator:
             row.append(0)
             row.append(0)
             row.append(0)
-            row.append(0)     
+            row.append(0)   
+            row.append(0)  
 
         self.logger.add_row(row)
 
