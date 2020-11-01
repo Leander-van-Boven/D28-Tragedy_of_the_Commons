@@ -44,7 +44,7 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
         ':'.join(x.split('\'][\''))[2:-2] for x in params_to_range]
 
 
-    def _get_logger(append=False):
+    def _get_logger(fn=None):
     # Generate a CsvLogger class if log_dir is specified
         if log_dir:
             #TODO Add more columns to log
@@ -53,7 +53,10 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
                 ['Epoch', 'Resource', 'Count', 'A', 'B', 'C', 'D', 'E', 'Median', 'Below', 'Above', 'Mean', 'STD', 'Resource Limit', 'Resource Unlimit']
             #for dist_name in params['agent_distributions']:
             #   col_names.append(dist_name)
-            logger = CsvLogger(params['logger_params'], col_names, log_dir, append)
+            if fn:
+                ld = f"{log_dir}/{fn}"
+            else: ld = log_dir
+            logger = CsvLogger(params['logger_params'], col_names, ld)
         else:
             logger = None
         return logger
@@ -129,16 +132,15 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
 
                 _run_sim(curr_params, [run] + list(combi), logger)
         else:
+            if not log_dir or not os.path.isdir(log_dir):
+                print("Error: --out command should be directory in" +
+                      "multithreaded mode")
+                return
+
             from joblib import Parallel, delayed
-            logger = _get_logger()
-            if logger:
-                logger.write()
-            loggers = []
             print("Running %s instances..." % number_of_combis)
             def _run_parallel(run, combi):
-                logger = _get_logger(True)
-                if logger:
-                    loggers.append(logger)
+                logger = _get_logger(f"run{run}.csv")
 
                 # Add values of ranged parameters to the dictionary
                 curr_params = params.copy()
@@ -147,15 +149,11 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
 
                 _run_sim(curr_params, [run] + list(combi), logger)
 
-                # if logger:
-                #     logger.write()
+                if logger:
+                    logger.write()
 
             Parallel(n_jobs=n_jobs, verbose=10, batch_size=16)(
                 delayed(_run_parallel)(*tup) for tup in enumerate(value_combis))
-
-            print(len(loggers))
-            for logger in loggers:
-                logger.write()
 
 
     # If we have a CsvLogger, then write it to a CSV file

@@ -369,7 +369,7 @@ class Simulator:
             elif (svo > .8 and svo <= 1):
                 e += 1
                 
-        row.append((len(self.agents))
+        row.append((len(self.agents)))
         row.append(a)
         row.append(b)
         row.append(c)
