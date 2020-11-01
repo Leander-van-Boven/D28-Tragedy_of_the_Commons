@@ -1,8 +1,28 @@
 import collections.abc
 import itertools
+from collections import defaultdict
 
 def do_nothing(self, *args, **kwargs):
     pass
+
+def dd_factory(d = None):
+    """A defaultdict generator method. 
+    
+    Generates a defaultdict that returns a defaultdict whenever a 
+    non-existent key is called.
+
+    Parameters 
+    ----------
+    d : `dict`, optional,
+        Pre-fill the defaultdict with the given dictionary.
+
+    Returns
+    -------
+    `defaultdict`,
+        either empty or pre-filled with the key-values in `d`. 
+    """
+
+    return defaultdict(dd_factory, d) if d else defaultdict(dd_factory)
 
 def update_dict(d, u, omit_new=False):
     """Recursively updates dict d with the values of dict u, 

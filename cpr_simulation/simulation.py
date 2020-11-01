@@ -207,7 +207,8 @@ class Simulator:
         while (self.epoch < self.max_epoch):
             self.v2_print('\n---    EPOCH %s    ---\n' % self.epoch)
             self.v2_print(f"Agent count: {len(self.agents)}")
-            self.v2_print(f"Available resource: {self.resource.get_amount():.2f}")
+            self.v2_print("Available resource: " +
+                         f"{self.resource.get_amount():.2f}")
             self.v2_print(f"Restriction: ", end='')
 
             parents = []
@@ -229,8 +230,9 @@ class Simulator:
             # Update the agents
             for num, agent in enumerate(self.agents):
                 #print(f'\t\t{num}. {agent}.act()')
-                self.v2_print(f"{num:3.0f}\tid={agent.id}\tsvo={agent.social_value_orientation:3.2f}\tpre={agent.energy:3.2f}",
-                    end='')
+                self.v2_print(f"{num:3.0f}\tid={agent.id}\t" + \
+                    f"svo={agent.social_value_orientation:3.2f}\t" + \
+                    f"pre={agent.energy:3.2f}", end='')
                 agent.act(self)
                 self.v2_print(f'\tpost={agent.energy:.2f}', end='')
                 # Check impact of actions
@@ -252,8 +254,8 @@ class Simulator:
             self.v2_print('\nPost act agent count: %s' % self.get_agent_count())
             self.v2_print('Procreate: %s (tot %s)' % (
                 ', '.join([str(a.id) for a in parents]),
-                len(parents)
-            ))
+                len(parents)))
+
             Agent.procreate(self, parents)
             self.v2_print('Post-proc agent count: %s\n' % len(self.agents))
             # Update the resource and epoch
