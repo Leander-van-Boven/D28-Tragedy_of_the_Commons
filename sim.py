@@ -16,6 +16,7 @@ import argparse
 import json
 import os, sys
 from collections import defaultdict
+from functools import partial
 
 # Constant values for loading and saving scenarios. 
 SCENARIO_DIR = 'scenarios'
@@ -102,7 +103,17 @@ def run(args):
         not (args.range or args.batch-1)
 
     verbose = args.verbose if args.verbose > 1 else \
-        int(not args.range or args.batch-1)
+        not args.range or args.batch==0
+
+    if args.verbose >= 0:
+        verbose = args.verbose
+    elif (not args.range) or (args.batch==1):
+        print(args.range)
+        verbose = 0
+    else:
+        verbose = 1
+
+    print(verbose)
 
     cpr.run(param_dict, params_to_range, args.jobs, param_ranges, args.out, 
             plot, verbose)
@@ -195,7 +206,7 @@ def str2bool(v):
     raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
-def str2locint(x):
+def str2locval(x):
     """Converts a string to a parameter tuple. 
 
     Parameters
@@ -213,7 +224,12 @@ def str2locint(x):
     """
     try:
         (param, val) = tuple(x.split('='))
-        return ("[\'" + "\'][\'".join(param.split(':')) + "\']", float(val))
+        res = "[\'" + "\'][\'".join(param.split(':')) + "\']"
+        if exec('cpr.default_param' + res):
+            return (res, type(exec('cpr.default_param' + res))(val))
+        else:
+            return (res, float(val))
+
     except ValueError:
         raise argparse.ArgumentTypeError("Invalid argument syntax")
 
@@ -234,7 +250,8 @@ def str2locrange(x):
         dictionary, and `tup` represents the value range this parameter 
         should get. 
     """
-    
+    addtwo = partial(sum, 2)
+    addtwo(3) # = 5
     try:
         (param, val) = tuple(x.split('='))
         return ("[\'" + "\'][\'".join(param.split(':')) + "\']", 
@@ -261,7 +278,7 @@ if __name__ == '__main__':
         metavar='item',  help="add parameters to run the simulation with a " +
          "range of values, e.g. resource:start_amount=300,601,100")
     parser.add_argument(
-        '-p', '--param', required=False, nargs='+', type=str2locint, 
+        '-p', '--param', required=False, nargs='+', type=str2locval, 
         metavar='item', help='add parameters to override its value, ' +
         'e.g. resource:start_amount=600')
     parser.add_argument(

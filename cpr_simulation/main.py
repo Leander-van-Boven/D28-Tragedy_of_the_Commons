@@ -67,7 +67,7 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
 
         # Generate the Simulator class
         simulator = Simulator(p, printer, l or logger, list(c), 
-                              int(verbose))
+                              verbose)
 
         # If we use real-time plotting, we need to pass the simulation
         # to the printer.
