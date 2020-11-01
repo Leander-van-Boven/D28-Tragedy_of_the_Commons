@@ -172,7 +172,7 @@ class Simulator:
             yield self.plot_results()
         if self.verbose:
             self.print_results()
-
+        self.epoch = 1
         #TODO We might want to add self.epoch = 1 here.
         # Run the simulations for max_epoch amounts
         while (self.epoch < self.max_epoch):

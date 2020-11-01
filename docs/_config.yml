@@ -1,0 +1,45 @@
+github: [metadata]
+
+remote_theme: hydecorp/hydejack@v9.0.5
+
+lang: en
+
+title: Tragedy of the Commons model Documentation
+description: Everything to know about this project in one place
+keywords: []
+logo: /IMAGES/nemo_logo.png
+
+accent_image: /IMAGES/lake.png
+
+author:
+  name: Group D28
+  social:
+    github: https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons
+
+hydejack:
+  no_mark_external: true
+  no_page_style: true
+# PRO-Version only #
+# hydejack: 
+#   cookies_banner: true
+#   dark_mode:
+#     dynamic: true
+#     sunrise: 6
+#     sunset: 18
+#     icon: true
+#     always: false
+
+menu:
+  - title: The Implementation
+    url: /PAGES/IMPLEMENTATION
+  - title: The Model
+    url: /PAGES/MODEL
+
+exclude:
+  - .jekyll-cache
+  - .sass-cache
+  - Gemfile
+  - Gemfile.lock
+
+plugins:
+  - jekyll-include-cache

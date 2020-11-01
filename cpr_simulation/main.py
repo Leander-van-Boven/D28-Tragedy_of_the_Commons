@@ -168,10 +168,10 @@ def generate_default_params(path=".defaults.json"):
 def copy_last_run(param_path, fig_path):
     '''Used to save the results from last run.'''
 
-    if not os.path.isfile('.last.json') or \
-       not os.path.isfile('.lastplot.pdf'):
+    if not os.path.isfile('.last.json'):
         return False
 
     shutil.copyfile('.last.json', param_path)
-    shutil.copyfile('.lastplot.pdf', fig_path)
+    if os.path.isfile('.lastplot.pdf'):
+        shutil.copyfile('.lastplot.pdf', fig_path)
     return True

@@ -91,15 +91,15 @@ class Agent:
         list[csp_simulation.Agent]
             The list of Agents.
         """
-        
+
         if not dist_params:
             dist_params = {
                 "d1" : {
-                    "m" : .25,
+                    "m" : 0.25,
                     "s" : .125
                 },
                 "d2" : {
-                    "m" : .75,
+                    "m" : 0.75,
                     "s" : .125
                 }
             }
@@ -225,36 +225,48 @@ class Agent:
             # If agent would die this epoch it is allowed to fish the
             # amount of fish to get at 1 energy at the end of the epoch.
             if self.energy <= 0:
+                #print('\t\tself.energy<=0:', self.energy)
                 # self.energy += sim.get_resource().consume_resource(
                 #     abs(self.energy) + 1)
                 self.energy += sim.get_resource().consume_resource(
-                    self.consumption)
+                    self.consumption + 1)
+                #print('\t\tfished, energy:', self.energy)
             # Otherwise, determine based on SVO whether agent violates
             # the fishing rule.
             elif rnd.random() > self.social_value_orientation:
+                #print('\t\tviolated restriction...')
                 # Check if agent is caught violating the rule.
                 if rnd.random() < self.caught_chance:
+                    #print('\t\tgot caught! setting cooldown to', self.caught_cooldown, ', energy:', self.energy)
                     self.cur_cooldown = self.caught_cooldown
                 else:
                     self.energy += sim.get_resource().consume_resource(
                         self.consumption)
+                    #print('\t\tfished violatetly, energy:', self.energy)
+            # else:
+            #     print('\t\tdid not fish today, energy:', self.energy)
 
         # Check if agent is not allowed to fish this epoch.
         if self.cur_cooldown > 0:
+            #print('\tcur_cooldown > 0:', self.cur_cooldown, ', energy:', self.energy)
             self.cur_cooldown -= 1
             return
 
         # Check whether the resources dropped below restriction limit.
         if sim.get_resource().get_amount() > \
             sim.get_agent_count()*self.res_unlimit_factor*self.consumption:
+            #print('\trestriction has become inactive')
             self.restriction_active = False
         elif sim.get_resource().get_amount() < \
             sim.get_agent_count()*self.res_limit_factor*self.consumption:
+            #print('\trestriction has become active')
             self.restriction_active = True
 
         if self.restriction_active:
+            #print('\tacting restricted')
             act_restricted()
         else:
+            #print('\tacting unrestricted')
             self.energy += sim.get_resource().consume_resource(self.consumption)
 
     @classmethod

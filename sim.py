@@ -124,7 +124,7 @@ def save(args):
         os.mkdir(SCENARIO_DIR)
 
     if args.name:
-        path = '%s\\%s' % (SCENARIO_DIR, args.name)
+        path = '%s/%s' % (SCENARIO_DIR, args.name)
 
         if os.path.isdir(path):
             print("A scenario named \'%s\' already exists" % args.name)
@@ -135,17 +135,17 @@ def save(args):
     else:
         i=0
         name = 'scenario%s' % i
-        path = '%s\\%s' % (SCENARIO_DIR, name)
+        path = '%s/%s' % (SCENARIO_DIR, name)
 
         while(os.path.isfile(path)):
             i += 1
             name = 'scenario%s' % i
-            path = '%s\\%s' % (SCENARIO_DIR, name)
+            path = '%s/%s' % (SCENARIO_DIR, name)
 
         os.mkdir(path)
         
-    param_path = '%s\\%s' % (path, PARAM_NAME)
-    fig_path = '%s\\%s' % (path, FIG_NAME)
+    param_path = '%s/%s' % (path, PARAM_NAME)
+    fig_path = '%s/%s' % (path, FIG_NAME)
 
     if cpr.copy_last_run(param_path, fig_path):
         print("Saved scenario as \'%s\'" % name)
