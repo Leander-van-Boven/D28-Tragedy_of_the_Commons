@@ -28,14 +28,14 @@ class Resource:
 
 
     def growth_exponential(self, val, **kwargs):
-        return val * kwargs['exp_rate']
+        return val + (val*kwargs['exp_rate'])
 
 
     def growth_logarithmic(self, val, **kwargs):
         p = kwargs['log_offset']
         q = kwargs['log_scale']
         s = kwargs['log_init_jump']
-        return ((q / (math.log10(val) + (q / (s-p)))) + p)
+        return val * ((q / (math.log10(val) + (q / (s-p)))) + p)
 
     def growth_nroot(self, val , **kwargs):
         # First iteration gives most resource.
@@ -46,7 +46,7 @@ class Resource:
         tx = kwargs['root_xoffset']
         ty = kwargs['root_yoffset']
         r = kwargs['root_base']
-        return max(a * (1 / ((val - (tx/a)) ** (1/r)) - ty/a), 0)
+        return val + max(a * (1 / ((val - (tx/a)) ** (1/r)) - ty/a), 0)
 
 
     def __init__(self, values):
@@ -106,7 +106,7 @@ class Resource:
         # self.amount += self.amount * growth
         growth = self.growth(val=self.amount, **self.growth_kwargs)
         self.print(f"Resource: {self.amount:4.2f},\t growing {growth:.2f},", end='')
-        self.amount *= growth
+        self.amount = growth
         self.print(f"\tnow {self.amount:.2f}")
 
         if ((not self.max_amount < 0) and self.amount > self.max_amount):

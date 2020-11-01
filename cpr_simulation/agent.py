@@ -12,7 +12,7 @@ class Agent:
     child_count = 0
 
     # Restricted Energy Function attributes
-    restriction_active = False
+    #restriction_active = False
     cur_cooldown = 0
     id=-1
 
@@ -60,8 +60,8 @@ class Agent:
         self.greed = params['greed']
 
         # Restricted energy function parameters
-        self.res_limit_factor = params['res_limit_factor']
-        self.res_unlimit_factor = params['res_unlimit_factor']
+        # self.res_limit_factor = params['res_limit_factor']
+        # self.res_unlimit_factor = params['res_unlimit_factor']
         self.caught_chance = params['caught_chance']
         self.caught_cooldown = params['caught_cooldown_factor'] \
                                 * params['maximum_age']
@@ -254,23 +254,27 @@ class Agent:
         if self.cur_cooldown > 0:
             #print('\tcur_cooldown > 0:', self.cur_cooldown, ', energy:', self.energy)
             self.cur_cooldown -= 1
+            self.print('\tCOOLDOWN', end='')
             return
 
         # Check whether the resources dropped below restriction limit.
-        if sim.get_resource().get_amount() > \
-            sim.get_agent_count()*self.res_unlimit_factor*self.consumption:
-            #print('\trestriction has become inactive')
-            self.restriction_active = False
-        elif sim.get_resource().get_amount() < \
-            sim.get_agent_count()*self.res_limit_factor*self.consumption:
-            #print('\trestriction has become active')
-            self.restriction_active = True
+        # if sim.get_resource().get_amount() > \
+        #     sim.get_agent_count()*self.res_unlimit_factor*self.consumption:
+        #     #print('\trestriction has become inactive')
+        #     self.restriction_active = False
+        # elif sim.get_resource().get_amount() < \
+        #     sim.get_agent_count()*self.res_limit_factor*self.consumption:
+        #     #print('\trestriction has become active')
+        #     self.restriction_active = True
 
-        if self.restriction_active:
+        assert sim.restriction_active is not None
+
+        if sim.restriction_active:
             #print('\tacting restricted')
+            self.print('\tRESTRICTED', end='')
             act_restricted()
         else:
-            #print('\tacting unrestricted')
+            self.print('\tUNRESTRICTED', end='')
             self.energy += sim.get_resource().consume_resource(self.consumption)
 
     @classmethod

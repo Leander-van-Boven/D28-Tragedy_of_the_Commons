@@ -117,7 +117,7 @@ run : `int`,
 
 default_params = {
     "agent" : {
-        "count" : 5,
+        "count" : 10,
         "svo_convergence_factor" : 0.09,
         "params" : {
             "metabolism" : 5,
@@ -138,8 +138,6 @@ default_params = {
             "greed" : 5,
 
             # Restricted Model Parameters
-            "res_limit_factor" : 1.3,
-            "res_unlimit_factor" : 2,
             "caught_chance" : 0.7,
             "caught_cooldown_factor" : 0.2,
         }
@@ -158,13 +156,13 @@ default_params = {
         "min_growth_rate" : 1,
         "max_growth_rate" : 2,
 
-        "growth_function" : "logarithmic", # "exponential", "nroot",  logarithmic"
+        "growth_function" : "nroot", # "exponential", "nroot",  logarithmic"
         "gf_params" : {
             "exp_rate" : .25,
             "log_init_jump" : 3,
             "log_scale" : 6,
             "log_offset" : 0,
-            "root_scale" : 2500,
+            "root_scale" : 2500,#2500,
             "root_xoffset" : 0,
             "root_yoffset" : 1400,
             "root_base" : 16,
@@ -176,7 +174,11 @@ default_params = {
         "plot_interval" : 1,
         "print_interval" : 1,
         "log_interval" : 1,
-        "sleep" : 0
+        "sleep" : 0,
+
+        # Restriction check parameters
+        "res_limit_factor" : 1.3,
+        "res_unlimit_factor" : 2,
     },
 
     "plotter_params" : {
