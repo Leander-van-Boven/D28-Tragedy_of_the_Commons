@@ -206,7 +206,9 @@ class Simulator:
         # Run the simulations for max_epoch amounts
         while (self.epoch < self.max_epoch):
             self.v2_print('\n---    EPOCH %s    ---\n' % self.epoch)
-            self.v2_print(f"Agent count: {len(self.agents)}, available resource: {self.resource.get_amount():.2f}")
+            self.v2_print(f"Agent count: {len(self.agents)}")
+            self.v2_print(f"Available resource: {self.resource.get_amount():.2f}")
+            self.v2_print(f"Restriction: ", end='')
 
             parents = []
             eol = []
@@ -218,6 +220,11 @@ class Simulator:
                 if self.resource.get_amount() < \
                     len(self.agents)*self.resource_limit_factor:
                         self.restriction_active = True
+
+            if self.restriction_active:
+                self.v2_print(f"ACTIVE")
+            else:
+                self.v2_print(f"INACTIVE")
 
             # Update the agents
             for num, agent in enumerate(self.agents):
