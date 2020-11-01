@@ -368,16 +368,6 @@ class Simulator:
             elif (svo > .8 and svo <= 1):
                 e += 1
 
-        below = []
-        above = []
-
-        for agent in self.agents:
-            svo = agent.social_value_orientation
-            if svo < median:
-                below.append(svo)
-            if svo > median:
-                above.append(svo)
-
         row.append(a)
         row.append(b)
         row.append(c)
