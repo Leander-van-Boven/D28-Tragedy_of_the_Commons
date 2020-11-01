@@ -150,7 +150,7 @@ default_params = {
     },
 
     "resource" : {
-        "start_amount" : 1,
+        "start_amount" : 100,
         #"max_amount" : 1500,
         "min_amount" : 1,
         "cooldown" : 50,
@@ -158,11 +158,11 @@ default_params = {
         "min_growth_rate" : 1,
         "max_growth_rate" : 2,
 
-        "growth_function" : "nroot", # "exponential", "nroot",  logarithmic"
+        "growth_function" : "logarithmic", # "exponential", "nroot",  logarithmic"
         "gf_params" : {
             "exp_rate" : .25,
-            "log_init_jump" : 100,
-            "log_scale" : 15,
+            "log_init_jump" : 3,
+            "log_scale" : 6,
             "log_offset" : 0,
             "root_scale" : 2500,
             "root_xoffset" : 0,
@@ -189,5 +189,7 @@ default_params = {
         "print_interval" : 1
     },
 
+    # Do not override this value!
+    # For internal purposes only
     "batch" : 1,
 }

@@ -1,4 +1,5 @@
 import math
+from .util import do_nothing
 
 class Resource:
     """This class represents the common resource, or fish in our case.
@@ -24,6 +25,7 @@ class Resource:
     in_cooldown = False
     min_growth_rate = 0
     max_growth_rate = 1
+
 
     def growth_exponential(self, val, **kwargs):
         return val * kwargs['exp_rate']
@@ -57,6 +59,7 @@ class Resource:
         self.max_growth_rate = values.get('max_growth_rate', self.max_growth_rate)
         self.growth = eval('self.growth_' + values['growth_function'])
         self.growth_kwargs = values['gf_params']
+        self.print = values.get('print', do_nothing)
 
         self.amount = self.start_amount
 
@@ -102,9 +105,9 @@ class Resource:
 
         # self.amount += self.amount * growth
         growth = self.growth(val=self.amount, **self.growth_kwargs)
-        print(f"Resource: {self.amount:4.2f},\t growing {growth:.2f},", end='')
-        self.amount += growth
-        print(f"\tnow {self.amount:.2f}")
+        self.print(f"Resource: {self.amount:4.2f},\t growing {growth:.2f},", end='')
+        self.amount *= growth
+        self.print(f"\tnow {self.amount:.2f}")
 
         if ((not self.max_amount < 0) and self.amount > self.max_amount):
             self.amount = self.max_amount

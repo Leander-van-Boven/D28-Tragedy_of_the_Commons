@@ -2,6 +2,7 @@ import numpy as np
 import time
 from .agent import Agent
 from .resource import Resource
+from .util import do_nothing
 
 class Simulator:
     """Main class that manages the agents and resource.
@@ -40,6 +41,9 @@ class Simulator:
     result = ""
     resource = None
 
+    v_print = do_nothing
+    v1_print = do_nothing
+    v2_print = do_nothing
 
     def __init__(self, param_dict, printer=None, logger=None, row_head=[],
                  verbose=True):
@@ -63,6 +67,16 @@ class Simulator:
 
         self.svo_mutation_factor = \
             param_dict['agent']['svo_convergence_factor'] / 3
+
+        if verbose > 0:
+            self.v_print = print
+            if verbose == 1:
+                self.v1_print = print
+            elif verbose == 2:
+                self.v2_print = print
+
+        self.agent_params['print'] = self.v2_print
+        self.resource_params['print'] = self.v2_print
 
 
     def get_agent_count(self, min_social_value=0, max_social_value=1):
@@ -176,8 +190,8 @@ class Simulator:
         #TODO We might want to add self.epoch = 1 here.
         # Run the simulations for max_epoch amounts
         while (self.epoch < self.max_epoch):
-            print('\n---    EPOCH %s    ---\n' % self.epoch)
-            print(f"Agent count: {len(self.agents)}, available resource: {self.resource.get_amount():.2f}")
+            self.v2_print('\n---    EPOCH %s    ---\n' % self.epoch)
+            self.v2_print(f"Agent count: {len(self.agents)}, available resource: {self.resource.get_amount():.2f}")
 
             parents = []
             eol = []
@@ -185,33 +199,33 @@ class Simulator:
             # Update the agents
             for num, agent in enumerate(self.agents):
                 #print(f'\t\t{num}. {agent}.act()')
-                print(f"{num:3.0f}\tid={agent.id}\tsvo={agent.social_value_orientation:3.2f}\tpre={agent.energy:3.2f}",
+                self.v2_print(f"{num:3.0f}\tid={agent.id}\tsvo={agent.social_value_orientation:3.2f}\tpre={agent.energy:3.2f}",
                     end='')
                 agent.act(self)
-                print(f'\tpost={agent.energy:.2f}', end='')
+                self.v2_print(f'\tpost={agent.energy:.2f}', end='')
                 # Check impact of actions
                 if agent.energy <= 0:
-                    print('\tSTARVED')
+                    self.v2_print('\tSTARVED')
                     eol.append(agent)
                 elif agent.age > agent.maximum_age:
-                    print('\tEOL')
+                    self.v2_print('\tEOL')
                     eol.append(agent)                              
                 elif agent.energy >= agent.procreate_req:
-                    print('\tPROCEATE')
+                    self.v2_print('\tPROCEATE')
                     parents.append(agent)
                 else:
-                    print('\tLIVE')
+                    self.v2_print('\tLIVE')
 
             for agent in eol:
                 self.agents.remove(agent)
 
-            print('\nPost act agent count: %s' % self.get_agent_count())
-            print('Procreate: %s (tot %s)' % (
+            self.v2_print('\nPost act agent count: %s' % self.get_agent_count())
+            self.v2_print('Procreate: %s (tot %s)' % (
                 ', '.join([str(a.id) for a in parents]),
                 len(parents)
             ))
             Agent.procreate(self, parents)
-            print('Post-proc agent count: %s\n' % len(self.agents))
+            self.v2_print('Post-proc agent count: %s\n' % len(self.agents))
             # Update the resource and epoch
             self.resource.grow_resource() 
             np.random.shuffle(self.agents)
@@ -227,15 +241,15 @@ class Simulator:
             if self.logger and self.epoch%self.log_interval == 0:
                 self.log_results()
 
-            input("Press enter to continue...")
+            if self.verbose == 2:
+                input("Press enter to continue...")
 
             # Check whether there are still agents alive
             if self.get_agent_count() <= 1:
-                pass#break
+                break
         
         # While loop finished, maximum epoch reached
-        if self.verbose:
-            print()
+        self.v_print()
         # Some agents stayed alive
         if self.get_agent_count() > 1:
             self.result = ("Maximum epoch reached, you managed to keep " +
@@ -251,8 +265,7 @@ class Simulator:
 
         if self.printer:
             self.printer.save_fig('.lastplot.pdf')
-        if self.verbose:
-            print(self.result)
+        self.v_print(self.result)
 
     
     def plot_results(self):
@@ -280,7 +293,7 @@ class Simulator:
         #                                  dist['max_social_value'])) + 
         #         ", ")
         #self.cur_stats += f"res: {self.resource.get_amount():.2f}"
-        print(self.cur_stats, end = "\r", flush = True)
+        self.v1_print(self.cur_stats, end = "\r", flush = True)
 
     def log_results(self):
         '''Adds a new row to the log.'''

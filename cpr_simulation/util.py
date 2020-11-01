@@ -1,6 +1,9 @@
 import collections.abc
 import itertools
 
+def do_nothing(self, *args, **kwargs):
+    pass
+
 def update_dict(d, u, omit_new=False):
     """Recursively updates dict d with the values of dict u, 
     and returns d.

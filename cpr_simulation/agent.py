@@ -2,6 +2,7 @@ import random as rnd
 
 import numpy as np
 import scipy.stats as ss
+from .util import do_nothing
 
 
 class Agent:
@@ -15,6 +16,7 @@ class Agent:
     cur_cooldown = 0
     id=-1
 
+    print=do_nothing
 
     # variable = Agent(params);
     def __init__(self, params, **kwargs):
@@ -50,6 +52,8 @@ class Agent:
 
         if 'id' in kwargs:
             self.id = kwargs['id']
+
+        self.print = params.get('print', do_nothing)
 
         # Base energy function parameters
         self.scarcity = params['scarcity']
@@ -152,10 +156,10 @@ class Agent:
         # * (1 + exp(self.age - self.max_age/2))
         self.energy -= self.metabolism  
         self.age += 1
-        print(f'\t-met={self.energy:.2f}', end='')
+        self.print(f'\t-met={self.energy:.2f}', end='')
         # Execute behaviour to compensate lost energy from metabolism
         eval('self.' + self.behaviour)(sim)
-        print(f'\t+beh={self.energy:.2f}', end='')
+        self.print(f'\t+beh={self.energy:.2f}', end='')
 
     def new_energy_function(self, sim):
 
