@@ -7,7 +7,7 @@ simulation:max_epoch=1000 `
 
 # Bimodal Experiments
 python sim.py run --batch 12 `
---out 'final_results/final_csv/bimodal.csv' `
+--out 'data_analysis/final_results/nfinal_csv/bimodal.csv' `
 --param svo_dist:d1:m=.5 svo_dist:d1:s=.25 `
 svo_dist:d2:m=.5 svo_dist:d2:s=.25 `
 --range svo_dist:d1:m=0,0.41,0.2 svo_dist:d1:s=0.01,0.21,0.09 `

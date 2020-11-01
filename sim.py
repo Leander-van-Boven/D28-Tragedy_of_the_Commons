@@ -81,10 +81,10 @@ def run(args):
 
     if args.verbose >= 0:
         verbose = args.verbose
-    elif args.range or (args.batch==1):
-        verbose = 1
-    else:
+    elif args.range or (args.batch>1):
         verbose = 0
+    else:
+        verbose = 1
         
     if args.plot is not None:
         plot = args.plot
