@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib
+matplotlib.use('TKagg')
 from matplotlib import pyplot as plt
 from matplotlib import animation
 
@@ -155,6 +156,7 @@ class ResultsPlotter:
             self.fig, self.update, data_gen, 
             blit=True, interval=1, repeat=False, 
             init_func=self.init_plot)
+        plt.switch_backend('TkAgg')
         mng = plt.get_current_fig_manager()
         mng.window.state('zoomed')
         plt.show()

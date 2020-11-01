@@ -313,14 +313,15 @@ class Simulator:
 
     def print_results(self):
         '''Prints the current stats of the simulation.'''
-
-        self.cur_stats = f"epoch: {self.epoch}, " + \
-                         f"agent count: {self.get_agent_count()}, " + \
-                         f"resource: {self.get_resource().get_amount():.2f}"
+        self.cur_stats = ''
         if self.restriction_mode:
             self.cur_stats += f"restriction: "
             self.cur_stats += \
-                "ACTIVE  " if self.restriction_active else "INACTIVE"
+                "ACTIVE,   " if self.restriction_active else "INACTIVE, "
+        self.cur_stats += f"epoch: {self.epoch}, " + \
+                          f"agent count: {self.get_agent_count()}, " + \
+                          f"resource: {self.get_resource().get_amount():.2f}"
+
         # for dist_name in self.agent_distributions:
         #     dist = self.agent_distributions[dist_name]
         #     self.cur_stats += (

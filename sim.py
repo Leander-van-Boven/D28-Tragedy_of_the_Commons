@@ -102,7 +102,7 @@ def run(args):
         not (args.range or args.batch-1)
 
     verbose = args.verbose if args.verbose > 1 else \
-        not int(args.range or args.batch-1)
+        int(not args.range or args.batch-1)
 
     cpr.run(param_dict, params_to_range, args.jobs, param_ranges, args.out, 
             plot, verbose)
