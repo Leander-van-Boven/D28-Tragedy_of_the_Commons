@@ -276,7 +276,7 @@ class Simulator:
 
             # Check whether there are still agents alive
             if self.get_agent_count() <= 1:
-                pass#break
+                break
         
         # While loop finished, maximum epoch reached
         self.v_print()

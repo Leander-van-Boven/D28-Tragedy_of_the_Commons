@@ -82,7 +82,7 @@ class ResultsPlotter:
         self.res_limit_line.set_data(self.xdata, self.limitresource)
         self.res_unlimit_line.set_data(self.xdata, self.unlimitresource)
 
-        initialised = [self.agent_line, self.resource_line]
+        initialised = [self.agent_line, self.resource_line, self.res_limit_line, self.res_unlimit_line]
         for bar in self.svo_bars:
             initialised.append(bar)
         return initialised
@@ -136,7 +136,7 @@ class ResultsPlotter:
         self.res_limit_line.set_data(self.xdata, self.limitresource)
         self.res_unlimit_line.set_data(self.xdata, self.unlimitresource)
         #self.save_fig('.lastplot.pdf')
-        updated = [self.agent_line, self.resource_line]
+        updated = [self.agent_line, self.resource_line, self.res_limit_line, self.res_unlimit_line]
         for bar in self.svo_bars:
             updated.append(bar)
         return updated
