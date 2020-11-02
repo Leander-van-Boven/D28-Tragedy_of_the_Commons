@@ -2,23 +2,17 @@ import random as rnd
 
 import numpy as np
 import scipy.stats as ss
+
 from .util import do_nothing
 
 
 class Agent:
-    # Attributes
-    age = 0
-    energy = 0
-    child_count = 0
 
-    # Restricted Energy Function attributes
-    # restriction_active = False
-    cur_cooldown = 0
-    id = -1
-
+    # Static attributes
+    svo_convergence_factor = 0
+    svo_procreation_function = 'svo_either_parent'
     print = do_nothing
 
-    # variable = Agent(params);
     def __init__(self, params, **kwargs):
         """Initialises the agent with the provided parameters.
 
@@ -29,45 +23,42 @@ class Agent:
         ----------
         params : `dict`,
             Dictionary containing the parameters for this agent.
+        **kwargs : `dict`, optional,
+            If desired, you can add 'id' key for a unique agent 
+            identifier and 'svo' key to override the svo value.
         """
 
+        # Independent parameters
+        self.age = 0
+        self.energy = 0
+        self.child_count = 0
+        self.penalty_cooldown = 0
+
+        # General parameters
         self.metabolism = params['metabolism']
         self.consumption = params['metabolism'] * params['consumption_factor']
-        self.procreate_cost = params['metabolism'] \
-                              * params['procreate_cost_factor']
-        self.procreate_req_factor = params['procreate_req_factor']
+        self.procreate_cost = \
+            params['metabolism'] * params['procreate_cost_factor']
+        self.procreate_req = \
+            self.procreate_cost * params['procreate_req_factor']
         self.energy = params['metabolism'] * params['start_energy_factor']
-        self.maximum_age = int(round(rnd.gauss(
+        self.maximum_age = max(0, int(round(rnd.gauss(
             params['maximum_age'],
-            params['maximum_age'] * params['maximum_age_std_factor'])))
-
-        # self.behaviour = eval(params['behaviour'] + '(sim)')
+            params['maximum_age'] * params['maximum_age_std_factor']))))
         self.behaviour = params['behaviour']
-
-        if 'svo' in kwargs:
-            self.social_value_orientation = kwargs['svo']
-        else:
-            self.social_value_orientation = .5
-
-        if 'id' in kwargs:
-            self.id = kwargs['id']
-
-        self.print = params.get('print', do_nothing)
+        # Override SVO value
+        self.social_value_orientation = kwargs.get('svo', .5)
+        # Unique agent identifier
+        self.id = kwargs.get('id', -1)
 
         # Base energy function parameters
         self.scarcity = params['scarcity']
         self.greed = params['greed']
 
         # Restricted energy function parameters
-        # self.res_limit_factor = params['res_limit_factor']
-        # self.res_unlimit_factor = params['res_unlimit_factor']
         self.caught_chance = params['caught_chance']
-        self.caught_cooldown = params['caught_cooldown_factor'] \
-                               * params['maximum_age']
-
-    @property
-    def procreate_req(self):
-        return self.procreate_cost * self.procreate_req_factor
+        self.caught_cooldown = \
+            params['caught_cooldown_factor'] * params['maximum_age']
 
     @classmethod
     def from_svo_distribution(cls, dist_params, n, agent_params=dict()):
@@ -76,14 +67,12 @@ class Agent:
 
         Parameters
         ----------
-        #TODO update docstring dist_params -> dict...
-        dist_params : `list[list[float]]`
-            The collection of normal distribution parameters. Sould be
-            formatted as follows: dist_params[i][0] denotes the mean and
-            dist_params[i][1] the variance of the i'th distribution, for 
-            any i >= 0.
-        n : `int/float`
-            The desired number of agents.
+        dist_params : `dict[str, dict[str, float]]`,
+            A dictionary of normal distribution dicionaries. Each normal
+            distribution should have a key 'm' denoting the mean, and a 
+            key 's' denoting the standard deviation.
+        n : `float` or `int`
+            The desired number of agents. Will be rounded down.
         agent_params : `dict`, optional
             The parameter dictionary that will be passed on to each
             agent, by default dict().
@@ -94,6 +83,7 @@ class Agent:
             The list of Agents.
         """
 
+        # If dist_param is an empty dictionary, use default
         if not dist_params:
             dist_params = {
                 "d1": {
@@ -106,9 +96,10 @@ class Agent:
                 }
             }
 
-        dist_params = [list(d.values()) for d in dist_params.values()]
-        # We'll use numpy-specific functions, so we convert to np.array
-        dist_params = np.array(dist_params)
+        # Convert the dictionary structure to a list structure sorted
+        # by index instead of key
+        dist_params = \
+            np.array([list(d.values()) for d in dist_params.values()])
 
         # The shape of dist_params should be (x,2) with x>0
         assert dist_params.shape[0] > 0
@@ -123,7 +114,7 @@ class Agent:
         weights = np.ones(n_dist, dtype=np.float64) / float(n_dist)
 
         # Sample for each agent, the index of the distribution its SVO
-        # will be drawn from. 
+        # will be drawn from.
         agent_dist_index = np.random.choice(len(weights), size=n, replace=True,
                                             p=weights)
 
@@ -140,63 +131,52 @@ class Agent:
                 enumerate(agent_svos)]
 
     def act(self, sim):
-        """This is the act function of the agent.
-        It updates the status of the agent depending on multiple factors.
+        """This is the act function of the agent. This function updates the 
+        status of the agent depending on its behaviour function.
 
         Parameters
         ----------
         sim : `Simulation`,
-            Reference to the simulation
+            The current simulation
         """
 
-        # Life cycle
-        # TODO Metabolism increases as agent gets older
-        # * (1 + exp(self.age - self.max_age/2))
+        # Metabolise some energy
         self.energy -= self.metabolism
+        # Grow older
         self.age += 1
         self.print(f'\t-met={self.energy:.2f}', end='')
         # Execute behaviour to compensate lost energy from metabolism
         eval('self.' + self.behaviour)(sim)
         self.print(f'\t+beh={self.energy:.2f}', end='')
 
-    def new_energy_function(self, sim):
-
-        if sim.get_resource().get_amount() >= sim.get_agent_count() * self.consumption:
-            self.energy += sim.get_resource().consume_resource(self.consumption)
-        elif sim.get_resource().get_amount() >= sim.get_agent_count() * self.metabolism:
-            self.energy += sim.get_resource().consume_resource(self.metabolism)
-        else:
-            available_frac = sim.get_resource().get_amount() / sim.get_agent_count() * self.metabolism
-            self.energy += sim.get_resource().consume_resource(self.metabolism * available_frac)
-
     def base_energy_function(self, sim):
         """This is the base model energy function for our agent.
-        
+
         Implements the basic behaviour of the agents.
-        
+
         - Pro-social agents will always fish 
             at the predefined consumption rate.
         - Pro-self agents, will fish with an extra greed coefficient 
             when fish population is low relative to human population.
-        
+
         Parameters
         ----------
         sim : `Simulation`,
-            Reference to the simulation
+            The current simulation
         """
 
         # Prosocial Behaviour
         if self.social_value_orientation >= .5:
-            self.energy += sim.get_resource().consume_resource(self.consumption)
+            self.energy += sim.resource.consume_resource(self.consumption)
         # Proself Behaviour
         else:
-            fish = sim.get_resource().get_amount()
+            fish = sim.resource.amount
             population = sim.get_agent_count()
             if fish / population < self.scarcity:
-                self.energy += sim.get_resource().consume_resource(
+                self.energy += sim.resource.consume_resource(
                     self.consumption * self.greed)
             else:
-                self.energy += sim.get_resource().consume_resource(
+                self.energy += sim.resource.consume_resource(
                     self.consumption)
 
     def restricted_energy_function(self, sim):
@@ -219,60 +199,39 @@ class Agent:
         Parameters
         ----------
         sim : `Simulation`,
-            Reference to the simulation
+            The current simulation
         """
 
-        def act_restricted():
-            # If agent would die this epoch it is allowed to fish the
-            # amount of fish to get at 1 energy at the end of the epoch.
-            if self.energy <= 0:
-                # print('\t\tself.energy<=0:', self.energy)
-                # self.energy += sim.get_resource().consume_resource(
-                #     abs(self.energy) + 1)
-                self.energy += sim.get_resource().consume_resource(
-                    self.consumption + 1)
-                # print('\t\tfished, energy:', self.energy)
-            # Otherwise, determine based on SVO whether agent violates
-            # the fishing rule.
-            elif rnd.random() > self.social_value_orientation:
-                # print('\t\tviolated restriction...')
-                # Check if agent is caught violating the rule.
-                if rnd.random() < self.caught_chance:
-                    # print('\t\tgot caught! setting cooldown to', self.caught_cooldown, ', energy:', self.energy)
-                    self.cur_cooldown = self.caught_cooldown
-                else:
-                    self.energy += sim.get_resource().consume_resource(
-                        self.consumption)
-                    # print('\t\tfished violatetly, energy:', self.energy)
-            # else:
-            #     print('\t\tdid not fish today, energy:', self.energy)
-
         # Check if agent is not allowed to fish this epoch.
-        if self.cur_cooldown > 0:
-            # print('\tcur_cooldown > 0:', self.cur_cooldown, ', energy:', self.energy)
-            self.cur_cooldown -= 1
+        if self.penalty_cooldown > 0:
+            self.penalty_cooldown -= 1
             self.print('\tCOOLDOWN', end='')
             return
-
-        # Check whether the resources dropped below restriction limit.
-        # if sim.get_resource().get_amount() > \
-        #     sim.get_agent_count()*self.res_unlimit_factor*self.consumption:
-        #     #print('\trestriction has become inactive')
-        #     self.restriction_active = False
-        # elif sim.get_resource().get_amount() < \
-        #     sim.get_agent_count()*self.res_limit_factor*self.consumption:
-        #     #print('\trestriction has become active')
-        #     self.restriction_active = True
 
         assert sim.restriction_active is not None
 
         if sim.restriction_active:
-            # print('\tacting restricted')
+            # If the agent is restricted
             self.print('\tRESTRICTED', end='')
-            act_restricted()
+            # If agent would die this epoch it is allowed to fish the
+            # amount of fish to get at 1 energy at the end of the epoch.
+            if self.energy <= 0:
+                self.energy += sim.resource.consume_resource(
+                    self.consumption + 1)
+            # Otherwise, determine based on SVO whether agent violates
+            # the fishing rule.
+            elif rnd.random() > self.social_value_orientation:
+                # Check if agent is caught violating the rule.
+                if rnd.random() < self.caught_chance:
+                    self.penalty_cooldown = self.caught_cooldown
+                else:
+                    self.energy += sim.resource.consume_resource(
+                        self.consumption)
         else:
+            # If the agent is not restricted, just consume the desired
+            # amount of resource.
             self.print('\tUNRESTRICTED', end='')
-            self.energy += sim.get_resource().consume_resource(self.consumption)
+            self.energy += sim.resource.consume_resource(self.consumption)
 
     @classmethod
     def procreate(cls, sim, parents):
@@ -283,11 +242,34 @@ class Agent:
         ----------
         sim : `Simulation`,
             Reference to the simulation
-        parents : [],
+        parents : `list[Agent]`,
             An array of agents with energy > procreate_req
         """
+
+        def svo_either_parent():
+            if rnd.random() < parent1.energy / (parent1.energy+parent2.energy):
+                svo = rnd.gauss(parent1.social_value_orientation,
+                                Agent.svo_convergence_factor)
+            else:
+                svo = rnd.gauss(parent2.social_value_orientation,
+                                Agent.svo_convergence_factor)
+
+            return max(min(svo, 1), 0)
+
+        def svo_between_parents():
+            svo_mean = \
+                (parent1.social_value_orientation*parent1.energy
+                 + parent2.social_value_orientation*parent2.energy) \
+                / (parent1.energy+parent2.energy)
+            base_svo_std = min(abs(svo_mean-parent1.social_value_orientation),
+                               abs(svo_mean-parent2.social_value_orientation))
+            svo_std = base_svo_std * Agent.svo_convergence_factor
+            return max(min(rnd.gauss(svo_mean, svo_std), 1), 0)
+
         if parents:
+            # Detrmine the start point for unique agent identifier
             s_id = max([a.id for a in parents]) + 1
+
         rnd.shuffle(parents)
         while len(parents) > 1:
             # Select parent 1, update its attributes
@@ -298,27 +280,11 @@ class Agent:
             parent2 = parents.pop()
             parent2.child_count += 1
 
-            if rnd.random() < parent1.energy / (parent1.energy + parent2.energy):
-                svo = rnd.gauss(parent1.social_value_orientation,
-                                sim.svo_mutation_factor)
-            else:
-                svo = rnd.gauss(parent2.social_value_orientation,
-                                sim.svo_mutation_factor)
-
-            svo = max(min(svo, 1), 0)
+            svo = eval(Agent.svo_procreation_function)()
 
             child = Agent(sim.agent_params, id=s_id, svo=svo)
-            child.energy = (parent1.procreate_cost + parent2.procreate_cost) / 2
-
-            # svo_mean = \
-            #     (parent1.social_value_orientation*parent1.energy \
-            #     + parent2.social_value_orientation*parent2.energy) \
-            #     / (parent1.energy+parent2.energy)
-            # base_svo_std = min(abs(svo_mean-parent1.social_value_orientation), 
-            #                    abs(svo_mean-parent2.social_value_orientation))
-            # svo_std = base_svo_std * sim.svo_mutation_factor
-            # child.social_value_orientation = \
-            #     max(min(rnd.gauss(svo_mean, svo_std), 1), 0)
+            child.energy = (parent1.procreate_cost +
+                            parent2.procreate_cost) / 2
 
             sim.add_agent(child)
 

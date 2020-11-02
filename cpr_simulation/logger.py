@@ -1,4 +1,6 @@
-import os, sys
+import os
+import sys
+from .exception import InvalidParameterError
 
 
 class CsvLogger:
@@ -8,7 +10,7 @@ class CsvLogger:
     ----------
     head : `list[str]`, 
         The table header, where head[i] is the header for column i.
-    
+
     table : `list[list[str]]`,
         The table, where table[i][j] holds the value of row i, column j.
 
@@ -28,31 +30,36 @@ class CsvLogger:
     Methods
     -------
     `add_row(col_names, sep=',', rep=' ')`
-    
+
     `write(path)`
     """
 
     def __init__(self, params, col_names, path=None, append=False):
         """Initializes the CsvLogger class.
-        
+
         Parameters
         ----------
         params : `dict`,
             A dictionary containing parameters for the logger.
 
+        col_names : `list[str]`,
+            A list containing the names for each column of the table.
+
         path : `str`, 
             The path to which the output should be written.
 
-        col_names : `list[str]`,
-            A list containing the names for each column of the table.
+        append : `bool`,
+            Whether to append this table to the file (assumes path is a 
+            file that already exists). Will not copy over this table's
+            header row. 
         """
 
         self.path = path
-
         self.separator = params['separator']
         self.sep_replace = params['separator_replacement']
         if self.separator == self.sep_replace:
-            raise Exception("Separator and its replacement can't be equal!")
+            raise exception.InvalidParameterError(
+                "CSV separator and its replacement can't be equal!")
 
         self.head = [col.replace(self.separator, self.sep_replace)
                      for col in col_names]
@@ -72,11 +79,8 @@ class CsvLogger:
 
         if len(row) != self.n_cols:
             raise Exception("Invalid number of columns in row!")
-        # self.table.append([str(r).replace(self.separator, self.sep_replace)
-        #                    for r in row])
         self.table.append(self.separator.join(
-            [str(r).replace(self.separator, self.sep_replace) for r in row])
-        )
+            [str(r).replace(self.separator, self.sep_replace) for r in row]))
         self.n_rows += 1
 
     def write(self, path=None):
@@ -88,11 +92,10 @@ class CsvLogger:
             The path to write the file to,
             if not specified self.path is taken.
         """
+        
         if not self.append:
             with open(path or self.path or '.log.csv', 'w') as file:
                 file.write(self.separator.join(self.head) + '\n')
-                # file.write('\n'.join([self.separator.join(row) 
-                #                       for row in self.table]))
                 file.write('\n'.join(self.table))
         else:
             with open(path or self.path or '.log.csv', 'a') as file:

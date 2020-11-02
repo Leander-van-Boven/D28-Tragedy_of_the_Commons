@@ -39,8 +39,8 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
   
     
 
-<title>Interaction with the Model | Tragedy of the Commons model Documentation</title>
-<meta name="description" content="Everything to know about the implementation of this awesome project in one place
+<title>Model Interaction | Tragedy of the Commons model Documentation</title>
+<meta name="description" content="Everything there is to know about the implementation of this awesome project. All in one place.
 ">
 <link rel="canonical" href="http://localhost:4000/pages/interaction/">
 
@@ -160,7 +160,7 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 >
   <article class="page" role="article">
   <header>
-    <h1 class="page-title">Interaction with the Model</h1>
+    <h1 class="page-title">Model Interaction</h1>
     
 
 
@@ -172,22 +172,54 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 
   <ol title="Contents" id="markdown-toc">
   <li><a href="#the-command-line-interface" id="markdown-toc-the-command-line-interface">The Command-Line Interface</a>    <ol>
-      <li><a href="#required-argument" id="markdown-toc-required-argument">Required argument</a></li>
-      <li><a href="#specifying-a-certain-scenario" id="markdown-toc-specifying-a-certain-scenario">Specifying a certain scenario</a></li>
-      <li><a href="#altering-simulation-parameters" id="markdown-toc-altering-simulation-parameters">Altering simulation parameters</a></li>
+      <li><a href="#required-argument" id="markdown-toc-required-argument">Required Argument</a></li>
+      <li><a href="#specifying-a-certain-scenario" id="markdown-toc-specifying-a-certain-scenario">Specifying a Certain Scenario</a></li>
+      <li><a href="#altering-simulation-parameters" id="markdown-toc-altering-simulation-parameters">Altering Simulation Parameters</a>        <ol>
+          <li><a href="#examples" id="markdown-toc-examples">Examples</a></li>
+        </ol>
+      </li>
     </ol>
   </li>
 </ol>
 
 <h1 id="the-command-line-interface">The Command-Line Interface</h1>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: sim.py [-h] [-b amount] [-r item [item ...]] [-p item [item ...]]
-              [-n scenario] [-o file_path] [-P [bool]] [-f [bool]]
-              [-v [0, 1 or 2]] [--jobs n_jobs]
-              {run,save,list,test}
+<p>Interaction with the model is done through the file <code class="language-plaintext highlighter-rouge">sim.py</code> that’s located in the root directory. At any time, a discription of the CLI can be found by using <code class="language-plaintext highlighter-rouge">python sim.py --help</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nemo@p-sea:~/D28-Tragedy_of_the_Commons$ python sim.py --help
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: sim.py [-h] [-n scenario] [-p item [item ...]] [-b int]
+              [-r item [item ...]] [-o path] [-P [bool]] [-v [int]]
+              [-f [bool]] [--jobs int]
+              {run,save,list}
+
+positional arguments:
+  {run,save,list}  run: run a simulation; save: save the previous
+                        simulation; list: list all saved simulations
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -n scenario, --name scenario
+                        the name of the scenario to load or to save
+  -p item [item ...], --param item [item ...]
+                        add parameters to override its value, e.g.
+                        resource:start_amount=600
+  -b int, --batch int   the amount of times the same experiment should be run
+                        (defaults to 1)
+  -r item [item ...], --range item [item ...]
+                        add parameters to run the simulation with a range of
+                        values, e.g. resource:start_amount=300,601,100
+  -o path, --out path   the output path for CSV logging
+  -P [bool], --plot [bool]
+                        whether to show a real-time plot
+  -v [int], --verbose [int]
+                        whether to enter verbose mode [0..2]
+  -f [bool], --fullscreen [bool]
+                        whether to show the plot in fullscreen
+  --jobs int            the amount of parallel processes in range or batch
+                        mode
 </code></pre></div></div>
 
-<h2 id="required-argument">Required argument</h2>
-<p>The only required argument is a positional argument. Options can be taken from <code class="language-plaintext highlighter-rouge">{run, save, list, test}</code>.</p>
+<h2 id="required-argument">Required Argument</h2>
+<p>The only required argument is a positional argument. Options can be taken from <code class="language-plaintext highlighter-rouge">{run, save, list}</code>.</p>
 
 <ul>
   <li>Specifying <code class="language-plaintext highlighter-rouge">run</code> will run a simulation with default parameters, real-time plotting and book-keeping in the CLI.
@@ -204,7 +236,7 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
   </li>
 </ul>
 
-<h2 id="specifying-a-certain-scenario">Specifying a certain scenario</h2>
+<h2 id="specifying-a-certain-scenario">Specifying a Certain Scenario</h2>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -n    [name_of_scenario]
 --name [name_of_scenario] 
 </code></pre></div></div>
@@ -215,7 +247,47 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
   <li>If the program is operating in <code class="language-plaintext highlighter-rouge">list</code>-mode, the <code class="language-plaintext highlighter-rouge">name</code> argument is ignored.</li>
 </ul>
 
-<h2 id="altering-simulation-parameters">Altering simulation parameters</h2>
+<h2 id="altering-simulation-parameters">Altering Simulation Parameters</h2>
+<blockquote>
+  <p>For an overview of all parameters available in this simulation, refer to <a href="/pages/parameters/">Parameters</a>.</p>
+</blockquote>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -p       [parameter_address]=[value]
+--params  [parameter_address]=[value]
+</code></pre></div></div>
+<p>With the <code class="language-plaintext highlighter-rouge">param</code> argument, it’s possible to override the default values of different parameters. The parameter address <code class="language-plaintext highlighter-rouge">[parameter_address]</code> follows the parameter syntax found in <a href="/pages/parameters">Parameters</a>. The new parameter value <code class="language-plaintext highlighter-rouge">[value]</code> can be an integer, a float or a string. It is possible to override multiple paramers at once. Note that the <code class="language-plaintext highlighter-rouge">param</code> argument is only used in <code class="language-plaintext highlighter-rouge">run</code>-mode.</p>
+
+<h3 id="examples">Examples</h3>
+<ul>
+  <li>Change the initial agent count from 100 (default) to 10:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python sim.py run --param agent:count=10
+</code></pre></div>    </div>
+  </li>
+  <li>Change the resource growth function<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote">1</a></sup> from <code class="language-plaintext highlighter-rouge">logarithmic</code> (default) to <code class="language-plaintext highlighter-rouge">nroot</code>:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python sim.py run --param resource:growth_function=nroot
+</code></pre></div>    </div>
+  </li>
+  <li>Change both the initial agent count and the resource growth function:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python sim.py run --param agent:count=10 resource:growth_function=nroot
+</code></pre></div>    </div>
+  </li>
+  <li>Change the initial agents’ SVO distribution to a bimodal normal distribution with \(\mu_1=0.2\), \(\sigma_1=0.125\), \(\mu_2=0.95\), and \(\sigma_2=0.01\):
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python sim.py run --param \
+    svo_dist:d1:m=0.2 \
+    svo_dist:d1:s=0.125 \
+    svo_dist:d2:m=0.95 \
+    svo_dist:d2:s=0.01
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>For more information about the characteristics of the different resource growth functions, refer to <a href="/pages/architecture/resource/">Resource</a>. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
   
 
@@ -239,20 +311,20 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 
 
 
-<div class="sidebar-bg sidebar-overlay" style="background-color:rgb(79,177,186);background-image:url(/IMAGES/lake.jpg)"></div>
+<div class="sidebar-bg sidebar-overlay" style="background-color:rgb(79,177,186);background-image:url(/assets/img/lake.jpg)"></div>
 
     <div class="sidebar-sticky">
   <div class="sidebar-about">
     
       <a class="no-hover" href="/" tabindex="-1">
-        <img src="/IMAGES/nemo_logo.png" class="avatar" alt="Tragedy of the Commons model Documentation" width="120" height="120" loading="lazy" />
+        <img src="/assets/img/nemo_logo.png" class="avatar" alt="Tragedy of the Commons model Documentation" width="120" height="120" loading="lazy" />
       </a>
     
     <a class="sidebar-title" href="/"><h2 class="h1">Tragedy of the Commons model Documentation</h2></a>
     
     
       <p class="">
-        Everything to know about the implementation of this awesome project in one place
+        Everything there is to know about the implementation of this awesome project. All in one place.
 
       </p>
     

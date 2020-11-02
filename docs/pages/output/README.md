@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Output
+title: Model Output
 ---
 
 1. toc

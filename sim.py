@@ -9,37 +9,26 @@ running:
 # TODO:
 # - Check behavior of output path for csv logger
 # - Implement plot default true if single exp, default false if batch or
-#   range. 
+#   range.
 
-import cpr_simulation as cpr
 import argparse
 import json
 import os
 import sys
 
-# Constant values for loading and saving scenarios. 
+import cpr_simulation as cpr
+import cpr_simulation.util
+
+
+# Constant values for loading and saving scenarios.
 SCENARIO_DIR = 'scenarios'
 PARAM_NAME = 'params.json'
 FIG_NAME = 'figure.pdf'
 
 
-def test(args):
-    """Test method for debugging purposes.
-
-    This method can be called directly from the CLI.
-
-    Parameters
-    ----------
-    args : `argparse.Namespace`
-        The command-line arguments.
-    """
-
-    print(args)
-
-
 def run(args):
     """This method is called when `sim.py run` is run. 
-    
+
     This method reads out all command-line arguments parses them and 
     starts a simulation from the `cpr_simulation` package. 
 
@@ -50,7 +39,7 @@ def run(args):
     """
 
     if args.name:
-        path = '%s\\%s\\%s' % (SCENARIO_DIR, args.name, PARAM_NAME)
+        path = '%s/%s/%s' % (SCENARIO_DIR, args.name, PARAM_NAME)
 
         if not os.path.isfile(path):
             print("Couldn't find scenario named %s" % args.name)
@@ -93,13 +82,22 @@ def run(args):
     else:
         plot = not (args.range or args.batch - 1)
 
-    cpr.run(param_dict, params_to_range, param_ranges,
-            args.out, plot, args.jobs, args.fullscreen, verbose)
+    try:
+        cpr.run(param_dict, params_to_range, param_ranges,
+                args.out, plot, args.jobs, args.fullscreen, verbose)
+    except cpr.exception.InvalidArgumentError as e:
+        print(f"Inalid argument: {e.message}")
+        sys.exit(1)
+    except cpr.exception.MissingArgumentError as e:
+        print(f"Missing argument: {e.message}")
+        sys.exit(1)
+    except cpr.exception.InvalidParameterError as e:
+        print(f"Invalid parameter: {e.message}")
 
 
 def save(args):
     """This method is called when `sim.py save` is run. 
-    
+
     This method saves the parameters of the last run non-batch or 
     non-range simulation, if it exists. 
 
@@ -144,7 +142,7 @@ def save(args):
 
 def llist(_):
     """This method is called when `sim.py list` is run. 
-    
+
     This method lists all saved scenarios as saved by the save method. 
 
     Parameters
@@ -153,7 +151,7 @@ def llist(_):
         The command-line arguments.
     """
     print('\n'.join(
-        sorted([path for path in os.listdir(SCENARIO_DIR) if \
+        sorted([path for path in os.listdir(SCENARIO_DIR) if
                 os.path.isdir('%s\\%s' % (SCENARIO_DIR, path))])))
 
 
@@ -242,47 +240,48 @@ if __name__ == '__main__':
     # Define possible CL arguments
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'command', choices=['run', 'save', 'list', 'test'],
+        'command', choices=['run', 'save', 'list'],
         help='run: run a simulation; save: save the previous simulation; ' +
-             'list: list all saved simulations; test: for testing purposes')
+             'list: list all saved simulations')
     parser.add_argument(
-        '-b', '--batch', required=False, default=1, type=int, metavar='amount',
-        help='the amount of times the same experiment should be run '
-             + '(defaults to 1)')
-    parser.add_argument(
-        '-r', '--range', required=False, nargs='+', type=str2locrange,
-        metavar='item', help="add parameters to run the simulation with a " +
-                             "range of values, e.g. resource:start_amount=300,601,100")
+        '-n', '--name', required=False, type=str, metavar='scenario',
+        help='the name of the scenario to load or to save')
     parser.add_argument(
         '-p', '--param', required=False, nargs='+', type=str2locval,
         metavar='item', help='add parameters to override its value, ' +
                              'e.g. resource:start_amount=600')
     parser.add_argument(
-        '-n', '--name', required=False, type=str, metavar='scenario',
-        help='the name of the scenario to load or to save')
+        '-b', '--batch', required=False, default=1, type=int, metavar='int',
+        help='the amount of times the same experiment should be run '
+             + '(defaults to 1)')
     parser.add_argument(
-        '-o', '--out', required=False, type=str, metavar='file_path',
+        '-r', '--range', required=False, nargs='+', type=str2locrange,
+        metavar='item', help="add parameters to run the simulation with a " +
+                             "range of values, e.g. resource:start_amount=" +
+                             "300,601,100")
+    parser.add_argument(
+        '-o', '--out', required=False, type=str, metavar='path',
         help='the output path for CSV logging')
     parser.add_argument(
         '-P', '--plot', required=False, default=None, const=True, type=str2bool,
         nargs='?', metavar='bool', help='whether to show a real-time plot')
     parser.add_argument(
+        '-v', '--verbose', required=False, default=-1, const=1,
+        type=int, nargs='?', metavar='int',
+        help="whether to enter verbose mode [0..2]")
+    parser.add_argument(
         '-f', '--fullscreen', required=False, default=False, const=True,
         type=str2bool, nargs='?', metavar='bool',
         help='whether to show the plot in fullscreen')
     parser.add_argument(
-        '-v', '--verbose', required=False, default=-1, const=1,
-        type=int, nargs='?', metavar='0, 1 or 2',
-        help="whether to enter verbose mode")
-    parser.add_argument(
-        '--jobs', required=False, default=1, type=int, metavar='n_jobs',
+        '--jobs', required=False, default=1, type=int, metavar='int',
         help="the amount of parallel processes in range or batch mode")
 
     # Parse the arguments that were input
     args = parser.parse_args()
 
     # Run the right method, based on CL arguments
-    # We had to rename the method `list`, as otherwise it would have 
+    # We had to rename the method `list`, as otherwise it would have
     # conflicted with the `list` type.
     if args.command == 'list':
         args.command = 'llist'

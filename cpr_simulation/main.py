@@ -1,25 +1,25 @@
-from .simulation import Simulator
-from .output import ResultsPlotter
-from .logger import CsvLogger
-from .parameters import default_params
-from .util import update_dict
+import itertools as it
 import json
 import os
 import shutil
+
 from numpy import arange, prod
-import itertools as it
+
+from . import exception
+from .logger import CsvLogger
+from .output import ResultsPlotter
+from .parameters import default_params
+from .simulation import Simulator
+from .util import update_dict
 
 
 def run(override_params=dict(), params_to_range=None, param_ranges=None,
-        log_path=None, use_plot=True, n_jobs=1, fullscreen_plot=True, verbose=1):
+        log_path=None, use_plot=True, n_jobs=1, fullscreen_plot=True, 
+        verbose=1):
     """Reads and generates param dicts and runs the simulation with them.
 
     Parameters
     ----------
-    verbose
-    fullscreen_plot
-    n_jobs
-
 
     override_params : `dict`, optional,
         A dictionary with parameters to override from default, 
@@ -33,16 +33,26 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
         The ranges (organized by index) that the params_to_range will 
         range over.
 
-    log_dir : `str`, optional,
-        The directory where to save the output, by default None.
+    log_path : `str`, optional,
+        The path where to save the output, by default None.
 
     use_plot : `bool`, optional,
         Whether to use real time plotting, by default True.
+
+    n_jobs : `int`, optional,
+        The amount of jobs to simultaneously run.
+
+    fullscreen_plot : `bool`, optional,
+        Whether to make the real-time plotting window full-screen, by
+        default True
+
+    verbose : `int`, optional,
+        The verbose mode. 0 = iteration count, 1 = status every
+        epoch, 2 = detailed breakdown per epoch, halt each epoch.
     """
 
     # Update the parameter dictionary with the override values
     assert isinstance(override_params, dict)
-    # TODO: Check if update_dict performs as expected
     params = update_dict(default_params, override_params)
 
     # Get more print-friendly parameter locations
@@ -50,15 +60,16 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
         ':'.join(x.split('\'][\''))[2:-2] for x in params_to_range]
 
     def _get_logger(fn=None):
-        # Generate a CsvLogger class if log_dir is specified
+        """Generate a CsvLogger class with right parameters, 
+        if out_path is specified. Returns None if not.
+        """
+
         if log_path:
-            # TODO Add more columns to log
             col_names = \
-                ['Exp Num'] + param_names + ['Epoch', 'Resource', 'Count',
-                'A', 'B', 'C', 'D', 'E', 'Median', 'Below', 'Above', 'Mean', 
-                'STD', 'Resource Limit', 'Resource Unlimit']
-            # for dist_name in params['agent_distributions']:
-            #   col_names.append(dist_name)
+                ['Exp Num'] + param_names + \
+                ['Epoch', 'Resource', 'Count', 'A', 'B', 'C', 'D', 'E',
+                 'Median', 'Below', 'Above', 'Mean', 'STD', 'Resource Limit',
+                 'Resource Unlimit']
             if fn:
                 ld = f"{log_path}/{fn}"
             else:
@@ -68,9 +79,11 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
             logger = None
         return logger
 
-    # Local method that generates and runs a simulation. Is called twice,
-    # which is why we make it a function beforehand. 
     def _run_sim(p, c=[0], lg=None):
+        """Local method that generates and runs a simulation. This is a 
+        local method as the way we call it depends on operating mode.
+        """
+
         # If real-time plot is on, generate the ResultPrinter class
         printer = None if not use_plot else \
             ResultsPlotter(
@@ -99,7 +112,12 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
     # If not parameter range is specified, no loop is required.
     if not params_to_range:
         logger = _get_logger()
+
+        with open('.last.json', 'w') as file:
+            file.write(json.dumps(params))
+
         _run_sim(params, lg=logger)
+
     # If a parameter range is specified, we'll need to find out
     # what to loop over
     else:
@@ -109,15 +127,11 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
         # Generate all possible combinations of these ranged values
         value_combis = it.product(*param_values)
 
-        # Calculate the total number of iterations 
+        # Calculate the total number of iterations
         number_of_combis = prod([len(x) for x in param_values])
 
-        # Write the parameters to a json file to make saving possible
-        # TODO: Incorporate range and batch parameters to save.
-        with open(".last.json", "w") as file:
-            file.write(json.dumps(params))
-
         if n_jobs <= 1:
+            # If running single-threaded
             logger = _get_logger()
 
             # Iterate
@@ -125,10 +139,11 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
                 # Provide run information if verbose mode is on
                 if verbose == 1:
                     print('\nIteration: %s/%s' % (run + 1, number_of_combis))
-                    print('Params: ' + 
-                          ', '.join(["%s = %s" % i for i in zip(param_names, combi)]))
-                    # If not, keep a simple run counter
+                    print('Params: ' +
+                          ', '.join(
+                            ["%s = %s" % i for i in zip(param_names, combi)]))
                 else:
+                    # If not, keep a simple run counter
                     print('Iteration: %s/%s' % (run + 1, number_of_combis),
                           end='\r', flush=True)
 
@@ -139,19 +154,22 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
 
                 _run_sim(curr_params, [run] + list(combi), logger)
         else:
+            # If running multi-threaded
             if not log_path:
-                print("Error: Please specify the target directory for" +
-                      " the output CSV files using --out.")
-                return
+                raise exception.MissingArgumentError(
+                    "Please specify the target directory for the output CSV"
+                    " files using --out.")
             if not os.path.exists(log_path):
                 os.mkdir(log_path)
             elif not os.path.isdir(log_path):
-                print("Error: --out argument should be a directory in" +
-                      "multithreaded mode")
-            
+                raise exception.InvalidArgumentError(
+                    "Error: --out argument should be a directory in" +
+                    " multithreaded mode")
+
             from joblib import Parallel, delayed
             print("Running %s instances..." % number_of_combis)
 
+            # Make a method that can be called by the Parallel class
             def _run_parallel(run, combi):
                 logger = _get_logger(f"run{run}.csv")
 
@@ -165,6 +183,8 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
                 if logger:
                     logger.write()
 
+            # Run all experiments in parallel, with batch_size to 16 as 
+            # experiments tend to be quite quick
             Parallel(n_jobs=n_jobs, verbose=10, batch_size=16)(
                 delayed(_run_parallel)(*tup) for tup in enumerate(value_combis))
 
@@ -173,7 +193,16 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
         logger.write()
 
 
-def generate_default_params(path=".defaults.json"):
+def save_modified_params(path, override_params=dict()):
+    """Don't run, but only save the overriden parameter file."""
+    assert isinstance(override_params, dict)
+    params = update_dict(default_params, override_params)
+
+    with open(path, 'w') as file:
+        file.write(json.dumps(params))
+
+
+def save_default_params(path=".defaults.json"):
     """Used to generate the parameters for the simulation."""
 
     with open(path, "w") as file:

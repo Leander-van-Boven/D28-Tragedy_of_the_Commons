@@ -4,11 +4,11 @@ remote_theme: hydecorp/hydejack@v9.0.5
 
 lang: en
 title: Tragedy of the Commons model Documentation
-description: Everything to know about the implementation of this awesome project in one place
+description: Everything there is to know about the implementation of this awesome project. All in one place.
 keywords: []
-logo: /IMAGES/nemo_logo.png
+logo: /assets/img/nemo_logo.png
 
-accent_image: /IMAGES/lake.jpg
+accent_image: /assets/img/lake.jpg
 
 author:
   name: Group D28

@@ -3,17 +3,7 @@
 Explanation of parameters
 -------------------------
 
-agent_distributions : `dict`,
-    Contains the different groups of agents,
-        with their respective parameter values.
-    The key for each group denotes it label (this is also shown as line
-        label in the legend of the real-time plot).
-
-    line_style : `str`,
-        The style to use for the plot for this group.
-        Refer to https://tinyurl.com/y9go69zm for possible options.
-        (#NOTE not all options seem to work)
-
+agent : `dict`,
     agent_count : `int`,
         The amount of agents in the group.
 
@@ -118,7 +108,15 @@ run : `int`,
 default_params = {
     "agent": {
         "count": 100,
-        "svo_convergence_factor": 0.15,
+
+        "svo_procreation_function": "svo_either_parent",
+        # Possible values:          "svo_either_parent"
+        #                           "svo_between_parents"
+        "svo_convergence_factor": {
+            "svo_either_parent": 0.15,
+            "svo_between_parents": 3
+        },
+
         "params": {
             "metabolism": 5,
             "maximum_age": 30,
@@ -130,7 +128,7 @@ default_params = {
             "start_energy_factor": 1.3,
 
             "behaviour": "restricted_energy_function",
-            # possible values: "base_energy_function", 
+            # Possible values: "base_energy_function",
             #                  "restricted_energy_function"
 
             # Base Model Parameters
@@ -156,24 +154,29 @@ default_params = {
 
     "resource": {
         "start_amount": 4000,
-        # "max_amount" : 1500,
+        "max_amount": -1,
         "min_amount": 1,
-        "cooldown": 50,
-        "growth_rate": .25,
-        "min_growth_rate": 1,
-        "max_growth_rate": 2,
 
-        "growth_function": "logarithmic",  # "exponential", "nroot",  logarithmic"
+        "growth_function": "logarithmic",
+        # Possible values: "exponential",
+        #                  "logarithmic",
+        #                  "nroot"
         "gf_params": {
-            "exp_rate": .25,
-            "log_init_jump": 3,
-            "log_scale": 6,
-            "log_offset": 0,
-            "root_scale": 2500,
-            "root_xoffset": 0,
-            "root_yoffset": 1400,
-            "root_base": 16,
-        }
+            "exponential": {
+                "rate": .25,
+            },
+            "logarithmic": {
+                "a": 6,  # Scaling
+                "t": 0,  # Translation
+                "s": 3,  # Start jump
+            },
+            "nroot": {
+                "a": 2500,   # Scaling
+                "tx": 0,     # Translation x
+                "ty": 1400,  # Translation y
+                "n": 16,     # Root base
+            },
+        },
     },
 
     "simulation": {
@@ -194,8 +197,7 @@ default_params = {
 
     "logger_params": {
         "separator": ',',
-        "separator_replacement": ' ',
-        "print_interval": 1
+        "separator_replacement": ' '
     },
 
     # Do not override this value!

@@ -39,8 +39,8 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
   
     
 
-<title>Parameters | Tragedy of the Commons model Documentation</title>
-<meta name="description" content="Everything to know about the implementation of this awesome project in one place
+<title>Model Parameters | Tragedy of the Commons model Documentation</title>
+<meta name="description" content="Everything there is to know about the implementation of this awesome project. All in one place.
 ">
 <link rel="canonical" href="http://localhost:4000/pages/parameters/">
 
@@ -160,7 +160,7 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 >
   <article class="page" role="article">
   <header>
-    <h1 class="page-title">Parameters</h1>
+    <h1 class="page-title">Model Parameters</h1>
     
 
 
@@ -170,15 +170,223 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 
   </header>
 
-  
-<ul>
-  <li><a href="/pages/parameters/agent_parameters.html" class="heading flip-title">Agent Parameters</a> — An explanation of each parameter for the agents.</li>
-  <li><a href="/pages/parameters/resource_parameters.html" class="heading flip-title">Resource Parameters</a> — An explanation of each parameter for the resources.</li>
-  <li>
-    <p><a href="/pages/parameters/simulation_parameters.html" class="heading flip-title">Simulation Parameters</a> — An explanation of each parameter for the simulation.</p>
+  <ol title="Contents" id="markdown-toc">
+  <li><a href="#general" id="markdown-toc-general">General</a></li>
+  <li><a href="#agent-parameters" id="markdown-toc-agent-parameters">Agent Parameters</a>    <ol>
+      <li><a href="#general-agent-parameters" id="markdown-toc-general-agent-parameters">General Agent Parameters</a></li>
+      <li><a href="#agent-specific-parameters" id="markdown-toc-agent-specific-parameters">Agent Specific Parameters</a>        <ol>
+          <li><a href="#base-model-parameters" id="markdown-toc-base-model-parameters">Base Model Parameters</a></li>
+          <li><a href="#restricted-model-parameters" id="markdown-toc-restricted-model-parameters">Restricted Model Parameters</a></li>
+        </ol>
+      </li>
+    </ol>
   </li>
-  <li><a href="/pages/parameters/output_parameters.html" class="heading flip-title">Output Parameters</a> — An explanation of each parameter for the command-line output, csv-logger and real-time plot.</li>
+  <li><a href="#svo-distributions-parameters" id="markdown-toc-svo-distributions-parameters">SVO Distributions Parameters</a></li>
+  <li><a href="#resource-parameters" id="markdown-toc-resource-parameters">Resource Parameters</a>    <ol>
+      <li><a href="#growth-function-parameters" id="markdown-toc-growth-function-parameters">Growth Function Parameters</a>        <ol>
+          <li><a href="#exponential-growth-function" id="markdown-toc-exponential-growth-function">Exponential Growth Function</a></li>
+          <li><a href="#logarithmic-growth-function" id="markdown-toc-logarithmic-growth-function">Logarithmic Growth Function</a></li>
+          <li><a href="#nroot-growth-function" id="markdown-toc-nroot-growth-function">NRoot Growth Function</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li><a href="#simulation-parameters" id="markdown-toc-simulation-parameters">Simulation Parameters</a>    <ol>
+      <li><a href="#restricted-model-limit-parameters" id="markdown-toc-restricted-model-limit-parameters">Restricted Model Limit Parameters</a></li>
+    </ol>
+  </li>
+  <li><a href="#output-parameters" id="markdown-toc-output-parameters">Output Parameters</a>    <ol>
+      <li><a href="#real-time-plot-parameters" id="markdown-toc-real-time-plot-parameters">Real-time Plot Parameters</a></li>
+      <li><a href="#csv-logger-parameters" id="markdown-toc-csv-logger-parameters">CSV-Logger Parameters</a></li>
+    </ol>
+  </li>
+</ol>
+
+<h1 id="general">General</h1>
+<p>Despite its relative simplicity, this model already contains a lot of parameters. To enhance readability and scalability, these parameters are defined in a dictionary grouped by there architectural part in the model.</p>
+
+<p>The following structure for the parameter dictionary arises:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"agent"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1"># General agent parameters
+</span>        <span class="s">"count"</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="s">"svo_procreation_function"</span><span class="p">:</span> <span class="s">"svo_either_parent"</span>
+        <span class="c1"># Possible values:          "svo_either_parent
+</span>        <span class="c1">#                           "svo_between_parents"
+</span>        <span class="s">"svo_convergence_factor"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"svo_either_parent"</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span>
+            <span class="s">"svo_between_parents"</span><span class="p">:</span> <span class="mi">3</span>
+        <span class="p">},</span>
+        <span class="s">"params"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1"># Agent specific prameters
+</span>        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s">"svo_dist"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">"d1"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"m"</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s">"s"</span> <span class="p">:</span> <span class="mf">0.1</span>
+        <span class="p">},</span>
+        <span class="c1"># More distributions can be added here, or via the CLI
+</span>    <span class="p">},</span>
+    <span class="s">"resource"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1"># General resource parameters
+</span>        <span class="s">"growth_function"</span><span class="p">:</span> <span class="s">"logarithmic"</span>
+        <span class="s">"gf_params"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1"># Growth function parameters
+</span>        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s">"simulation"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1"># General simulation parameters
+</span>    <span class="p">},</span>
+    <span class="s">"plotter_params"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">"svo_bar_count"</span><span class="p">:</span> <span class="mi">20</span>
+    <span class="p">},</span>
+    <span class="s">"logger_params"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1"># General csv-logger parameters
+</span>    <span class="p">},</span>
+
+    <span class="c1"># Do not override this value!
+</span>    <span class="c1"># For internal purposes only
+</span>    <span class="s">"batch"</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p class="figcaption">Structure of the parameters dictionary with placeholder values.</p>
+
+<!-- * [Agent Parameters](/pages/parameters/agent_parameters.html){:.heading.flip-title} --- An explanation of each parameter for the agents.
+* [Resource Parameters](/pages/parameters/resource_parameters.html){:.heading.flip-title} --- An explanation of each parameter for the resources.
+* [Simulation Parameters](/pages/parameters/simulation_parameters.html){:.heading.flip-title} --- An explanation of each parameter for the simulation.
+* [Output Parameters](/pages/parameters/output_parameters.html){:.heading.flip-title} --- An explanation of each parameter for the command-line output, csv-logger and real-time plot. -->
+
+<p>Below is a listing of <strong>all</strong> parameters in the model that can be changed.<br />
+Use <code class="language-plaintext highlighter-rouge">--param [parameter_location]=[value]</code> to change a parameter using the command-line interface. The <code class="language-plaintext highlighter-rouge">parameter_location</code> is given by the first text of each listing below. The type of value is put between parentheses.</p>
+
+<h1 id="agent-parameters">Agent Parameters</h1>
+<blockquote>
+  <p>Refer to the explanation of the <a href="/pages/architecture/agent/">Agent</a> class for a full explanation of the effects of each parameter.</p>
+</blockquote>
+
+<h2 id="general-agent-parameters">General Agent Parameters</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">agent:count</code> (<code class="language-plaintext highlighter-rouge">int</code>): Determines the start amount of agents.</li>
+  <li><code class="language-plaintext highlighter-rouge">agent:svo_procreation_function</code> (<code class="language-plaintext highlighter-rouge">str</code>): Function to use to determine the SVO of a new agent. Can be either <code class="language-plaintext highlighter-rouge">"svo_either_parent"</code> or <code class="language-plaintext highlighter-rouge">"svo_between_parents"</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">agent:svo_convergence_factor:svo_either_parent</code> (<code class="language-plaintext highlighter-rouge">float</code>): The SVO convergence factor for the <code class="language-plaintext highlighter-rouge">svo_either_parent</code> procreate function.</li>
+  <li><code class="language-plaintext highlighter-rouge">agent:svo_convergence_factor:svo_between_parents</code> (<code class="language-plaintext highlighter-rouge">float</code>): The SVO convergence factor for the <code class="language-plaintext highlighter-rouge">svo_between_parents</code> procreate function.</li>
 </ul>
+
+<h2 id="agent-specific-parameters">Agent Specific Parameters</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">agent:params:metabolism</code> (<code class="language-plaintext highlighter-rouge">float</code>): Sets the cost of staying alive (in energy / epoch).</li>
+  <li><code class="language-plaintext highlighter-rouge">agent:params:maximum_age</code> (<code class="language-plaintext highlighter-rouge">int</code>): Sets the mean of the Gaussian distribution used to determine the actual age of the agent (in epochs).</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">agent:params:maximum_age_std_factor</code> (<code class="language-plaintext highlighter-rouge">float</code>): Sets the standard deviation of the Gaussian distribution used to determine the actual maximum age of the agent.</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">agent:params:consumption_factor</code> (<code class="language-plaintext highlighter-rouge">float</code>): This factor is multiplied with the metabolism to determine the amount of fish an agent will catch (in terms of energy), if it is allowed. (&lt;1 values means that the consumption will be lower than the metabolism, therefore not allowing the agent to fish more energy than it loses per epoch.)</li>
+  <li><code class="language-plaintext highlighter-rouge">agent:params:procreate_cost_factor</code> (<code class="language-plaintext highlighter-rouge">float</code>): This factor is multiplied with the metabolism to determine the amount of energy it costs to procreate. Values &gt;1 are desirable.</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">agent:params:procreate_req_factor</code> (<code class="language-plaintext highlighter-rouge">float</code>): This factor is multiplied with the metabolism to determine the amount of energy an agent needs to have before it is allowed to procreate. Values &gt;1 are desirable.</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">agent:params:behaviour</code> (<code class="language-plaintext highlighter-rouge">str</code>): Sets the behaviour model to use for the agents. Currently the only two options are <code class="language-plaintext highlighter-rouge">"base_energy_function"</code> and <code class="language-plaintext highlighter-rouge">"restricted_energy_function"</code>.</li>
+</ul>
+
+<h3 id="base-model-parameters">Base Model Parameters</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">agent:params:scarcity</code> (<code class="language-plaintext highlighter-rouge">float</code>): If \(\frac{current\_resource\_amount}{agent\_count}&lt;value\), proself agents (all agents with a SVO&lt;.5) will try to fish more, therefore allowing them to stockpile energy.</li>
+  <li><code class="language-plaintext highlighter-rouge">agent:params:greed</code> (<code class="language-plaintext highlighter-rouge">float</code>): When resources are scarce, proself agents (all agents with a SVO&lt;.5) will try to fish more: \(consumption\cdot value\).</li>
+</ul>
+
+<h3 id="restricted-model-parameters">Restricted Model Parameters</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">agent:params:caught_chance</code> (<code class="language-plaintext highlighter-rouge">float</code>): When an agent violates the restriction when the restriction is active, this value determines the chance that the agent is caught violating the restriction. (0.5 means 50% chance of getting caught)</li>
+  <li><code class="language-plaintext highlighter-rouge">agent:params:caught_cooldown_factor</code> (<code class="language-plaintext highlighter-rouge">float</code>): When an agent is caught violating the restriction when it is active, this parameter determines how long this agent is prohibited from fishing (in epochs).</li>
+</ul>
+
+<h1 id="svo-distributions-parameters">SVO Distributions Parameters</h1>
+<blockquote>
+  <p>Refer to the explanation of the <a href="/pages/architecture/agent/">Agent</a> class for a full explanation of the effects of each parameter.</p>
+</blockquote>
+
+<p>The <code class="language-plaintext highlighter-rouge">svo_dist</code> paramater is a dictionary containing the Gaussian distributions from which the starting SVO of the initial agent group is drawn. Multiple distributions can be added. Each distributions should be a dictionary with an unique key (d1, d2, …, dn) and follow the following structure:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"svo_dist"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">"d1"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">"m"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="s">"s:"</span> <span class="mf">0.1</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The <code class="language-plaintext highlighter-rouge">"m"</code> key then denotes the mean of the Gaussian distribution, <code class="language-plaintext highlighter-rouge">"s"</code> then denotes the standard deviation of the Gaussian distribution.</p>
+
+<h1 id="resource-parameters">Resource Parameters</h1>
+<blockquote>
+  <p>Refer to the explanation of the <a href="/pages/architecture/resource/">Resource</a> class for a full explanation of the effects of each parameter.</p>
+</blockquote>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">resource:start_amount</code> (<code class="language-plaintext highlighter-rouge">float</code>): The amount of resources to start the simulation with.</li>
+  <li><code class="language-plaintext highlighter-rouge">resource:max_amount</code> (<code class="language-plaintext highlighter-rouge">float</code>): The maximum amount for the resources. If resources grow beyond this value, it is set to this value. When set to \(-1\), this parameter is ignored. This parameter can be used to keep resources within a reasonable amount, allowing the plot to not slow down too much.</li>
+  <li><code class="language-plaintext highlighter-rouge">resource:min_amount</code> (<code class="language-plaintext highlighter-rouge">float</code>): The minimum amount of resources. If the resources drop below this limit, it is reset to this value.</li>
+  <li><code class="language-plaintext highlighter-rouge">resource:growth_function</code> (<code class="language-plaintext highlighter-rouge">str</code>): The growth function to use. Choices are: <code class="language-plaintext highlighter-rouge">"exponential"</code>, <code class="language-plaintext highlighter-rouge">"logarithmic"</code> and <code class="language-plaintext highlighter-rouge">"nroot"</code>.</li>
+</ul>
+
+<h2 id="growth-function-parameters">Growth Function Parameters</h2>
+<p>The parameters below are sorted by the resource growth function they apply to.</p>
+<h3 id="exponential-growth-function">Exponential Growth Function</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">resource:gf_params:exponential:rate</code> (<code class="language-plaintext highlighter-rouge">float</code>): The exponential rate for the exponential growth function.</li>
+</ul>
+
+<h3 id="logarithmic-growth-function">Logarithmic Growth Function</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">resource:gf_params:logarithmic:a</code> (<code class="language-plaintext highlighter-rouge">float</code>): The scaling factor of the logarithmic growth function.</li>
+  <li><code class="language-plaintext highlighter-rouge">resource:gf_params:logarithmic:t</code> (<code class="language-plaintext highlighter-rouge">float</code>): The translation factor of the logarithmic growth function.</li>
+  <li><code class="language-plaintext highlighter-rouge">resource:gf_params:logarithmic:s</code> (<code class="language-plaintext highlighter-rouge">float</code>): The initial jump scaling factor of the logarithmic growth function.</li>
+</ul>
+
+<h3 id="nroot-growth-function">NRoot Growth Function</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:a</code> (<code class="language-plaintext highlighter-rouge">float</code>): The scaling factor of the nroot growth function.</li>
+  <li><code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:tx</code> (<code class="language-plaintext highlighter-rouge">float</code>): The translation factor over the x axis of the nroot growth function.</li>
+  <li><code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:ty</code> (<code class="language-plaintext highlighter-rouge">float</code>): The translation factor over the y axis of the nroot growth function.</li>
+  <li><code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:n</code> (<code class="language-plaintext highlighter-rouge">float</code>): The base of the root that’s used in the nroot growth function. ($\sqrt[n]{x}$)</li>
+</ul>
+
+<h1 id="simulation-parameters">Simulation Parameters</h1>
+<blockquote>
+  <p>Refer to the explanation of the <a href="/pages/architecture/simulation/">Simulation</a> class for a full explanation of the effects of each parameter.</p>
+</blockquote>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">simulation:max_epoch</code> (<code class="language-plaintext highlighter-rouge">int</code>): The maximum amount of epochs for the simulation.</li>
+  <li><code class="language-plaintext highlighter-rouge">simulation:plot_interval</code> (<code class="language-plaintext highlighter-rouge">int</code>): How many every epoch the real-time plot should be updated. This parameter is only used when the real-time plot is enabled.</li>
+  <li><code class="language-plaintext highlighter-rouge">simulation:print_interval</code> (<code class="language-plaintext highlighter-rouge">int</code>): How many every epoch the console should be updated.</li>
+  <li><code class="language-plaintext highlighter-rouge">simulation:log_interval</code> (<code class="language-plaintext highlighter-rouge">int</code>): How many every epoch the current stats of the simulation should be posted to the logger. (When set to e.g. 2, the stats of epoch 1,3,5,etc. will be logged. No buffer is created!).</li>
+  <li><code class="language-plaintext highlighter-rouge">simulation:sleep</code> (<code class="language-plaintext highlighter-rouge">float</code>): The amount of time (in seconds) to pause the simulation between each epoch. Setting this value to &gt;0 allows for better oversight of the model, but will obsviously make the simulation take longer to complete.</li>
+</ul>
+
+<h2 id="restricted-model-limit-parameters">Restricted Model Limit Parameters</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">simulation:res_limit_factor</code> (<code class="language-plaintext highlighter-rouge">float</code>): Determines when to activate the restriction in the restricted energy function based on when \(agent\_count\cdot consumption\cdot value\) is greater than the currently available resources. Values &lt;1 mean that the restriction will become active at a point that if all agents would fish their consumption, some agents will not get any resources.</li>
+  <li><code class="language-plaintext highlighter-rouge">simluation:res_unlimit_factor</code> (<code class="language-plaintext highlighter-rouge">float</code>): Determines when to deactivate the restriction in the restricted energy function. This follows the same functions as for the <code class="language-plaintext highlighter-rouge">res_limit_factor</code> parameter. It is desirable to set <code class="language-plaintext highlighter-rouge">res_limit_factor</code>&lt;<code class="language-plaintext highlighter-rouge">res_unlimit_factor</code> to allow the resources to regrow before all agents are allowed to fish their consumption again (resulting in the restriction to become active again at some point).</li>
+</ul>
+
+<h1 id="output-parameters">Output Parameters</h1>
+<h2 id="real-time-plot-parameters">Real-time Plot Parameters</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">plotter_params:svo_bar_count</code> (<code class="language-plaintext highlighter-rouge">int</code>): The amount of bars to show in the real-time histogram plot. To allow fast plotting this value should be kept below ~50 <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote">1</a></sup>.</li>
+</ul>
+
+<h2 id="csv-logger-parameters">CSV-Logger Parameters</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">logger_params:separator</code> (<code class="language-plaintext highlighter-rouge">str</code>): The separator to use to separate the individual items in a row with.</li>
+  <li><code class="language-plaintext highlighter-rouge">logger_params:separator_replacement</code> (<code class="language-plaintext highlighter-rouge">str</code>): The string to use when an item in a row contains the separator.</li>
+</ul>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>This is a recommendation for average speed computers. Below 100 should still run fine on fast computers. Default 20 should be runnable at decent speed on all kinds of computers. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
   
 
@@ -202,20 +410,20 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 
 
 
-<div class="sidebar-bg sidebar-overlay" style="background-color:rgb(79,177,186);background-image:url(/IMAGES/lake.jpg)"></div>
+<div class="sidebar-bg sidebar-overlay" style="background-color:rgb(79,177,186);background-image:url(/assets/img/lake.jpg)"></div>
 
     <div class="sidebar-sticky">
   <div class="sidebar-about">
     
       <a class="no-hover" href="/" tabindex="-1">
-        <img src="/IMAGES/nemo_logo.png" class="avatar" alt="Tragedy of the Commons model Documentation" width="120" height="120" loading="lazy" />
+        <img src="/assets/img/nemo_logo.png" class="avatar" alt="Tragedy of the Commons model Documentation" width="120" height="120" loading="lazy" />
       </a>
     
     <a class="sidebar-title" href="/"><h2 class="h1">Tragedy of the Commons model Documentation</h2></a>
     
     
       <p class="">
-        Everything to know about the implementation of this awesome project in one place
+        Everything there is to know about the implementation of this awesome project. All in one place.
 
       </p>
     

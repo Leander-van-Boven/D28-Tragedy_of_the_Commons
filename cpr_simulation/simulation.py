@@ -1,5 +1,7 @@
-import numpy as np
 import time
+
+import numpy as np
+
 from .agent import Agent
 from .resource import Resource
 from .util import do_nothing
@@ -7,40 +9,7 @@ from .util import do_nothing
 
 class Simulator:
     """Main class that manages the agents and resource.
-
-    ...
-
-    Attributes
-    ----------
-    epoch : `int`,
-        The current epoch the simulation is on.
-
-    agents : `list`,
-        A list containing all (alive) agents currently in the simulation.
-    
-    result : `str`,
-        Set when the simulation is done, denoting the outcome of the sim.
-    
-    resource : `Resource`,
-        A resource object representing the common resource.
-
-    Methods
-    -------
-    getters and setters for each attribute
-
-    `get_agent_count(min_social_value=0, max_social_value=1)`
-
-    `add_agent(agent)`
-
-    `remove_agent(agent)`
-
-    `generate_simulation()`
     """
-
-    epoch = 0
-    agents = []
-    result = ""
-    resource = None
 
     v_print = do_nothing
     v1_print = do_nothing
@@ -49,6 +18,11 @@ class Simulator:
     def __init__(self, param_dict, printer=None, logger=None, row_head=[],
                  verbose=True):
         """Initializes the simulation with the provided parameter dict."""
+
+        self.epoch = 0
+        self.agents = []
+        self.result = ""
+        self.resource = None
 
         self.printer = printer
         self.logger = logger
@@ -81,9 +55,6 @@ class Simulator:
         self.restriction_active = \
             None if not self.restriction_mode else False
 
-        self.svo_mutation_factor = \
-            param_dict['agent']['svo_convergence_factor'] / 3
-
         if verbose > 0:
             self.v_print = print
             if verbose == 1:
@@ -91,12 +62,18 @@ class Simulator:
             elif verbose == 2:
                 self.v2_print = print
 
-        self.agent_params['print'] = self.v2_print
-        self.resource_params['print'] = self.v2_print
+        Agent.print = self.v2_print
+        Agent.svo_procreation_function = \
+            param_dict['agent']['svo_procreation_function']
+        Agent.svo_convergence_factor = \
+            param_dict['agent']['svo_convergence_factor'] \
+                      [param_dict['agent']['svo_procreation_function']] / 3
+
+        Resource.print = self.v2_print
 
     def get_agent_count(self, min_social_value=0, max_social_value=1):
         """Returns the amount of all agents if no params are specified.
-        
+
         This function returns the amount of agents that have a social
         value orientation between the two parameters (inclusive).
 
@@ -114,15 +91,6 @@ class Simulator:
                     <= agent.social_value_orientation
                     <= max_social_value])
 
-    def get_agents(self):
-        """Creates a histogram with an agent count for each unique SVO."""
-
-        classes = {}
-        for agent in self.agents:
-            svo = agent.social_value_orientation()
-            classes[svo] = classes.get(svo, 0) + 1
-        return classes
-
     def add_agent(self, agent):
         """Adds an agent to the list of agents.
 
@@ -137,9 +105,6 @@ class Simulator:
     def remove_agent(self, agent):
         """Removes the agent from the simulation.
 
-        #TODO determine what to do with the energy of the agent
-            when the agent dies from for example age or punishment.
-
         Parameters
         ----------
             agent : `Agent`,
@@ -148,18 +113,9 @@ class Simulator:
 
         self.agents.remove(agent)
 
-    def get_resource(self):
-        return self.resource
-
-    def get_result(self):
-        return self.result
-
-    def get_epoch(self):
-        return self.epoch
-
     def generate_simulation(self):
         """Generates the simulation.
-        
+
         This function runs sets up the simulation as a Generator
         Every iteration, tt makes an agent act, causes resource to 
         replenish and collects data to plot and/or log.
@@ -176,12 +132,6 @@ class Simulator:
         self.agents = Agent.from_svo_distribution(
             self.svo_distributions, self.n_agents, self.agent_params)
 
-        # # Initialise the agents
-        # for dist_name in self.agent_distributions:
-        #     dist = self.agent_distributions[dist_name]
-        #     for _ in range(dist.get('agent_count',0)):
-        #         self.add_agent(Agent(dist))
-
         # Initialise the resource
         self.resource = Resource(self.resource_params)
 
@@ -195,23 +145,23 @@ class Simulator:
         if self.verbose:
             self.print_results()
         self.epoch = 1
-        # TODO We might want to add self.epoch = 1 here.
+
         # Run the simulations for max_epoch amounts
         while self.epoch < self.max_epoch:
             self.v2_print('\n---    EPOCH %s    ---\n' % self.epoch)
             self.v2_print(f"Agent count: {len(self.agents)}")
             self.v2_print("Available resource: " +
-                          f"{self.resource.get_amount():.2f}")
+                          f"{self.resource.amount:.2f}")
             self.v2_print(f"Restriction: ", end='')
 
             parents = []
             eol = []
 
             if self.restriction_mode:
-                if self.resource.get_amount() > \
+                if self.resource.amount > \
                         len(self.agents) * self.resource_unlimit_factor:
                     self.restriction_active = False
-                if self.resource.get_amount() < \
+                if self.resource.amount < \
                         len(self.agents) * self.resource_limit_factor:
                     self.restriction_active = True
 
@@ -222,9 +172,8 @@ class Simulator:
 
             # Update the agents
             for num, agent in enumerate(self.agents):
-                # print(f'\t\t{num}. {agent}.act()')
-                self.v2_print(f"{num:3.0f}\tid={agent.id}\t" + \
-                              f"svo={agent.social_value_orientation:3.2f}\t" + \
+                self.v2_print(f"{num:3.0f}\tid={agent.id}\t" +
+                              f"svo={agent.social_value_orientation:3.2f}\t" +
                               f"pre={agent.energy:3.2f}", end='')
                 agent.act(self)
                 self.v2_print(f'\tpost={agent.energy:.2f}', end='')
@@ -244,7 +193,8 @@ class Simulator:
             for agent in eol:
                 self.agents.remove(agent)
 
-            self.v2_print('\nPost act agent count: %s' % self.get_agent_count())
+            self.v2_print('\nPost act agent count: %s' %
+                          len(self.agents))
             self.v2_print('Procreate: %s (tot %s)' % (
                 ', '.join([str(a.id) for a in parents]),
                 len(parents)))
@@ -277,11 +227,11 @@ class Simulator:
         # While loop finished, maximum epoch reached
         self.v_print()
         # Some agents stayed alive
-        if self.get_agent_count() > 1:
+        if len(self.agents) > 1:
             self.result = ("Maximum epoch reached, you managed to keep " +
-                           str(self.get_agent_count()) +
+                           str(len(self.agents)) +
                            " agents alive!")
-        elif self.get_agent_count() == 1:
+        elif len(self.agents) == 1:
             self.result = ("Only one lonely agent managed to survive\n" +
                            "He will stay on this forgotten island forever.")
         else:
@@ -301,7 +251,7 @@ class Simulator:
         return (self.epoch,
                 len(self.agents),
                 [agent.social_value_orientation for agent in self.agents],
-                self.resource.get_amount(),
+                self.resource.amount,
                 len(self.agents) * self.resource_limit_factor,
                 len(self.agents) * self.resource_unlimit_factor)
 
@@ -313,23 +263,23 @@ class Simulator:
             self.cur_stats += \
                 "ACTIVE,   " if self.restriction_active else "INACTIVE, "
         self.cur_stats += f"epoch: {self.epoch}, " + \
-                          f"agent count: {self.get_agent_count()}, " + \
-                          f"resource: {self.get_resource().get_amount():.2f}"
+                          f"agent count: {len(self.agents)}, " + \
+                          f"resource: {self.resource.amount:.2f}"
 
         # for dist_name in self.agent_distributions:
         #     dist = self.agent_distributions[dist_name]
         #     self.cur_stats += (
-        #         f"{dist_name}: " + 
-        #         str(self.get_agent_count(dist['min_social_value'], 
-        #                                  dist['max_social_value'])) + 
+        #         f"{dist_name}: " +
+        #         str(self.get_agent_count(dist['min_social_value'],
+        #                                  dist['max_social_value'])) +
         #         ", ")
-        # self.cur_stats += f"res: {self.resource.get_amount():.2f}"
+        # self.cur_stats += f"res: {self.resource.amount:.2f}"
         self.v1_print(self.cur_stats, end="\r", flush=True)
 
     def log_results(self):
         """Adds a new row to the log."""
 
-        row = self.log_row_head + [self.epoch, self.resource.get_amount()]
+        row = self.log_row_head + [self.epoch, self.resource.amount]
         # for dist_name in self.agent_distributions:
         #    dist = self.agent_distributions[dist_name]
         #    row.append(self.get_agent_count(dist['min_social_value'],
