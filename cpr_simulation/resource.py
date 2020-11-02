@@ -1,6 +1,7 @@
 import math
 from .util import do_nothing
 
+
 class Resource:
     """This class represents the common resource, or fish in our case.
 
@@ -26,18 +27,16 @@ class Resource:
     min_growth_rate = 0
     max_growth_rate = 1
 
-
     def growth_exponential(self, val, **kwargs):
-        return val + (val*kwargs['exp_rate'])
-
+        return val + (val * kwargs['exp_rate'])
 
     def growth_logarithmic(self, val, **kwargs):
         p = kwargs['log_offset']
         q = kwargs['log_scale']
         s = kwargs['log_init_jump']
-        return val * ((q / (math.log10(val) + (q / (s-p)))) + p)
+        return val * ((q / (math.log10(val) + (q / (s - p)))) + p)
 
-    def growth_nroot(self, val , **kwargs):
+    def growth_nroot(self, val, **kwargs):
         # First iteration gives most resource.
         # New energy function: knows how to exploit the system (get res down to 1, so hardest growth)
         # restricted energy function seems to find some form of equilibrium without exploiting system fallacies
@@ -46,8 +45,7 @@ class Resource:
         tx = kwargs['root_xoffset']
         ty = kwargs['root_yoffset']
         r = kwargs['root_base']
-        return val + max(a * (1 / ((val - (tx/a)) ** (1/r)) - ty/a), 0)
-
+        return val + max(a * (1 / ((val - (tx / a)) ** (1 / r)) - ty / a), 0)
 
     def __init__(self, values):
         self.start_amount = values.get('start_amount', self.start_amount)
@@ -63,7 +61,6 @@ class Resource:
 
         self.amount = self.start_amount
 
-
     def grow_resource(self):
         """Regrows the resource with `self.growth_rate`
 
@@ -71,7 +68,7 @@ class Resource:
         cooldown is triggered. When the cooldown is past, resource
         amount will be reset to self.min_amount.
         """
-        
+
         # if self.in_cooldown:
         #     self.cur_cooldown -= 1
         #     if self.cur_cooldown <= 0:
@@ -89,13 +86,13 @@ class Resource:
         #     if self.cur_cooldown <= 0:
         #         self.in_cooldown = False
 
-        #growth = valmap(self.amount, self.min_amount, self.max_amount)
+        # growth = valmap(self.amount, self.min_amount, self.max_amount)
 
         # growth = (self.amount - self.min_amount) / (self.max_amount - self.min_amount)
         # growth = 1 - growth
         # growth = self.min_growth_rate + (growth * (self.max_growth_rate - self.min_growth_rate))
 
-        if (self.amount < self.min_amount):
+        if self.amount < self.min_amount:
             self.amount = self.min_amount
 
         # if (self.amount <= 1):
@@ -109,14 +106,10 @@ class Resource:
         self.amount = growth
         self.print(f"\tnow {self.amount:.2f}")
 
-        if ((not self.max_amount < 0) and self.amount > self.max_amount):
+        if (not self.max_amount < 0) and self.amount > self.max_amount:
             self.amount = self.max_amount
 
-        #print("\tclipped %s" % self.amount)
-
-
-
-
+        # print("\tclipped %s" % self.amount)
 
     def consume_resource(self, amount):
         """Consumes an amount of the resource.
@@ -141,30 +134,23 @@ class Resource:
             self.amount -= amount
             return amount
 
-
     def get_amount(self):
         return self.amount
-
 
     def get_growth_rate(self):
         return self.growth_rate
 
-
     def set_set_growth_rate(self, growth_rate):
         self.set_growth_rate = growth_rate
 
-
     def get_max_amount(self):
         return self.max_amount
-    
 
     def set_max_amount(self, max_amount):
         self.max_amount = max_amount
-     
 
     def get_min_amount(self):
         return self.min_amount
-
 
     def set_min_amount(self, min_amount):
         self.min_amount = min_amount

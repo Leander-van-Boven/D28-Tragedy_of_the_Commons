@@ -109,10 +109,10 @@ def test():
 """
 Built of base model.
 
-Accounts for deliberation time contraints based on age, hunger,
+Accounts for deliberation time constraints based on age, hunger,
     and scarcity
 
-These time contraints inspire increasingly greedy behaviour in 
+These time constraints inspire increasingly greedy behaviour in
     proself agents
 
 Additional greed coefficients are weighted at a diminishing value

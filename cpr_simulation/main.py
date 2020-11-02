@@ -9,12 +9,18 @@ import shutil
 from numpy import arange, prod
 import itertools as it
 
-def run(override_params=dict(), params_to_range=None, n_jobs=1,
-        param_ranges=None, log_dir=None, use_plot=True, verbose=1):
+
+def run(override_params=dict(), params_to_range=None, param_ranges=None,
+        log_dir=None, use_plot=True, n_jobs=1, fullscreen_plot=True, verbose=1):
     """Reads and generates param dicts and runs the simulation with them.
 
     Parameters
     ----------
+    verbose
+    fullscreen_plot
+    n_jobs
+
+
     override_params : `dict`, optional,
         A dictionary with parameters to override from default, 
         by default None.
@@ -36,53 +42,64 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
 
     # Update the parameter dictionary with the override values
     assert isinstance(override_params, dict)
-    #TODO: Check if update_dict performs as expected
+    # TODO: Check if update_dict performs as expected
     params = update_dict(default_params, override_params)
-        
+
     # Get more print-friendly parameter locations
     param_names = [
         ':'.join(x.split('\'][\''))[2:-2] for x in params_to_range]
 
-    # Generate a CsvLogger class if log_dir is specified
-    if log_dir and n_jobs<=1:
-        #TODO Add more columns to log
-        col_names = \
-            ['Exp Num'] + param_names + \
-            ['Epoch', 'Resource', 'A', 'B', 'C', 'D', 'E', 'Median', 'Below','Above', 'Mean', 'STD']
-        #for dist_name in params['agent_distributions']:
-        #   col_names.append(dist_name)
-        logger = CsvLogger(params['logger_params'], col_names, log_dir)
-    else:
-        logger = None
+    def _get_logger(fn=None):
+        # Generate a CsvLogger class if log_dir is specified
+        if log_dir:
+            # TODO Add more columns to log
+            col_names = \
+                ['Exp Num'] + param_names + \
+                ['Epoch', 'Resource', 'Count', 'A', 'B', 'C', 'D', 'E', 'Median', 'Below', 'Above', 'Mean', 'STD',
+                 'Resource Limit', 'Resource Unlimit']
+            # for dist_name in params['agent_distributions']:
+            #   col_names.append(dist_name)
+            if fn:
+                ld = f"{log_dir}/{fn}"
+            else:
+                ld = log_dir
+            logger = CsvLogger(params['logger_params'], col_names, ld)
+        else:
+            logger = None
+        return logger
 
     # Local method that generates and runs a simulation. Is called twice,
     # which is why we make it a function beforehand. 
-    def _run_sim(p, c=[0], l=None):
+    def _run_sim(p, c=[0], lg=None):
         # If real-time plot is on, generate the ResultPrinter class
         printer = None if not use_plot else \
             ResultsPlotter(
                 params['agent']['count'],
                 params['plotter_params']['svo_bar_count'],
-                params['resource']['start_amount'])
+                params['resource']['start_amount'],
+                fullscreen_plot)
 
         # Generate the Simulator class
-        simulator = Simulator(p, printer, l or logger, list(c), 
-                              int(verbose))
+        simulator = Simulator(p, printer, lg, list(c),
+                              verbose)
 
         # If we use real-time plotting, we need to pass the simulation
         # to the printer.
         if use_plot:
             printer.start_printer(simulator.generate_simulation)
-        # If not, we neet to manually iterate over the simulation
+        # If not, we need to manually iterate over the simulation
         else:
             simulation = simulator.generate_simulation()
             while True:
-                try: next(simulation)
-                except StopIteration: break
+                try:
+                    next(simulation)
+                except StopIteration:
+                    break
 
-    # If not parameter range is specified, no loop is required. 
+    # If not parameter range is specified, no loop is required.
     if not params_to_range:
-        _run_sim(params)
+        logger = _get_logger()
+        _run_sim(params, lg=logger)
     # If a parameter range is specified, we'll need to find out
     # what to loop over
     else:
@@ -96,62 +113,55 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
         number_of_combis = prod([len(x) for x in param_values])
 
         # Write the parameters to a json file to make saving possible
-        #TODO: Incorporate range and batch parameters to save. 
+        # TODO: Incorporate range and batch parameters to save.
         with open(".last.json", "w") as file:
             file.write(json.dumps(params))
 
         if n_jobs <= 1:
+            logger = _get_logger()
+
             # Iterate
-            for (run, combi) in enumerate(value_combis):       
+            for (run, combi) in enumerate(value_combis):
                 # Provide run information if verbose mode is on
                 if verbose == 1:
-                    print('\nIteration: %s/%s' % (run+1, number_of_combis))
-                    print('Params: ' + ', '.join(["%s = %s" % i 
-                                                for i in zip(param_names, combi)]))     
-                # If not, keep a simple run counter
+                    print('\nIteration: %s/%s' % (run + 1, number_of_combis))
+                    print('Params: ' + ', '.join(["%s = %s" % i
+                                                  for i in zip(param_names, combi)]))
+                    # If not, keep a simple run counter
                 else:
-                    print('Iteration: %s/%s' % (run+1, number_of_combis), 
-                        end='\r', flush=True)
+                    print('Iteration: %s/%s' % (run + 1, number_of_combis),
+                          end='\r', flush=True)
 
                 # Add values of ranged parameters to the dictionary
                 curr_params = params.copy()
                 for param_pair in zip(params_to_range, combi):
                     exec('curr_params%s=%s' % param_pair)
 
-                _run_sim(curr_params, [run] + list(combi))
+                _run_sim(curr_params, [run] + list(combi), logger)
         else:
+            if not log_dir or not os.path.isdir(log_dir):
+                print("Error: --out command should be directory in" +
+                      "multithreaded mode")
+                return
+
             from joblib import Parallel, delayed
             print("Running %s instances..." % number_of_combis)
+
             def _run_parallel(run, combi):
-                if log_dir and os.path.isdir(log_dir):
-                    col_names = \
-                        ['Exp Num'] + param_names + \
-                        ['Epoch', 'Resource', 'A', 'B', 'C', 'D', 'E']
-                    #for dist_name in params['agent_distributions']:
-                    #   col_names.append(dist_name)
-                    path = log_dir + '\\run%s.csv' % run
-                    _logger = CsvLogger(params['logger_params'], col_names, path)
-                else:
-                    _logger = None
+                logger = _get_logger(f"run{run}.csv")
 
                 # Add values of ranged parameters to the dictionary
                 curr_params = params.copy()
                 for param_pair in zip(params_to_range, combi):
                     exec('curr_params%s=%s' % param_pair)
 
-                _run_sim(curr_params, [run] + list(combi), _logger)
+                _run_sim(curr_params, [run] + list(combi), logger)
 
-                if _logger:
-                    _logger.write()
-            #     done += 1
-            #     print('Done: %s/%s' % (done, number_of_combis),
-            #         end='\n', flush=True)
-           
-            # print('Done: %s/%s' % (done, number_of_combis),
-            #     end='\r', flush=True)
-            Parallel(n_jobs=n_jobs, verbose=10)(
+                if logger:
+                    logger.write()
+
+            Parallel(n_jobs=n_jobs, verbose=10, batch_size=16)(
                 delayed(_run_parallel)(*tup) for tup in enumerate(value_combis))
-
 
     # If we have a CsvLogger, then write it to a CSV file
     if log_dir and n_jobs <= 1:
@@ -159,14 +169,14 @@ def run(override_params=dict(), params_to_range=None, n_jobs=1,
 
 
 def generate_default_params(path=".defaults.json"):
-    '''Used to generate the parameters for the simulation.'''
+    """Used to generate the parameters for the simulation."""
 
     with open(path, "w") as file:
         file.write(json.dumps(default_params))
 
 
 def copy_last_run(param_path, fig_path):
-    '''Used to save the results from last run.'''
+    """Used to save the results from last run."""
 
     if not os.path.isfile('.last.json'):
         return False
