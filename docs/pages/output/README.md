@@ -17,7 +17,7 @@ This will only print out the number of the currently running experiment, togethe
 
 
 # CSV-logger
-The CSV logger logs the statistics of the simulation into a CSV- or [comma-separated values file](https://en.wikipedia.org/wiki/Comma-separated_values). This file can then be used for further data processing. Its usage becomes most optimal if combined with the [--range](/pages/interaction/#batch-and-range) command-line argument. 
+The CSV logger logs the statistics of the simulation into a CSV- or [comma-separated values file](https://en.wikipedia.org/wiki/Comma-separated_values). This file can then be used for further data processing. Its usage becomes most optimal if combined with the [--range](/D28-Tragedy_of_the_Commons/pages/interaction/#batch-and-range) command-line argument. 
 
 
 ## Logged values

@@ -12,11 +12,11 @@ Welcome to the documentation of a model modeling a community of agents living in
 ## Overview
 The documentation is separated into multiple parts:
 
-* [Model Background](/pages/background/){:.heading.flip-title} --- Describes the concept and literature of the model in a broader context.
-* [Model Architecture](/pages/architecture){:.heading.flip-title} --- Shows the different (code) parts of the model and how they are connected.
-* [Model Interaction](/pages/interaction){:.heading.flip-title} --- Explains how to interact with the model.
-* [Model Parameters](/pages/parameters){:.heading.flip-title} --- Shows a listing of all parameters of the model per submodule.
-* [Model Output](/pages/output){:.heading.flip-title} --- Gives an overview and explanation of the inner workings of all submodules producing about.
+* [Model Background](/D28-Tragedy_of_the_Commons/pages/background/){:.heading.flip-title} --- Describes the concept and literature of the model in a broader context.
+* [Model Architecture](/D28-Tragedy_of_the_Commons/pages/architecture){:.heading.flip-title} --- Shows the different (code) parts of the model and how they are connected.
+* [Model Interaction](/D28-Tragedy_of_the_Commons/pages/interaction){:.heading.flip-title} --- Explains how to interact with the model.
+* [Model Parameters](/D28-Tragedy_of_the_Commons/pages/parameters){:.heading.flip-title} --- Shows a listing of all parameters of the model per submodule.
+* [Model Output](/D28-Tragedy_of_the_Commons/pages/output){:.heading.flip-title} --- Gives an overview and explanation of the inner workings of all submodules producing about.
 
 ## Quick Start
 ### Prerequisites
@@ -40,7 +40,7 @@ This assumes that this command is run from the base folder of the repository.
 ### Important Command-line Arguments
 To change a the parameter of the model the `--param [parameter]=[value]` or `-p [parameter]=[value]` argument can be used 
 
-> Refer to [Parameters](/pages/parameters) for a listing of all parameters per submodule
+> Refer to [Parameters](/D28-Tragedy_of_the_Commons/pages/parameters) for a listing of all parameters per submodule
 
 ### Interesting Scenarios to run
 NEEDS CONTENT

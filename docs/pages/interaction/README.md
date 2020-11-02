@@ -86,10 +86,10 @@ With the `name` argument, it's possible to specify a certain scenario name.
  -p       [parameter_address]=[value]
 --params  [parameter_address]=[value]
 ```
-With the `param` argument, it's possible to override the default values of different parameters. The parameter address `[parameter_address]` follows the parameter syntax found in [Parameters](/pages/parameters). The new parameter value `[value]` can be an integer, a float or a string. It is possible to override multiple paramers at once. Note that the `param` argument is only used in `run`-mode. 
+With the `param` argument, it's possible to override the default values of different parameters. The parameter address `[parameter_address]` follows the parameter syntax found in [Parameters](/D28-Tragedy_of_the_Commons/pages/parameters). The new parameter value `[value]` can be an integer, a float or a string. It is possible to override multiple paramers at once. Note that the `param` argument is only used in `run`-mode. 
 
 ### Examples
-> For an overview of all parameters available in this model, refer to [Parameters](/pages/parameters/). 
+> For an overview of all parameters available in this model, refer to [Parameters](/D28-Tragedy_of_the_Commons/pages/parameters/). 
 
 * Change the initial agent count from 100 (default) to 10:
   ```shell
@@ -140,7 +140,7 @@ The `verbose` argument specifies the level of verbosity of the model. Three mode
 |1| Experiment counter and status per epoch |
 |2| Detailed overview of all agents and their behaviour each epoch. Halts after each epoch to allow for the digestion of all information |
 
-For examples of the exact output of the different verbosity modes, refer to [Output](/pages/output/). So for example, to use verbosity mode 1, use:
+For examples of the exact output of the different verbosity modes, refer to [Output](/D28-Tragedy_of_the_Commons/pages/output/). So for example, to use verbosity mode 1, use:
 ```shell
 $ py sim.py run --verbose 1 
 ```
@@ -175,7 +175,7 @@ If the total amount of experiments is very high, depending on your CPU, it might
 
 
 ### Examples
-> For an overview of all parameters available in this model, refer to [Parameters](/pages/parameters/). 
+> For an overview of all parameters available in this model, refer to [Parameters](/D28-Tragedy_of_the_Commons/pages/parameters/). 
 
 * Run the default experiment 10 times:
   ```shell
@@ -207,7 +207,7 @@ If the total amount of experiments is very high, depending on your CPU, it might
   >   --out quite_large.csv \
   >   --batch 12
   ```
-  > Note that we first use `--param` to create the parameter entries for both means and standard deviations. This is because `svo_dist` is empty by default. Therefore, we first have to generate both modes of the multi-modal distribution before we can range over any of them. For more information about the `svo_dist` parameter, refer to [Parameters](/pages/parameters/).
+  > Note that we first use `--param` to create the parameter entries for both means and standard deviations. This is because `svo_dist` is empty by default. Therefore, we first have to generate both modes of the multi-modal distribution before we can range over any of them. For more information about the `svo_dist` parameter, refer to [Parameters](/D28-Tragedy_of_the_Commons/pages/parameters/).
   
   This results in a total of 108 experiments.
 
@@ -263,4 +263,4 @@ If left unspecified, some arguments have different defaults based on the current
 |yes|1||no|0|`out.csv`|
 |yes|>1||no|ignored|`./out/`|
 
-[^1]: For more information about the characteristics of the different resource growth functions, refer to [Resource](/pages/architecture/resource/).
+[^1]: For more information about the characteristics of the different resource growth functions, refer to [Resource](/D28-Tragedy_of_the_Commons/pages/architecture/resource/).
