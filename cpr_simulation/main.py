@@ -11,7 +11,7 @@ import itertools as it
 
 
 def run(override_params=dict(), params_to_range=None, param_ranges=None,
-        log_dir=None, use_plot=True, n_jobs=1, fullscreen_plot=True, verbose=1):
+        log_path=None, use_plot=True, n_jobs=1, fullscreen_plot=True, verbose=1):
     """Reads and generates param dicts and runs the simulation with them.
 
     Parameters
@@ -51,18 +51,18 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
 
     def _get_logger(fn=None):
         # Generate a CsvLogger class if log_dir is specified
-        if log_dir:
+        if log_path:
             # TODO Add more columns to log
             col_names = \
-                ['Exp Num'] + param_names + \
-                ['Epoch', 'Resource', 'Count', 'A', 'B', 'C', 'D', 'E', 'Median', 'Below', 'Above', 'Mean', 'STD',
-                 'Resource Limit', 'Resource Unlimit']
+                ['Exp Num'] + param_names + ['Epoch', 'Resource', 'Count',
+                'A', 'B', 'C', 'D', 'E', 'Median', 'Below', 'Above', 'Mean', 
+                'STD', 'Resource Limit', 'Resource Unlimit']
             # for dist_name in params['agent_distributions']:
             #   col_names.append(dist_name)
             if fn:
-                ld = f"{log_dir}/{fn}"
+                ld = f"{log_path}/{fn}"
             else:
-                ld = log_dir
+                ld = log_path
             logger = CsvLogger(params['logger_params'], col_names, ld)
         else:
             logger = None
@@ -125,8 +125,8 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
                 # Provide run information if verbose mode is on
                 if verbose == 1:
                     print('\nIteration: %s/%s' % (run + 1, number_of_combis))
-                    print('Params: ' + ', '.join(["%s = %s" % i
-                                                  for i in zip(param_names, combi)]))
+                    print('Params: ' + 
+                          ', '.join(["%s = %s" % i for i in zip(param_names, combi)]))
                     # If not, keep a simple run counter
                 else:
                     print('Iteration: %s/%s' % (run + 1, number_of_combis),
@@ -139,11 +139,16 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
 
                 _run_sim(curr_params, [run] + list(combi), logger)
         else:
-            if not log_dir or not os.path.isdir(log_dir):
-                print("Error: --out command should be directory in" +
-                      "multithreaded mode")
+            if not log_path:
+                print("Error: Please specify the target directory for" +
+                      " the output CSV files using --out.")
                 return
-
+            if not os.path.exists(log_path):
+                os.mkdir(log_path)
+            elif not os.path.isdir(log_path):
+                print("Error: --out argument should be a directory in" +
+                      "multithreaded mode")
+            
             from joblib import Parallel, delayed
             print("Running %s instances..." % number_of_combis)
 
@@ -164,7 +169,7 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
                 delayed(_run_parallel)(*tup) for tup in enumerate(value_combis))
 
     # If we have a CsvLogger, then write it to a CSV file
-    if log_dir and n_jobs <= 1:
+    if log_path and n_jobs <= 1:
         logger.write()
 
 
