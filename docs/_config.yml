@@ -1,5 +1,7 @@
 github: [metadata]
 
+baseurl: '/D28-Tragedy_of_the_Commons'
+
 remote_theme: hydecorp/hydejack@v9.0.5
 
 lang: en
@@ -27,20 +29,22 @@ menu:
   - title: Output
     url: /pages/output/
 
-defaults:
-  - scope:
-      path:            pages/
-    values:
-      accent_color:    rgb(38,139,210)
-      accent_image:
-        background:    rgb(32,32,32)
-        overlay:       false
+# defaults:
+#   - scope:
+#       path:            pages/
+#     values:
+#       accent_color:    rgb(38,139,210)
+#       accent_image:
+#         background:    rgb(32,32,32)
+#         overlay:       false
 
 ### HYDEJACK ###
 hydejack:
   no_mark_external: true
   no_page_style: true
   no_search: false
+  no_break_layout: true
+  no_large_heading: true
 
 lang: en
 # PRO-Version only #
