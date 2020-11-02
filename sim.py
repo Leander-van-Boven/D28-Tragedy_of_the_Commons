@@ -80,7 +80,22 @@ def run(args):
     elif verbose == 2:
         plot = False
     else:
-        plot = not (args.range or args.batch - 1)
+        plot = (not args.range) and args.batch == 1
+
+    if not args.out and (args.range or args.batch > 1):
+        if args.jobs == 1:
+            args.out = 'out.csv'
+            print("WARNING: No output file specified. falling back to " +
+                  "'out.csv'.")
+        else:
+            if os.path.exists('out'):
+                print("Missing argument: Please specify output directory for " +
+                      " multi-threaded batch or range mode.")
+                sys.exit(1)
+            else:
+                args.out = 'out'
+                print("WARNING: No output directory specified. falling back " +
+                  "to 'out'.")
 
     try:
         cpr.run(param_dict, params_to_range, param_ranges,
@@ -260,6 +275,9 @@ if __name__ == '__main__':
                              "range of values, e.g. resource:start_amount=" +
                              "300,601,100")
     parser.add_argument(
+        '-j', '--jobs', required=False, default=1, type=int, metavar='int',
+        help="the amount of parallel processes in range or batch mode")
+    parser.add_argument(
         '-o', '--out', required=False, type=str, metavar='path',
         help='the output path for CSV logging')
     parser.add_argument(
@@ -273,9 +291,6 @@ if __name__ == '__main__':
         '-f', '--fullscreen', required=False, default=False, const=True,
         type=str2bool, nargs='?', metavar='bool',
         help='whether to show the plot in fullscreen')
-    parser.add_argument(
-        '--jobs', required=False, default=1, type=int, metavar='int',
-        help="the amount of parallel processes in range or batch mode")
 
     # Parse the arguments that were input
     args = parser.parse_args()

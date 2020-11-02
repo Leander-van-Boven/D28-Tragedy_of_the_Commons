@@ -41,8 +41,9 @@
   * ~~```resource.py```~~
   * ~~```simulation.py```~~
   * ~~```util.py```~~
-* Solve fig.savefig() problem
-  * create new plot with data and save this figure instead.
+* ~~Solve fig.savefig() problem~~
+  * ~~create new plot with data and save this figure instead.~~
+* Add more maximized function supports
 * Add some nice scenarios
 * Check whether all code is compliant to beta implementation feedback
 * For each class, link to documentation in docstring
@@ -50,15 +51,20 @@
 
 ### General repository
 * Change README (decide on what we want to have there)
+  * Explain file structure
+  * link to documentation
+  * quick start?
 * <3
 * Cleanup of repository (file structure)
   * Remove redundant files/folders
   * Maybe put CSV files of experiments in separate repository? We can then put that repository in our main repository but it will only be cloned if ```git clone --recursive``` is used. 
 * Check whether docs/FILES/file_structure.md is still up-to-date
+* Make 
 ## Documentation
 * General
-  * Nicify logo picture
+  * ~~Nicify logo picture~~
   * Finalize layout
+  * Add scenario that is actually included in the --name example
 * Introduction
   * Interesting scenarios to run
 * Background pages
@@ -74,6 +80,8 @@
     * Behaviour
   * Resource class
   * Simulation class
+  * Output classes
+    * Mention list of strings instead of pandas frame for output
   * Helper classes?
 * Interaction pages
   * Overview of workflow of implementation

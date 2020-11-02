@@ -130,7 +130,7 @@ The parameters below are sorted by the resource growth function they apply to.
 * `resource:gf_params:nroot:a` (`float`): The scaling factor of the nroot growth function.
 * `resource:gf_params:nroot:tx` (`float`): The translation factor over the x axis of the nroot growth function.
 * `resource:gf_params:nroot:ty` (`float`): The translation factor over the y axis of the nroot growth function.
-* `resource:gf_params:nroot:n` (`float`): The base of the root that's used in the nroot growth function. ($\sqrt[n]{x}$)
+* `resource:gf_params:nroot:n` (`float`): The base of the root that's used in the nroot growth function. ($$\sqrt[n]{x}$$)
 
 # Simulation Parameters
 > Refer to the explanation of the [Simulation](/pages/architecture/simulation/) class for a full explanation of the effects of each parameter.

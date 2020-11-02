@@ -173,26 +173,43 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
   <ol title="Contents" id="markdown-toc">
   <li><a href="#the-command-line-interface" id="markdown-toc-the-command-line-interface">The Command-Line Interface</a>    <ol>
       <li><a href="#required-argument" id="markdown-toc-required-argument">Required Argument</a></li>
-      <li><a href="#specifying-a-certain-scenario" id="markdown-toc-specifying-a-certain-scenario">Specifying a Certain Scenario</a></li>
-      <li><a href="#altering-simulation-parameters" id="markdown-toc-altering-simulation-parameters">Altering Simulation Parameters</a>        <ol>
+      <li><a href="#specifying-a-certain-scenario" id="markdown-toc-specifying-a-certain-scenario">Specifying a Certain Scenario</a>        <ol>
           <li><a href="#examples" id="markdown-toc-examples">Examples</a></li>
         </ol>
       </li>
+      <li><a href="#altering-simulation-parameters" id="markdown-toc-altering-simulation-parameters">Altering Simulation Parameters</a>        <ol>
+          <li><a href="#examples-1" id="markdown-toc-examples-1">Examples</a></li>
+        </ol>
+      </li>
+      <li><a href="#specifying-output-behaviour" id="markdown-toc-specifying-output-behaviour">Specifying Output Behaviour</a>        <ol>
+          <li><a href="#output-path-for-csv-logging" id="markdown-toc-output-path-for-csv-logging">Output Path for CSV Logging</a></li>
+          <li><a href="#verbosity" id="markdown-toc-verbosity">Verbosity</a></li>
+        </ol>
+      </li>
+      <li><a href="#running-multiple-experiments-at-once" id="markdown-toc-running-multiple-experiments-at-once">Running Multiple Experiments at Once</a>        <ol>
+          <li><a href="#batch-and-range" id="markdown-toc-batch-and-range">Batch and Range</a></li>
+          <li><a href="#total-amount-of-experiments" id="markdown-toc-total-amount-of-experiments">Total Amount of Experiments</a></li>
+          <li><a href="#multi-threading" id="markdown-toc-multi-threading">Multi-threading</a></li>
+          <li><a href="#examples-2" id="markdown-toc-examples-2">Examples</a></li>
+        </ol>
+      </li>
+      <li><a href="#specifying-real-time-plotting-behaviour" id="markdown-toc-specifying-real-time-plotting-behaviour">Specifying Real-time Plotting Behaviour</a></li>
+      <li><a href="#default-values-of-arguments" id="markdown-toc-default-values-of-arguments">Default Values of Arguments</a></li>
     </ol>
   </li>
 </ol>
 
 <h1 id="the-command-line-interface">The Command-Line Interface</h1>
 <p>Interaction with the model is done through the file <code class="language-plaintext highlighter-rouge">sim.py</code> that’s located in the root directory. At any time, a discription of the CLI can be found by using <code class="language-plaintext highlighter-rouge">python sim.py --help</code>.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nemo@p-sea:~/D28-Tragedy_of_the_Commons$ python sim.py --help
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nemo@p-sea<span class="nv">$ </span>python sim.py <span class="nt">--help</span>
 </code></pre></div></div>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: sim.py [-h] [-n scenario] [-p item [item ...]] [-b int]
-              [-r item [item ...]] [-o path] [-P [bool]] [-v [int]]
-              [-f [bool]] [--jobs int]
+              [-r item [item ...]] [-j int] [-o path] [-P [bool]]
+              [-v [int]] [-f [bool]]
               {run,save,list}
 
 positional arguments:
-  {run,save,list}  run: run a simulation; save: save the previous
+  {run,save,list}       run: run a simulation; save: save the previous
                         simulation; list: list all saved simulations
 
 optional arguments:
@@ -207,6 +224,8 @@ optional arguments:
   -r item [item ...], --range item [item ...]
                         add parameters to run the simulation with a range of
                         values, e.g. resource:start_amount=300,601,100
+  -j int, --jobs int    the amount of parallel processes in range or batch
+                        mode
   -o path, --out path   the output path for CSV logging
   -P [bool], --plot [bool]
                         whether to show a real-time plot
@@ -214,24 +233,22 @@ optional arguments:
                         whether to enter verbose mode [0..2]
   -f [bool], --fullscreen [bool]
                         whether to show the plot in fullscreen
-  --jobs int            the amount of parallel processes in range or batch
-                        mode
 </code></pre></div></div>
 
 <h2 id="required-argument">Required Argument</h2>
-<p>The only required argument is a positional argument. Options can be taken from <code class="language-plaintext highlighter-rouge">{run, save, list}</code>.</p>
+<p>The only required argument is a positional argument. Possible options are <code class="language-plaintext highlighter-rouge">run</code>, <code class="language-plaintext highlighter-rouge">save</code> and <code class="language-plaintext highlighter-rouge">list</code>.</p>
 
 <ul>
   <li>Specifying <code class="language-plaintext highlighter-rouge">run</code> will run a simulation with default parameters, real-time plotting and book-keeping in the CLI.
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 sim.py run
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run
 </code></pre></div>    </div>
   </li>
   <li>Specifying <code class="language-plaintext highlighter-rouge">save</code> will save the parameters of the previously ran experiment as a scenario. The scenario will be saved with a default name.
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 sim.py save
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py save
 </code></pre></div>    </div>
   </li>
   <li>Specifying <code class="language-plaintext highlighter-rouge">list</code> will list the names of all saved scenarios.
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 sim.py list
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py list
 </code></pre></div>    </div>
   </li>
 </ul>
@@ -247,39 +264,257 @@ optional arguments:
   <li>If the program is operating in <code class="language-plaintext highlighter-rouge">list</code>-mode, the <code class="language-plaintext highlighter-rouge">name</code> argument is ignored.</li>
 </ul>
 
-<h2 id="altering-simulation-parameters">Altering Simulation Parameters</h2>
-<blockquote>
-  <p>For an overview of all parameters available in this simulation, refer to <a href="/pages/parameters/">Parameters</a>.</p>
-</blockquote>
+<h3 id="examples">Examples</h3>
+<ul>
+  <li>Load a scenario called <code class="language-plaintext highlighter-rouge">stable_system</code>, and run this simulation:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--name</span> stable_system
+</code></pre></div>    </div>
+  </li>
+  <li>Save the previously ran simulation as a scenario named <code class="language-plaintext highlighter-rouge">interesting_results</code>
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py save <span class="nt">--name</span> interesting_results
+</code></pre></div>    </div>
+    <blockquote>
+      <p>It isn’t possible to overwrite already saved scenarios. Scenarios can be manually deleted by deleting a the scenario directory in <code class="language-plaintext highlighter-rouge">./scenarios/</code>.</p>
+    </blockquote>
+  </li>
+</ul>
 
+<h2 id="altering-simulation-parameters">Altering Simulation Parameters</h2>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -p       [parameter_address]=[value]
 --params  [parameter_address]=[value]
 </code></pre></div></div>
 <p>With the <code class="language-plaintext highlighter-rouge">param</code> argument, it’s possible to override the default values of different parameters. The parameter address <code class="language-plaintext highlighter-rouge">[parameter_address]</code> follows the parameter syntax found in <a href="/pages/parameters">Parameters</a>. The new parameter value <code class="language-plaintext highlighter-rouge">[value]</code> can be an integer, a float or a string. It is possible to override multiple paramers at once. Note that the <code class="language-plaintext highlighter-rouge">param</code> argument is only used in <code class="language-plaintext highlighter-rouge">run</code>-mode.</p>
 
-<h3 id="examples">Examples</h3>
+<h3 id="examples-1">Examples</h3>
+<blockquote>
+  <p>For an overview of all parameters available in this model, refer to <a href="/pages/parameters/">Parameters</a>.</p>
+</blockquote>
+
 <ul>
   <li>Change the initial agent count from 100 (default) to 10:
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python sim.py run --param agent:count=10
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--param</span> agent:count<span class="o">=</span>10
 </code></pre></div>    </div>
   </li>
   <li>Change the resource growth function<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote">1</a></sup> from <code class="language-plaintext highlighter-rouge">logarithmic</code> (default) to <code class="language-plaintext highlighter-rouge">nroot</code>:
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python sim.py run --param resource:growth_function=nroot
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--param</span> resource:growth_function<span class="o">=</span>nroot
 </code></pre></div>    </div>
   </li>
   <li>Change both the initial agent count and the resource growth function:
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python sim.py run --param agent:count=10 resource:growth_function=nroot
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--param</span> agent:count<span class="o">=</span>10 resource:growth_function<span class="o">=</span>nroot
 </code></pre></div>    </div>
   </li>
   <li>Change the initial agents’ SVO distribution to a bimodal normal distribution with \(\mu_1=0.2\), \(\sigma_1=0.125\), \(\mu_2=0.95\), and \(\sigma_2=0.01\):
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python sim.py run --param \
-    svo_dist:d1:m=0.2 \
-    svo_dist:d1:s=0.125 \
-    svo_dist:d2:m=0.95 \
-    svo_dist:d2:s=0.01
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--param</span> <span class="se">\</span>
+<span class="o">&gt;</span>   svo_dist:d1:m<span class="o">=</span>0.2 <span class="se">\</span>
+<span class="o">&gt;</span>   svo_dist:d1:s<span class="o">=</span>0.125 <span class="se">\</span>
+<span class="o">&gt;</span>   svo_dist:d2:m<span class="o">=</span>0.95 <span class="se">\</span>
+<span class="o">&gt;</span>   svo_dist:d2:s<span class="o">=</span>0.01
 </code></pre></div>    </div>
   </li>
 </ul>
+
+<h2 id="specifying-output-behaviour">Specifying Output Behaviour</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -o   [path]
+--out [path]
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -v       [?mode]
+--verbose [?mode]
+</code></pre></div></div>
+<p>This model has multiple ways of showing the condition of the simulation each epoch. Real-time plotting is used to make a simulation more insightful to the human eye, however when running a lot of experiments or closely monitoring the behaviour of each agent, these plots might not be sufficient. This is where the CSV logging and verbosity modes come into play.</p>
+
+<h3 id="output-path-for-csv-logging">Output Path for CSV Logging</h3>
+<p>The <code class="language-plaintext highlighter-rouge">out</code> argument can be used to specify the output path for the CSV file. Note that CSV logging will only be enabled when this argument is specified (unless running a <a href="#batch-and-range">batch or range</a> of experiments). It is possible to specify either a relative path (relative to ‘sim.py’) or an absolute path.</p>
+
+<p>For example, to enable CSV logging and have the CSV output path be <code class="language-plaintext highlighter-rouge">results/out.csv</code>, use:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--out</span> results/out.csv
+</code></pre></div></div>
+
+<h3 id="verbosity">Verbosity</h3>
+<p>The <code class="language-plaintext highlighter-rouge">verbose</code> argument specifies the level of verbosity of the model. Three modes are available:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Mode</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">0</td>
+      <td>Only experiment counter, no epoch status</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">1</td>
+      <td>Experiment counter and status per epoch</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td>Detailed overview of all agents and their behaviour each epoch. Halts after each epoch to allow for the digestion of all information</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For examples of the exact output of the different verbosity modes, refer to <a href="/pages/output/">Output</a>. So for example, to use verbosity mode 1, use:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--verbose</span> 1 
+</code></pre></div></div>
+
+<h2 id="running-multiple-experiments-at-once">Running Multiple Experiments at Once</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -b     [amount]
+--batch [amount]
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -r     [parameter_address]=[from],[to],[increment]
+--range [parameter_address]=[from],[to],[increment]
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -j    [number_of_jobs]
+--jobs [number_of_jobs]
+</code></pre></div></div>
+<h3 id="batch-and-range">Batch and Range</h3>
+<p>With the <code class="language-plaintext highlighter-rouge">batch</code> argument, it’s possible to specify the mount of times a single experiment should be run. As our model is highly stochastic, this functionality can be used to determine more accurately the impact that a certain parameter has on system outcomes.</p>
+
+<p>With the <code class="language-plaintext highlighter-rouge">range</code> argument, it’s possible to specify a range of values that a specific parameter will iterate over. The list of values is obtained by repeatedly adding <code class="language-plaintext highlighter-rouge">[increment]</code> to the value of <code class="language-plaintext highlighter-rouge">[from]</code> (inclusive), until the value of <code class="language-plaintext highlighter-rouge">[to]</code> (exclusive) is reached. For example, if <code class="language-plaintext highlighter-rouge">0,5,1</code> is given, the resulting set of values will be \(\{0,1,2,3,4\}\). It is possible to specify ranges for multiple parameters at once.</p>
+
+<blockquote>
+  <p>When using a range and/or batch, CSV logging is enabled by default. If the <code class="language-plaintext highlighter-rouge">out</code> argument isn’t specified, it will default to <code class="language-plaintext highlighter-rouge">./out.csv</code>.</p>
+</blockquote>
+
+<h3 id="total-amount-of-experiments">Total Amount of Experiments</h3>
+<p>Suppose \(P\) is the set of all parameters that are specified through the <code class="language-plaintext highlighter-rouge">range</code> argument. Say that, for each specified parameter \(p\in P\), the set of values that \(p\) will range over is called \(V_p\). Finally, suppose that the batch amount is set as \(b\). The total amount of experiments is then equal to \(b\cdot\prod_{p\in P}V_p\). Keep in mind that this number can increase very fast.</p>
+
+<h3 id="multi-threading">Multi-threading</h3>
+<p>If the total amount of experiments is very high, depending on your CPU, it might be beneficial to enable multi-threading mode. This is done through the <code class="language-plaintext highlighter-rouge">jobs</code> argument. This argument specifies the amount of threads that will be used in parallel. The default value of <code class="language-plaintext highlighter-rouge">jobs</code> is 1, i.e. the model runs in single-threaded mode by default. To enable multi-threading mode, set the <code class="language-plaintext highlighter-rouge">jobs</code> argument to a value higher than 1.</p>
+
+<blockquote>
+  <p>In multi-threading mode, each experiment will be saved to a separate file due to memory concerns. This means that the <code class="language-plaintext highlighter-rouge">out</code> argument should contain the path to a directory instead of a file. If the <code class="language-plaintext highlighter-rouge">out</code> argument isn’t specified and the simulation runs multi-threaded, it will default to the directory <code class="language-plaintext highlighter-rouge">./out/</code>.</p>
+</blockquote>
+
+<h3 id="examples-2">Examples</h3>
+<blockquote>
+  <p>For an overview of all parameters available in this model, refer to <a href="/pages/parameters/">Parameters</a>.</p>
+</blockquote>
+
+<ul>
+  <li>Run the default experiment 10 times:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--batch</span> 10
+</code></pre></div>    </div>
+  </li>
+  <li>Range over the agents’ consumption factor with values ranging from 1 to and including 5:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--range</span> agent:consumption_factor<span class="o">=</span>1,6,1
+</code></pre></div>    </div>
+  </li>
+  <li>Run the same experiment as above but repeat it 5 times, and save it to <code class="language-plaintext highlighter-rouge">nice_experiment.csv</code>:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--range</span> agent:consumption_factor<span class="o">=</span>1,6,1 <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--out</span> nice_experiment.csv <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--batch</span> 5 
+</code></pre></div>    </div>
+    <p>This results in a total of 25 experiments.</p>
+  </li>
+  <li>Use a bimodal starting SVO distribution where both standard deviations are equal and fixed. We range over both means, where \(\mu_1\) explores <code class="language-plaintext highlighter-rouge">[0..0.5]</code> in three steps and \(\mu_2\) explores <code class="language-plaintext highlighter-rouge">[0.5..1]</code> in three steps. We also repeat each experiment 12 times. Save to <code class="language-plaintext highlighter-rouge">quite_large.csv</code>.
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--param</span> <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d1:m<span class="o">=</span>0 <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d1:s<span class="o">=</span>0.125 <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d2:m<span class="o">=</span>0 <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d2:s<span class="o">=</span>0.125 <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--range</span> <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d1:m<span class="o">=</span>0,0.5,0.17 <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d2:m<span class="o">=</span>0.5,1,0.16 <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--out</span> quite_large.csv <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--batch</span> 12
+</code></pre></div>    </div>
+    <blockquote>
+      <p>Note that we first use <code class="language-plaintext highlighter-rouge">--param</code> to create the parameter entries for both means and standard deviations. This is because <code class="language-plaintext highlighter-rouge">svo_dist</code> is empty by default. Therefore, we first have to generate both modes of the multi-modal distribution before we can range over any of them. For more information about the <code class="language-plaintext highlighter-rouge">svo_dist</code> parameter, refer to <a href="/pages/parameters/">Parameters</a>.</p>
+    </blockquote>
+
+    <p>This results in a total of 108 experiments.</p>
+  </li>
+  <li>Now we also want to range over both standard deviations. This results in quite a high number of        experiments, so we use multi-threading to speed up the process.
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--param</span> <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d1:m<span class="o">=</span>0 <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d1:s<span class="o">=</span>0.125 <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d2:m<span class="o">=</span>0 <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d2:s<span class="o">=</span>0.125 <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--range</span> <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d1:m<span class="o">=</span>0,0.5,0.17 <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d1:s<span class="o">=</span>0.01,0.32,0.1 <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d2:m<span class="o">=</span>0.5,1,0.16 <span class="se">\</span>
+<span class="o">&gt;</span>       svo_dist:d2:s<span class="o">=</span>0.01,0.32,0.1 <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--out</span> very_big <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--batch</span> 12 <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--jobs</span> 8 
+</code></pre></div>    </div>
+    <blockquote>
+      <p>Note that we specify a directory for the <code class="language-plaintext highlighter-rouge">out</code> argument, instead of a file.</p>
+    </blockquote>
+
+    <p>This results in a total of 1728 experiments, divided over 8 parallel threads.</p>
+  </li>
+</ul>
+
+<h2 id="specifying-real-time-plotting-behaviour">Specifying Real-time Plotting Behaviour</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -P     [?boolean]
+--plot  [?boolean]
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -f
+--fullscreen
+</code></pre></div></div>
+<p>By default, the real-time plotting window will pop up in a small window. Also, depending on the mode of the simulation, real-time plotting might be enabled or disabled by default.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">plot</code> argument can be used to override whether to enable the real-time plotting functionality.</p>
+<ul>
+  <li>To forcefully enable the real-time plotting:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--plot</span> <span class="nb">true</span>
+</code></pre></div>    </div>
+  </li>
+  <li>To forcefully disable the real-time plotting:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--plot</span> <span class="nb">false</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>The <code class="language-plaintext highlighter-rouge">fullscreen</code> argument can be used to make the real-time plotting window show up in full screen. To enable this, simply add the <code class="language-plaintext highlighter-rouge">--fullscreen</code> or <code class="language-plaintext highlighter-rouge">-f</code> argument.</p>
+
+<h2 id="default-values-of-arguments">Default Values of Arguments</h2>
+<p>If left unspecified, some arguments have different defaults based on the current running mode. This is mainly influenced by whether the model is running a batch or range of experiments, and whether this is done in a multi-threaded environment. In the table below,</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">batch</code> or <code class="language-plaintext highlighter-rouge">range</code></td>
+      <td><code class="language-plaintext highlighter-rouge">jobs</code></td>
+      <td> </td>
+      <td><code class="language-plaintext highlighter-rouge">plot</code></td>
+      <td><code class="language-plaintext highlighter-rouge">verbose</code></td>
+      <td><code class="language-plaintext highlighter-rouge">out</code></td>
+    </tr>
+    <tr>
+      <td>no</td>
+      <td>1</td>
+      <td> </td>
+      <td>yes</td>
+      <td>1</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <td>yes</td>
+      <td>1</td>
+      <td> </td>
+      <td>no</td>
+      <td>0</td>
+      <td><code class="language-plaintext highlighter-rouge">out.csv</code></td>
+    </tr>
+    <tr>
+      <td>yes</td>
+      <td>&gt;1</td>
+      <td> </td>
+      <td>no</td>
+      <td>ignored</td>
+      <td><code class="language-plaintext highlighter-rouge">./out/</code></td>
+    </tr>
+  </tbody>
+</table>
 
 <div class="footnotes" role="doc-endnotes">
   <ol>

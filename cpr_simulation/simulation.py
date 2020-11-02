@@ -182,7 +182,7 @@ class Simulator:
                     self.v2_print('\tSTARVED')
                     eol.append(agent)
                 elif agent.age > agent.maximum_age:
-                    self.v2_print('\tEOL')
+                    self.v2_print('\tEND OF LIFE')
                     eol.append(agent)
                 elif agent.energy >= agent.procreate_req:
                     self.v2_print('\tPROCREATE')
@@ -190,17 +190,21 @@ class Simulator:
                 else:
                     self.v2_print('\tLIVE')
 
+            self.v2_print("\nEOL: %s (tot %s)" % (
+                ', '.join([str(a.id) for a in eol]),
+                len(eol) ))
+
             for agent in eol:
                 self.agents.remove(agent)
 
-            self.v2_print('\nPost act agent count: %s' %
+            self.v2_print('Post act agent count: %s' %
                           len(self.agents))
-            self.v2_print('Procreate: %s (tot %s)' % (
+            self.v2_print('\nProcreate: %s (tot %s)' % (
                 ', '.join([str(a.id) for a in parents]),
                 len(parents)))
 
             Agent.procreate(self, parents)
-            self.v2_print('Post-proc agent count: %s\n' % len(self.agents))
+            self.v2_print('Post procreate agent count: %s\n' % len(self.agents))
             # Update the resource and epoch
             self.resource.grow_resource()
             np.random.shuffle(self.agents)
@@ -240,7 +244,7 @@ class Simulator:
                            "just darkness.")
 
         if self.printer:
-            self.printer.save_fig('.lastplot.pdf')
+            self.printer.save_fig('.lastplot.png')
         self.v_print(self.result)
 
     def plot_results(self):

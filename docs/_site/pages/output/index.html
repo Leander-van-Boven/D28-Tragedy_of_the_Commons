@@ -170,7 +170,44 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 
   </header>
 
-  
+  <ol title="Contents" id="markdown-toc">
+  <li><a href="#verbosity" id="markdown-toc-verbosity">Verbosity</a>    <ol>
+      <li><a href="#minimal-mode---verbose-0" id="markdown-toc-minimal-mode---verbose-0">Minimal Mode (<code class="language-plaintext highlighter-rouge">--verbose 0</code>)</a></li>
+    </ol>
+  </li>
+  <li><a href="#real-time-plot" id="markdown-toc-real-time-plot">Real-time Plot</a></li>
+  <li><a href="#csv-logger" id="markdown-toc-csv-logger">CSV-logger</a>    <ol>
+      <li><a href="#logged-values" id="markdown-toc-logged-values">Logged values</a>        <ol>
+          <li><a href="#experiment-values" id="markdown-toc-experiment-values">Experiment Values</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<h1 id="verbosity">Verbosity</h1>
+<p>The most basic form of output, in the command-line itself.
+The type of verbosity can be specified using the <code class="language-plaintext highlighter-rouge">--verbose [mode]</code>  or <code class="language-plaintext highlighter-rouge">-v</code> command-line argument together with the <code class="language-plaintext highlighter-rouge">run</code> command. Three different modes of verbosity are available:</p>
+
+<h2 id="minimal-mode---verbose-0">Minimal Mode (<code class="language-plaintext highlighter-rouge">--verbose 0</code>)</h2>
+<p>This will only print out the number of the currently running experiment, together with the total amount of experiments to run. This verbose option is used when a batch experiments are run, or when a range of experiments over some parameter values is run.</p>
+
+<h1 id="real-time-plot">Real-time Plot</h1>
+
+<h1 id="csv-logger">CSV-logger</h1>
+<p>The CSV logger logs the statistics of the simulation into a CSV- or <a href="https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated values file</a>. This file can then be used for further data processing. Its usage becomes most optimal if combined with the <a href="/pages/interaction/#batch-and-range">–range</a> command-line argument.</p>
+
+<h2 id="logged-values">Logged values</h2>
+<p>The contents in each row of the logger are split into two parts.</p>
+<ul>
+  <li>The parameters of the experiment; and</li>
+  <li>The statistics of the simulation at a certain epoch.</li>
+</ul>
+
+<p>The former will change per experiment, the latter per call of the <code class="language-plaintext highlighter-rouge">add_row</code> function.</p>
+
+<h3 id="experiment-values">Experiment Values</h3>
+
   
 
 </article>
