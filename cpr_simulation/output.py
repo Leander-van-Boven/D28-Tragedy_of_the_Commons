@@ -155,8 +155,15 @@ class ResultsPlotter:
             self.fig, self.update, data_gen, 
             blit=True, interval=1, repeat=False, 
             init_func=self.init_plot)
-        mng = plt.get_current_fig_manager()
-        mng.window.state('zoomed')
+
+        backend = matplotlib.get_backend().lower()
+        if backend == 'tkagg':      
+            mng = plt.get_current_fig_manager()
+            mng.window.state('zoomed')
+        elif backend == 'macosx':
+            dosomethinghere = True
+        elif backend == 'qt5agg':
+            dosomethingelsehere = True
         plt.show()
         
 

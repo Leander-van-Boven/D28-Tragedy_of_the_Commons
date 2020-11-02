@@ -3,13 +3,12 @@ github: [metadata]
 remote_theme: hydecorp/hydejack@v9.0.5
 
 lang: en
-
 title: Tragedy of the Commons model Documentation
 description: Everything to know about the implementation of this awesome project in one place
 keywords: []
 logo: /IMAGES/nemo_logo.png
 
-accent_image: /IMAGES/lake.png
+accent_image: /IMAGES/lake.jpg
 
 author:
   name: Group D28
@@ -17,16 +16,33 @@ author:
     github: https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons
 
 menu:
-  - title: Background of the Model
+  - title: Background
     url: /pages/background/
-  - title: Interaction with the Model
+  - title: Architecture
+    url: /pages/architecture/
+  - title: Interaction
     url: /pages/interaction/
   - title: Parameters
     url: /pages/parameters/
+  - title: Output
+    url: /pages/output/
 
+defaults:
+  - scope:
+      path:            pages/
+    values:
+      accent_color:    rgb(38,139,210)
+      accent_image:
+        background:    rgb(32,32,32)
+        overlay:       false
+
+### HYDEJACK ###
 hydejack:
   no_mark_external: true
   no_page_style: true
+  no_search: false
+
+lang: en
 # PRO-Version only #
 # hydejack: 
 #   cookies_banner: true
@@ -51,12 +67,12 @@ exclude:
 plugins:
   - jekyll-default-layout
   - jekyll-optional-front-matter
-  - jekyll-paginate
+  #- jekyll-paginate
   - jekyll-readme-index
   - jekyll-redirect-from
   - jekyll-relative-links
-  - jekyll-seo-tag
-  - jekyll-sitemap
+  #- jekyll-seo-tag
+  #- jekyll-sitemap
   - jekyll-titles-from-headings
   - jekyll-include-cache
   - jekyll-last-modified-at

@@ -6,4 +6,12 @@ title: Model Background
 1. toc
 {:toc title="Contents"}
 
-## Tragedy of the Commons
+## Tragedy of the Commons / Common Pool Resource Problem
+In a more general context, this model models a Tragedy of the Commons (TOC) or Common Pool Resource (CPR) problem situation [^1].
+
+A CPR characterizes itself as a situation where a group of individuals all have access to a shared resource. Using this resource by an individual will result in benefits for this individual. If all individuals would use this resource however, the resource will deplete, resulting in a loss for everyone.
+
+## Adaptation onto this model
+This model tries to simulate aforementioned situation by simulating a community of fisherman (the agents) living on an island in the middle of a lake. The only source of food for the fisherman are the fish in the lake, making this the shared resource. The tradeoff for the agents to make is to either go fish, therefore depleting the resource or to leave the fish alone, allowing them to procreate. Refer to [Model Architecture](/pages/architecture/) for a more detailed explanation of the exact code structure.
+
+[^1]: Garrett Hardin. “The Tragedy of the Commons”. In: Science162.3859 (1968), pages 1243–1248. issn: 0036-8075. doi:[10.1126/science.162.3859.1243](https://doi.org/10.1126/science.162.3859.1243)
