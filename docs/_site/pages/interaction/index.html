@@ -503,7 +503,7 @@ optional arguments:
       <td> </td>
       <td>no</td>
       <td>0</td>
-      <td><code class="language-plaintext highlighter-rouge">out.csv</code></td>
+      <td>‘<code class="language-plaintext highlighter-rouge">out.csv</code>’</td>
     </tr>
     <tr>
       <td>yes</td>
@@ -511,10 +511,14 @@ optional arguments:
       <td> </td>
       <td>no</td>
       <td>ignored</td>
-      <td><code class="language-plaintext highlighter-rouge">./out/</code></td>
+      <td>’<code class="language-plaintext highlighter-rouge">./out/</code>’</td>
     </tr>
   </tbody>
 </table>
+
+<p class="figcaption">Default values of <code class="language-plaintext highlighter-rouge">plot</code>, <code class="language-plaintext highlighter-rouge">verbose</code> and <code class="language-plaintext highlighter-rouge">out</code> arguments depending on values of <code class="language-plaintext highlighter-rouge">batch</code>/<code class="language-plaintext highlighter-rouge">range</code> and <code class="language-plaintext highlighter-rouge">jobs</code> arguments.</p>
+
+<p>Note that the <code class="language-plaintext highlighter-rouge">verbose</code> argument is <em>ignored</em> if the model is running in multi-threaded mode. This means that, even when you override the <code class="language-plaintext highlighter-rouge">verbose</code> argument, it will not matter. This is because the multi-threading has a custom output.</p>
 
 <div class="footnotes" role="doc-endnotes">
   <ol>

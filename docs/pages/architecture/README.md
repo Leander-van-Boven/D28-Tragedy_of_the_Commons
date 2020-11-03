@@ -29,11 +29,11 @@ D28-Tragedy_of_the_Commons/
 * `exception.py`: Constains multiple custom exceptions that can be raised by `cpr_simulation`.
 * `logger.py`: Contains the CSV logger logic.
 * `output.py`: Contains the real-time plotting logic. 
-* `parameters.py`: Contains the default parameter dictionary. For more information, refer to [Parameters](/docs/PAGES/PARAMETERS/).
+* `parameters.py`: Contains the default parameter dictionary. For more information, refer to [Parameters](/D28-Tragedy_of_the_Commons/pages/parameters/).
 * `resource.py`: Contains the `Resource` class, specifying the consumption and growth behavriour of the resource pool.
 * `simulation.py`: Contains the `Simulator` class, wherein the simulation is set up and run. 
 * `util.py`: Contains some context-free helper methods.
-* `sim.py`: Contains the command-line interface and imports `cpr_simulation` to set-up and run a simulation. For more informatin about the command-line interface, refer to [Interaction](/docs/pages/interaction/).
+* `sim.py`: Contains the command-line interface and imports `cpr_simulation` to set-up and run a simulation. For more informatin about the command-line interface, refer to [Interaction](/D28-Tragedy_of_the_Commons/pages/interaction/).
 
 In the sections below, the `Agent`, `Resource` and `Simulation` classes are more thoroughly explained. 
 
@@ -41,7 +41,7 @@ In the sections below, the `Agent`, `Resource` and `Simulation` classes are more
 
 ```python
 class Agent:
-    def __init__(params):
+    def __init__(self, params):
         # Class constructor
 
     @classmethod
@@ -67,5 +67,72 @@ class Agent:
 Because what would a common-pool resource be without any exploitants. 
 
 # Resource
+```python
+class Resource:
+    def growth_exponential(self, val, rate):
+        # Exponential growth function
+
+    def growth_logarithmic(self, val, a, t, s):
+        # 1 / log growth function
+
+    def growth_nroot(self, a, tx, ty, n):
+        # 1 / nth root growth function
+
+    def __init__(self, params):
+        # Resource pool constructor
+
+    def grow_resource(self):
+        # Resource growth function entry point
+
+    def consume_resource(self, amount):
+        # Resource consumption entry pont
+```
 
 # Simulation
+```python
+class Simulation:
+    def __init__(self, param_dict, printer=None, logger=None, row_head=[], verbose=True):
+        # Params and modules initializer
+    
+    def get_agent_count(self, min_social_values=0, max_social_value=1):
+        # 
+```
+
+# Ouput
+
+## Real-Time Plot
+```python
+class ResultsPlotter:
+    def __init__(self, start_agent, svo_bar_count, start_resource, fullscreen):
+        # Sets up all parameters and attributes of the class
+    
+    def init_plot(self):
+        # Initializes the plot for the animation
+
+    def update(self, data):
+        # Updates the plot from the data provided
+
+    def start_printer(self, data_gen):
+        # Initializes the animation and shows the plot
+
+    def save_fig(self, path):
+
+```
+
+## CSV Logger
+```python
+class 
+```
+
+# Utilities
+```python
+class InvalidArgumentError(Exception):
+    pass
+
+class MissingArgumentError(Exception):
+    pass
+
+class InvalidParameterError(Exception):
+    pass
+```
+

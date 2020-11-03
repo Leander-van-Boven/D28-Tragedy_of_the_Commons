@@ -260,7 +260,12 @@ If left unspecified, some arguments have different defaults based on the current
 
 |`batch` or `range`|`jobs`||`plot`|`verbose`|`out`|
 |no|1||yes|1|none|
-|yes|1||no|0|`out.csv`|
-|yes|>1||no|ignored|`./out/`|
+|yes|1||no|0|'`out.csv`'|
+|yes|>1||no|ignored|'`./out/`'|
+
+Default values of `plot`, `verbose` and `out` arguments depending on values of `batch`/`range` and `jobs` arguments.
+{:.figcaption}
+
+Note that the `verbose` argument is _ignored_ if the model is running in multi-threaded mode. This means that, even when you override the `verbose` argument, it will not matter. This is because the multi-threading has a custom output. 
 
 [^1]: For more information about the characteristics of the different resource growth functions, refer to [Resource](/D28-Tragedy_of_the_Commons/pages/architecture/resource/).
