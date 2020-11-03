@@ -142,7 +142,7 @@ The `verbose` argument specifies the level of verbosity of the model. Three mode
 |1| Experiment counter and status per epoch |
 |2| Detailed overview of all agents and their behaviour each epoch. Halts after each epoch to allow for the digestion of all information |
 
-For examples of the exact output of the different verbosity modes, refer to [Output](/D28-Tragedy_of_the_Commons/pages/output/#Verbosity). So for example, to use verbosity mode 1, use:
+For examples of the exact output of the different verbosity modes, refer to [Output](../output/#verbosity). So for example, to use verbosity mode 1, use:
 ```shell
 $ py sim.py run --verbose 1 
 ```
@@ -214,7 +214,7 @@ For an overview of all parameters available in this model, refer to [Parameters]
   >   --out quite_large.csv \
   >   --batch 12
   ```
-  We first use `--param` to create the parameter entries for both means and standard deviations. This is because `svo_dist` is empty by default. Therefore, we first have to generate both modes of the multi-modal distribution before we can range over any of them. For more information about the `svo_dist` parameter, refer to [Parameters](/D28-Tragedy_of_the_Commons/pages/parameters/).
+  We first use `--param` to create the parameter entries for both means and standard deviations. This is because `svo_dist` is empty by default. Therefore, we first have to generate both modes of the multi-modal distribution before we can range over any of them. For more information about the `svo_dist` parameter, refer to [Parameters](../parameters/).
   {:.note}
   
   This results in a total of 108 experiments.
@@ -286,4 +286,4 @@ Default values of `plot`, `verbose` and `out` arguments depending on values of `
 Note that both the `verbose` and `plot` arguments are _ignored_ if the model is running in multi-threaded mode. This means that, even when you override the `verbose` or `plot` arguments, it will not matter. This is because the multi-threading has a custom output, and showing multiple plotting windows is not feasible in a multi-threaded environment. 
 {:.note}
 
-[^1]: For more information about the characteristics of the different resource growth functions, refer to [Resource](/D28-Tragedy_of_the_Commons/pages/architecture/resource/).
+[^1]: For more information about the characteristics of the different resource growth functions, refer to [Resource](../architecture/resource/).

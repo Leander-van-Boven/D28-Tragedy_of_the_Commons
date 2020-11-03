@@ -63,8 +63,8 @@ class Simulator:
                 self.v2_print = print
 
         Agent.print = self.v2_print
-        Agent.svo_procreation_function = \
-            param_dict['agent']['svo_procreation_function']
+        Agent.svo_inheritance_function = \
+            param_dict['agent']['svo_inheritance_function']
         Agent.svo_convergence_factor = \
             param_dict['agent']['svo_convergence_factor'] \
                       [param_dict['agent']['svo_procreation_function']] / 3

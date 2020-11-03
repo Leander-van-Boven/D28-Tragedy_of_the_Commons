@@ -102,32 +102,61 @@ The energy function used by the agents can be altered through the `agent:behavio
 {:.note}
 
 ### Base energy function
-The base energy function, represented by the method `Agent.base_energy_function()`, .... 
+The base energy function, represented by the method `Agent.base_energy_function()`, is the initially proposed agent behaviour function. This functions is very naive in that it makes a black and white separation between proself and prosocial agents (<.5 SVO means proself, >=.5 SVO means prosocial). While prosocial agents will always fish their consumption, the consumption of the proself agents differs based on the available resources.  
+Assume $$A$$ the set of all proself agents. Then for each agent $$a\in A$$ the amount of energy it consumes can be defined as $$c(a)$$. If $$f$$ is then defined as the amount of resources or fish available, $$s$$ a certain threshold value and $$$$ 
+
 ### Restricted energy function (default)
 The restricted energy function, represented by the method `Agent.restricted_energy_function`(), builds on the base function by adding a epoch-based resource restriction. 
 
-The point at which the restriction kicks in or out can be altered through the `simulation:res_limit_factor` and `simulation:res_unlimit_factor` parameters respectively. Refer to [Parameters](D28-Tragedy_of_the_Commons/pages/parameters/) for more information.
+The point at which the restriction kicks in or out can be altered through the `simulation:res_limit_factor` and `simulation:res_unlimit_factor` parameters respectively. Refer to [Parameters](../parameters/) for more information.
 {:.note}
 
 If this restriction is active, agents are only allowed to fish if they would die otherwise. However, each agent has a chance of ignoring this restriction. The probability hereof is linearly dependent of the agent's social value orientation, i.e. if they range more towards pro-selfness, they are inclined to ignore the restriction more often.  
 However, agents that choose to ignore this rule have have a probability of being caught. If they are catched red-handed, they are punished and can't fish for a predetermined number of epochs. 
 
-The probability of an agent being caught and the amount of epochs they can't fish if they are caught can be altered through the `agent:caught_chance` and `agent:caught_cooldown_factor` parameters respectively. Refer to [Parameters](D28-Tragedy_of_the_Commons/pages/parameters/) for more information.
+The probability of an agent being caught and the amount of epochs they can't fish if they are caught can be altered through the `agent:caught_chance` and `agent:caught_cooldown_factor` parameters respectively. Refer to [Parameters](../parameters/) for more information.
 {:.note}
 
 ## Agent procreation
 If agents have enough energy available, they can procreate. The procreation is implemented in the static method `Agent.procreate()`. Repeatedly, two random agents are taken from the list of parents and they procreate. Apart from the child's social value orientation, all attributes remain constant. The child's social value orientation is dynamic however, and is chosen depending on the parents' social value orientations and energy levels. This model implements two social value orientation inheritance functions, which are described in the sections below.
 
+The social value orientation inheritance function can be altered through the `agent:svo_inheritance_function` parameter. Refer to [Parameters](../parameters/) for more information.
+{:.note}
+
 ### SVO inheritance from either parent (default)
 This function is represented by the local method `svo_either_parent()` that is located within `Agent.procreate()`. With this method, the child's social value orientation is based on one of their parents. We first have to decide which parent to take, which is done probabilisticly based on the parents' energy level:
+
 $$
-P(\mu_c=svo_{p1}) = \frac{e_{p1}}{e_{p1}+e_{p2}}\\
-P(\mu_c=svo_{p2}) = \frac{e_{p2}}{e_{p1}+e_{p2}}\\
-P(\mu_c=svo_{p1}\vee svo_{p2}) =1
+\begin{align}
+P(\mu_c=svo_{p1}) &= \frac{e_{p1}}{e_{p1}+e_{p2}}\\[2em]
+P(\mu_c=svo_{p2}) &= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
+&=1-P(\mu_c=svo_{p1})
+\end{align}
 $$
-Notice that $$\mu_c$$ is used instead of $$svo_c$$. This because the child
+
+The probabilities of the child's mean svo to become that of both parents. Here, $P(\varphi )$ denotes the probability that $\varphi$.
+{:.figcaption}
+
+Notice that $$\mu_c$$ is used instead of $$svo_c$$. This because the social value orientation of the child is drawn from a normal distribution with a predetermined standard deviation. Thus we get:
+
+$$
+svo_c \sim \mathcal{N}(\mu_c, \sigma)
+$$
+
+The social value orientation is drawn from a normal distribution. Here, $$\sigma$$ denotes the predetermined standard deviation
+{.figcaption}
+
+The standard deviation for the final normal distribution can be altered through the `agent:svo_convergence_factor:svo_either_parent` parameter. Refer to [Parameters](../parameters/) for more information.
+{:.note}
 
 ### SVO inheritance from both parents
+This function is represented by the lcoal method `svo_both_parents()` that is located within `Agent.procreate()`. With this method, the child's social value orientation is based on both parents. As before, we construct a normal distribution where the social value orientation is sampled from. However, in this case the mean $$\mu_c$$ is determined by the weighted mean of the parents' social value orientations:
+
+$$
+\mu_c=\frac{svo_{p1}\cdot e_{p1} + svo_{p2}\cdot e_{p2}}{e_{p1}+e_{p2}}
+$$
+
+
 
 # Resource
 ```python

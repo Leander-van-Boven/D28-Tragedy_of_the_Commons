@@ -101,6 +101,7 @@
     * ~~Add description to resource growth function parameters~~
   * ~~SVO distribution parameters~~
 * Check and Fix all links
+  * Add additional /#header-title thingies if feasible
 * Data analysis page? Or in README? Should we mention it?
 ## Report
 * Read through section Implementation Model, add/fix things where needed

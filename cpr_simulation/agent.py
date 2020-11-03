@@ -10,7 +10,7 @@ class Agent:
 
     # Static attributes
     svo_convergence_factor = 0
-    svo_procreation_function = 'svo_either_parent'
+    svo_inheritance_function = 'svo_either_parent'
     print = do_nothing
 
     def __init__(self, params, **kwargs):
@@ -253,7 +253,6 @@ class Agent:
             else:
                 svo = rnd.gauss(parent2.social_value_orientation,
                                 Agent.svo_convergence_factor)
-
             return max(min(svo, 1), 0)
 
         def svo_between_parents():
@@ -280,7 +279,7 @@ class Agent:
             parent2 = parents.pop()
             parent2.child_count += 1
 
-            svo = eval(Agent.svo_procreation_function)()
+            svo = eval(Agent.svo_inheritance_function)()
 
             child = Agent(sim.agent_params, id=s_id, svo=svo)
             child.energy = (parent1.procreate_cost +

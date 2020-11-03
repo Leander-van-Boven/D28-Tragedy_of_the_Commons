@@ -109,7 +109,7 @@ default_params = {
     "agent": {
         "count": 100,
 
-        "svo_procreation_function": "svo_either_parent",
+        "svo_inheritance_function": "svo_either_parent",
         # Possible values:          "svo_either_parent"
         #                           "svo_between_parents"
         "svo_convergence_factor": {
