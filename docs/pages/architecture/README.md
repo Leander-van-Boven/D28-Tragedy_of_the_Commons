@@ -116,7 +116,7 @@ This function is represented by the local method `svo_either_parent()` that is l
 $$
 P(\mu_c=svo_{p1}) = \frac{e_{p1}}{e_{p1}+e_{p2}}\\
 P(\mu_c=svo_{p2}) = \frac{e_{p2}}{e_{p1}+e_{p2}}\\
-P(\mu_c=svo_{p1}) +P(\mu_c=svo_{p2}) =1
+P(\mu_c=svo_{p1}\vee svo_{p2}) =1
 $$
 Notice that $$\mu_c$$ is used instead of $$svo_c$$. This because the child
 
