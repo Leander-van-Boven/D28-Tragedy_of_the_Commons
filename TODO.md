@@ -83,35 +83,14 @@
   * Output classes
     * Mention list of strings instead of pandas frame for output
   * Helper classes?
-* Interaction pages
-  * Overview of workflow of implementation
-  * Thorough explanation of every CL argument
-  * Explanation and use-case of all 'modes' we thought of
-    * Regular mode
-      * Single experiment
-      * Real-time plots
-      * Verbosity 1
-    * Close-up mode
-      * Single experiment 
-      * No real-time plots
-      * Verbosity 2
-    * Small sweep
-      * Small number of experiments (```range``` and/or ```batch```)
-      * No real-time plots
-      * Verbosity 0
-      * Single-threaded
-      * Logging to single CSV file
-    * Large sweep
-      * Big number of experiments (```range``` and/or ```batch```)
-      * No real-time plots
-      * Verbosity 0
-      * Multi-threaded (```jobs``` > 1)
-      * Logging to multiple CSV files
-  * Lots of example commands (w/ pictures?)
+* ~~Interaction pages~~
+  * ~~Overview of workflow of implementation~~
+  * ~~Thorough explanation of every CL argument~~
+  * ~~Lots of example commands (w/ pictures?)~~
 * Output pages
-  * Explanation of real-time plots
-  * Explanation of different verbosity modes and their uses
-  * Explanation of CSV logging functionality
+  * ~~Explanation of real-time plots~~
+  * ~~Explanation of different verbosity modes and their uses~~
+  * ~~Explanation of CSV logging functionality~~
   * Add links
     * from #epoch-statistics to location where limit and unlimit factor are calculated
 * ~~Parameters pages~~
@@ -121,6 +100,7 @@
   * ~~Resource parameters~~
     * ~~Add description to resource growth function parameters~~
   * ~~SVO distribution parameters~~
+* Check and Fix all links
 * Data analysis page? Or in README? Should we mention it?
 ## Report
 * Read through section Implementation Model, add/fix things where needed

@@ -6,7 +6,7 @@ title: Model Background
 1. toc
 {:toc title="Contents"}
 
-## Tragedy of the Commons / Common Pool Resource Problem
+## Tragedy of the Commons / Common Pool Resource problem
 In a more general context, this model attempts to describe a scenario where Tragedy of the Commons (TOC) applies, by modelling multiple agents that interact with a Common Pool Resource (CPR) [^1].
 
 A CPR characterizes itself as a situation where a group of individuals all have access to a shared resource. Using this resource by an individual will result in benefits for this individual. However, if all individuals would use this resource, the resource will deplete, resulting in a loss for everyone. 

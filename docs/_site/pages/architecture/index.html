@@ -172,12 +172,25 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 
   <ol title="Contents" id="markdown-toc">
   <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
-  <li><a href="#agent" id="markdown-toc-agent">Agent</a></li>
+  <li><a href="#agent" id="markdown-toc-agent">Agent</a>    <ol>
+      <li><a href="#agent-construction" id="markdown-toc-agent-construction">Agent construction</a></li>
+      <li><a href="#agent-act" id="markdown-toc-agent-act">Agent act</a>        <ol>
+          <li><a href="#base-energy-function" id="markdown-toc-base-energy-function">Base energy function</a></li>
+          <li><a href="#restricted-energy-function-default" id="markdown-toc-restricted-energy-function-default">Restricted energy function (default)</a></li>
+        </ol>
+      </li>
+      <li><a href="#agent-procreation" id="markdown-toc-agent-procreation">Agent procreation</a>        <ol>
+          <li><a href="#svo-inheritance-from-either-parent-default" id="markdown-toc-svo-inheritance-from-either-parent-default">SVO inheritance from either parent (default)</a></li>
+          <li><a href="#svo-inheritance-from-both-parents" id="markdown-toc-svo-inheritance-from-both-parents">SVO inheritance from both parents</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
   <li><a href="#resource" id="markdown-toc-resource">Resource</a></li>
   <li><a href="#simulation" id="markdown-toc-simulation">Simulation</a></li>
-  <li><a href="#ouput" id="markdown-toc-ouput">Ouput</a>    <ol>
-      <li><a href="#real-time-plot" id="markdown-toc-real-time-plot">Real-Time Plot</a></li>
-      <li><a href="#csv-logger" id="markdown-toc-csv-logger">CSV Logger</a></li>
+  <li><a href="#output" id="markdown-toc-output">Output</a>    <ol>
+      <li><a href="#real-time-plot" id="markdown-toc-real-time-plot">Real-time plot</a></li>
+      <li><a href="#csv-logger" id="markdown-toc-csv-logger">CSV logger</a></li>
     </ol>
   </li>
   <li><a href="#utilities" id="markdown-toc-utilities">Utilities</a></li>
@@ -216,15 +229,18 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 <p>In the sections below, the <code class="language-plaintext highlighter-rouge">Agent</code>, <code class="language-plaintext highlighter-rouge">Resource</code> and <code class="language-plaintext highlighter-rouge">Simulation</code> classes are more thoroughly explained.</p>
 
 <h1 id="agent">Agent</h1>
-
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Agent</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+    <span class="c1"># Attributes:
+</span>    <span class="c1">#  - energy
+</span>    <span class="c1">#  - social_value_orientation
+</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Class constructor
 </span>
     <span class="o">@</span><span class="nb">classmethod</span>
     <span class="k">def</span> <span class="nf">from_svo_distribution</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">dist_params</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> 
                               <span class="n">agent_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
-        <span class="c1"># Generate set of agents with their SVO's 
+        <span class="c1"># Generate set of n agents with their SVO's 
 </span>        <span class="c1"># sampled from a multi-modal normal 
 </span>        <span class="c1"># distribution 
 </span>
@@ -240,8 +256,62 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
     <span class="o">@</span><span class="nb">classmethod</span>
     <span class="k">def</span> <span class="nf">procreate</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">sim</span><span class="p">,</span> <span class="n">parents</span><span class="p">):</span>
         <span class="c1"># Procreation function
+</span>
+        <span class="k">def</span> <span class="nf">svo_either_parent</span><span class="p">():</span>
+            <span class="c1"># SVO inheritance function based on
+</span>            <span class="c1"># either parent
+</span>
+        <span class="k">def</span> <span class="nf">svo_both_parents</span><span class="p">():</span>
+            <span class="c1"># SVO inheritance function based on
+</span>            <span class="c1"># both parents
 </span></code></pre></div></div>
-<p>Because what would a common-pool resource be without any exploitants.</p>
+<p class="figcaption">Because what would a common-pool resource be without any exploitants.</p>
+
+<h2 id="agent-construction">Agent construction</h2>
+<p>The constructor of <code class="language-plaintext highlighter-rouge">Agent</code>, <code class="language-plaintext highlighter-rouge">Agent.__init__()</code>, constructs a new instance of the <code class="language-plaintext highlighter-rouge">Agent</code> class. It fills all attributes based on the parameter dictionary <code class="language-plaintext highlighter-rouge">params</code>. In addition, the static method <code class="language-plaintext highlighter-rouge">Agent.from_svo_distribution()</code> can be used to make a collection of agents, with their social value orientation drawn from a multi-modal normal distribution.</p>
+
+<p>In this method, the means and standard deviations are passed through the <code class="language-plaintext highlighter-rouge">dist_params</code> argument. However, instead of using this to make a single multi-modal normal distribution, we make multiple unimodal distributions. For each agent, we take one such distribution by chance, and sample its social value orientation from that. This is mathematically equivalent so sampling all agents from a multi-modal distribution.</p>
+
+<p class="note">The initial SVO distribution can be altered through the <code class="language-plaintext highlighter-rouge">svo_dist</code> parameter. Refer to <a href="../parameters/">Parameters</a> for more information.</p>
+
+<h2 id="agent-act">Agent act</h2>
+<p>The behaviour ‘act’, represented by the method <code class="language-plaintext highlighter-rouge">Agent.act()</code>, represents the behaviour of this agent for an entire epoch. In our model, the act comprises of two things:</p>
+<ul>
+  <li>Metabolise some energy (agent’s energy level decreases)</li>
+  <li>Decide whether to go fishing (energy leven increases)</li>
+</ul>
+
+<p>How much energy the agent metabolises is decided by a parameter that’s constant across all agents.</p>
+
+<p class="note">The agents’ fish consumption can be altered through the  <code class="language-plaintext highlighter-rouge">agent:metabolism</code> and <code class="language-plaintext highlighter-rouge">agent:consumption_factor</code> parameters. Refer to <a href="../parameters/">Parameters</a> for more information.</p>
+
+<p>Whether to go fishing, and how much fish to catch, is decided by the <em>energy function</em>. The outcome of these functions relies solely on the agent’s social value orientation and the amount of resource that’s left. This model implements two such functions, which both are described in the sections below.</p>
+
+<p class="note">The energy function used by the agents can be altered through the <code class="language-plaintext highlighter-rouge">agent:behaviour</code> parameter. Refer to <a href="../parameters/">Parameters</a> for more information.</p>
+
+<h3 id="base-energy-function">Base energy function</h3>
+<p>The base energy function, represented by the method <code class="language-plaintext highlighter-rouge">Agent.base_energy_function()</code>, ….</p>
+<h3 id="restricted-energy-function-default">Restricted energy function (default)</h3>
+<p>The restricted energy function, represented by the method <code class="language-plaintext highlighter-rouge">Agent.restricted_energy_function</code>(), builds on the base function by adding a epoch-based resource restriction.</p>
+
+<p class="note">The point at which the restriction kicks in or out can be altered through the <code class="language-plaintext highlighter-rouge">simulation:res_limit_factor</code> and <code class="language-plaintext highlighter-rouge">simulation:res_unlimit_factor</code> parameters respectively. Refer to <a href="D28-Tragedy_of_the_Commons/pages/parameters/">Parameters</a> for more information.</p>
+
+<p>If this restriction is active, agents are only allowed to fish if they would die otherwise. However, each agent has a chance of ignoring this restriction. The probability hereof is linearly dependent of the agent’s social value orientation, i.e. if they range more towards pro-selfness, they are inclined to ignore the restriction more often.<br />
+However, agents that choose to ignore this rule have have a probability of being caught. If they are catched red-handed, they are punished and can’t fish for a predetermined number of epochs.</p>
+
+<p class="note">The probability of an agent being caught and the amount of epochs they can’t fish if they are caught can be altered through the <code class="language-plaintext highlighter-rouge">agent:caught_chance</code> and <code class="language-plaintext highlighter-rouge">agent:caught_cooldown_factor</code> parameters respectively. Refer to <a href="D28-Tragedy_of_the_Commons/pages/parameters/">Parameters</a> for more information.</p>
+
+<h2 id="agent-procreation">Agent procreation</h2>
+<p>If agents have enough energy available, they can procreate. The procreation is implemented in the static method <code class="language-plaintext highlighter-rouge">Agent.procreate()</code>. Repeatedly, two random agents are taken from the list of parents and they procreate. Apart from the child’s social value orientation, all attributes remain constant. The child’s social value orientation is dynamic however, and is chosen depending on the parents’ social value orientations and energy levels. This model implements two social value orientation inheritance functions, which are described in the sections below.</p>
+
+<h3 id="svo-inheritance-from-either-parent-default">SVO inheritance from either parent (default)</h3>
+<p>This function is represented by the local method <code class="language-plaintext highlighter-rouge">svo_either_parent()</code> that is located within <code class="language-plaintext highlighter-rouge">Agent.procreate()</code>. With this method, the child’s social value orientation is based on one of their parents. We first have to decide which parent to take, which is done probabilisticly based on the parents’ energy level:
+\(P(\mu_c=svo_{p1}) = \frac{e_{p1}}{e_{p1}+e_{p2}}\\
+P(\mu_c=svo_{p2}) = \frac{e_{p2}}{e_{p1}+e_{p2}}\\
+P(\mu_c=svo_{p1}\vee svo_{p2}) =1\)
+Notice that \(\mu_c\) is used instead of \(svo_c\). This because the child</p>
+
+<h3 id="svo-inheritance-from-both-parents">SVO inheritance from both parents</h3>
 
 <h1 id="resource">Resource</h1>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Resource</span><span class="p">:</span>
@@ -291,9 +361,9 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
         <span class="c1"># Updates the CSV logger
 </span></code></pre></div></div>
 
-<h1 id="ouput">Ouput</h1>
+<h1 id="output">Output</h1>
 
-<h2 id="real-time-plot">Real-Time Plot</h2>
+<h2 id="real-time-plot">Real-time plot</h2>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ResultsPlotter</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_agent</span><span class="p">,</span> <span class="n">svo_bar_count</span><span class="p">,</span> <span class="n">start_resource</span><span class="p">,</span> <span class="n">fullscreen</span><span class="p">):</span>
         <span class="c1"># Sets up all parameters and attributes of the class
@@ -311,7 +381,7 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 
 </code></pre></div></div>
 
-<h2 id="csv-logger">CSV Logger</h2>
+<h2 id="csv-logger">CSV logger</h2>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> 
 </code></pre></div></div>
 
