@@ -40,11 +40,11 @@ menu:
 
 ### HYDEJACK ###
 hydejack:
+  no_break_layout: true
+  no_large_heading: true
   no_mark_external: true
   no_page_style: true
   no_search: false
-  no_break_layout: true
-  no_large_heading: true
 
 lang: en
 # PRO-Version only #
