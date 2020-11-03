@@ -38,16 +38,19 @@ D28-Tragedy_of_the_Commons/
 In the sections below, the `Agent`, `Resource` and `Simulation` classes are more thoroughly explained. 
 
 # Agent 
-
 ```python
 class Agent:
-    def __init__(self, params):
+    # Attributes:
+    #  - energy
+    #  - social_value_orientation
+
+    def __init__(self, params, **kwargs):
         # Class constructor
 
     @classmethod
     def from_svo_distribution(cls, dist_params, n, 
                               agent_params=dict()):
-        # Generate set of agents with their SVO's 
+        # Generate set of n agents with their SVO's 
         # sampled from a multi-modal normal 
         # distribution 
 
@@ -63,8 +66,61 @@ class Agent:
     @classmethod
     def procreate(cls, sim, parents):
         # Procreation function
+
+        def svo_either_parent():
+            # SVO inheritance function based on
+            # either parent
+
+        def svo_both_parents():
+            # SVO inheritance function based on
+            # both parents
 ```
 Because what would a common-pool resource be without any exploitants. 
+{:.figcaption}
+
+## Agent Construction
+The constructor of `Agent`, `Agent.__init__()`, constructs a new instance of the `Agent` class. It fills all attributes based on the parameter dictionary `params`. In addition, the static method `Agent.from_svo_distribution()` can be used to make a collection of agents, with their social value orientation drawn from a multi-modal normal distribution.
+
+In this method, the means and standard deviations are passed through the `dist_params` argument. However, instead of using this to make a single multi-modal normal distribution, we make multiple unimodal distributions. For each agent, we take one such distribution by chance, and sample its social value orientation from that. This is mathematically equivalent so sampling all agents from a multi-modal distribution. 
+
+> The initial SVO distribution can be altered through the `svo_dist` parameter. Refer to [Parameters](D28-Tragedy_of_the_Commons/pages/parameters) for more information.
+
+## Agent Act
+The behaviour 'act', represented by the method `Agent.act()`, represents the behaviour of this agent for an entire epoch. In our model, the act comprises of two things:
+* Metabolise some energy (agent's energy level decreases)
+* Decide whether to go fishing (energy leven increases)
+
+How much energy the agent metabolises is decided by a parameter that's constant across all agents. 
+
+> The agents' fish consumption can be altered through the  `agent:metabolism` and `agent:consumption_factor` parameters. Refer to [Parameters](D28-Tragedy_of_the_Commons/pages/parameters) for more information.
+
+Whether to go fishing, and how much fish to catch, is decided by the *energy function*. The outcome of these functions relies solely on the agent's social value orientation and the amount of resource that's left. This model implements two such functions, which both are described in the sections below.
+
+> The energy function used by the agents can be altered through the `agent:behaviour` parameter. Refer to [Parameters](D28-Tragedy_of_the_Commons/pages/parameters) for more information.
+### Base Energy Function
+The base energy function, represented by the method `Agent.base_energy_function()`, .... 
+### Restricted Energy Function (Default)
+The restricted energy function, represented by the method `Agent.restricted_energy_function`(), builds on the base function by adding a epoch-based resource restriction. 
+
+> The point at which the restriction kicks in or out can be altered through the `simulation:res_limit_factor` and `simulation:res_unlimit_factor` parameters respectively. Refer to [Parameters](D28-Tragedy_of_the_Commons/pages/parameters) for more information.
+
+If this restriction is active, agents are only allowed to fish if they would die otherwise. However, each agent has a chance of ignoring this restriction. The probability hereof is linearly dependent of the agent's social value orientation, i.e. if they range more towards pro-selfness, they are inclined to ignore the restriction more often.  
+However, agents that choose to ignore this rule have have a probability of being caught. If they are catched red-handed, they are punished and can't fish for a predetermined number of epochs. 
+> The probability of an agent being caught and the amount of epochs they can't fish if they are caught can be altered through the `agent:caught_chance` and `agent:caught_cooldown_factor` parameters respectively. Refer to [Parameters](D28-Tragedy_of_the_Commons/pages/parameters) for more information.
+
+## Agent Procreation
+If agents have enough energy available, they can procreate. The procreation is implemented in the static method `Agent.procreate()`. Repeatedly, two random agents are taken from the list of parents and they procreate. Apart from the child's social value orientation, all attributes remain constant. The child's social value orientation is dynamic however, and is chosen depending on the parents' social value orientations and energy levels. This model implements two social value orientation inheritance functions, which are described in the sections below.
+
+### SVO Inheritance from Either Parent (Default)
+This function is represented by the local method `svo_either_parent()` that is located within `Agent.procreate()`. With this method, the child's social value orientation is based on one of their parents. We first have to decide which parent to take, which is done probabilisticly based on the parents' energy level:
+$$
+P(\mu_c=svo_{p1}) = \frac{e_{p1}}{e_{p1}+e_{p2}}\\
+P(\mu_c=svo_{p2}) = \frac{e_{p2}}{e_{p1}+e_{p2}}\\
+P(\mu_c=svo_{p1}\vee svo_{p2}) =1
+$$
+Notice that $$\mu_c$$ is used instead of $$svo_c$$. This because the child
+
+### SVO Inheritance from Both Parents
 
 # Resource
 ```python
