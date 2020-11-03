@@ -166,12 +166,15 @@ With the `range` argument, it's possible to specify a range of values that a spe
 > When using a range and/or batch, CSV logging is enabled by default. If the `out` argument isn't specified, it will default to `./out.csv`. 
 
 ### Total Amount of Experiments
-Suppose $$P$$ is the set of all parameters that are specified through the `range` argument. Say that, for each specified parameter $$p\in P$$, the set of values that $$p$$ will range over is called $$V_p$$. Finally, suppose that the batch amount is set as $$b$$. The total amount of experiments is then equal to $$b\cdot\prod_{p\in P}V_p$$. Keep in mind that this number can increase very fast. 
+Suppose $$P$$ is the set of all parameters that are specified through the `range` argument. Say that, for each specified parameter $$p\in P$$, the set of values that $$p$$ will range over is called $$V_p$$. Finally, suppose that the batch amount is set as $$b$$. The total amount of experiments is then equal to $$b\cdot\prod_{p\in P}V_p$$. 
+
+Keep in mind that this number will increase very fast!
+{:.note title="Important"}
 
 ### Multi-threading 
 If the total amount of experiments is very high, depending on your CPU, it might be beneficial to enable multi-threading mode. This is done through the `jobs` argument. This argument specifies the amount of threads that will be used in parallel. The default value of `jobs` is 1, i.e. the model runs in single-threaded mode by default. To enable multi-threading mode, set the `jobs` argument to a value higher than 1. 
 
-> In multi-threading mode, each experiment will be saved to a separate file due to memory concerns. This means that the `out` argument should contain the path to a directory instead of a file. If the `out` argument isn't specified and the simulation runs multi-threaded, it will default to the directory `./out/`. 
+> In multi-threading mode, each experiment will be saved to a separate file due to memory concerns and multi-threaded file access limitations. This means that the `out` argument should contain the path to a directory instead of a file. If the `out` argument isn't specified and the simulation runs multi-threaded, it will default to the directory `./out/`. 
 
 
 ### Examples
@@ -241,6 +244,9 @@ If the total amount of experiments is very high, depending on your CPU, it might
  -f
 --fullscreen
 ```
+```
+--resize
+```
 By default, the real-time plotting window will pop up in a small window. Also, depending on the mode of the simulation, real-time plotting might be enabled or disabled by default. 
 
 The `plot` argument can be used to override whether to enable the real-time plotting functionality.
@@ -255,17 +261,22 @@ The `plot` argument can be used to override whether to enable the real-time plot
 
 The `fullscreen` argument can be used to make the real-time plotting window show up in full screen. To enable this, simply add the `--fullscreen` or `-f` argument. 
 
+The `resize` argument can be used in a similar way as the `fullscreen` argument. Specifying this argument will cause the plot to start in a different mode allowing the plot to be resized without it resetting the current plot. 
+
+Setting this option however will cause a significant base slow-down of the plot, and cause the plot to become gradually slower over the epochs too!
+{:.note title="Important"}
+
 ## Default Values of Arguments
 If left unspecified, some arguments have different defaults based on the current running mode. This is mainly influenced by whether the model is running a batch or range of experiments, and whether this is done in a multi-threaded environment. In the table below, 
 
 |`batch` or `range`|`jobs`||`plot`|`verbose`|`out`|
 |no|1||yes|1|none|
 |yes|1||no|0|'`out.csv`'|
-|yes|>1||no|ignored|'`./out/`'|
+|yes|>1||ignored|ignored|'`./out/`'|
 
 Default values of `plot`, `verbose` and `out` arguments depending on values of `batch`/`range` and `jobs` arguments.
 {:.figcaption}
 
-Note that the `verbose` argument is _ignored_ if the model is running in multi-threaded mode. This means that, even when you override the `verbose` argument, it will not matter. This is because the multi-threading has a custom output. 
+> Note that both the `verbose` and `plot` arguments are _ignored_ if the model is running in multi-threaded mode. This means that, even when you override the `verbose` or `plot` arguments, it will not matter. This is because the multi-threading has a custom output, and showing multiple plotting windows is not feasible in a multi-threaded environment. 
 
 [^1]: For more information about the characteristics of the different resource growth functions, refer to [Resource](/D28-Tragedy_of_the_Commons/pages/architecture/resource/).

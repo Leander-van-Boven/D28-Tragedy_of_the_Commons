@@ -44,7 +44,7 @@ parameters = {
         # General simulation parameters
     },
     "plotter_params": {
-        "svo_bar_count": 20
+        # General real-time plot parameters
     },
     "logger_params": {
         # General csv-logger parameters

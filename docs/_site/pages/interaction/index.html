@@ -379,13 +379,15 @@ optional arguments:
 </blockquote>
 
 <h3 id="total-amount-of-experiments">Total Amount of Experiments</h3>
-<p>Suppose \(P\) is the set of all parameters that are specified through the <code class="language-plaintext highlighter-rouge">range</code> argument. Say that, for each specified parameter \(p\in P\), the set of values that \(p\) will range over is called \(V_p\). Finally, suppose that the batch amount is set as \(b\). The total amount of experiments is then equal to \(b\cdot\prod_{p\in P}V_p\). Keep in mind that this number can increase very fast.</p>
+<p>Suppose \(P\) is the set of all parameters that are specified through the <code class="language-plaintext highlighter-rouge">range</code> argument. Say that, for each specified parameter \(p\in P\), the set of values that \(p\) will range over is called \(V_p\). Finally, suppose that the batch amount is set as \(b\). The total amount of experiments is then equal to \(b\cdot\prod_{p\in P}V_p\).</p>
+
+<p class="note" title="Important">Keep in mind that this number will increase very fast!</p>
 
 <h3 id="multi-threading">Multi-threading</h3>
 <p>If the total amount of experiments is very high, depending on your CPU, it might be beneficial to enable multi-threading mode. This is done through the <code class="language-plaintext highlighter-rouge">jobs</code> argument. This argument specifies the amount of threads that will be used in parallel. The default value of <code class="language-plaintext highlighter-rouge">jobs</code> is 1, i.e. the model runs in single-threaded mode by default. To enable multi-threading mode, set the <code class="language-plaintext highlighter-rouge">jobs</code> argument to a value higher than 1.</p>
 
 <blockquote>
-  <p>In multi-threading mode, each experiment will be saved to a separate file due to memory concerns. This means that the <code class="language-plaintext highlighter-rouge">out</code> argument should contain the path to a directory instead of a file. If the <code class="language-plaintext highlighter-rouge">out</code> argument isn’t specified and the simulation runs multi-threaded, it will default to the directory <code class="language-plaintext highlighter-rouge">./out/</code>.</p>
+  <p>In multi-threading mode, each experiment will be saved to a separate file due to memory concerns and multi-threaded file access limitations. This means that the <code class="language-plaintext highlighter-rouge">out</code> argument should contain the path to a directory instead of a file. If the <code class="language-plaintext highlighter-rouge">out</code> argument isn’t specified and the simulation runs multi-threaded, it will default to the directory <code class="language-plaintext highlighter-rouge">./out/</code>.</p>
 </blockquote>
 
 <h3 id="examples-2">Examples</h3>
@@ -460,6 +462,8 @@ optional arguments:
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -f
 --fullscreen
 </code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--resize
+</code></pre></div></div>
 <p>By default, the real-time plotting window will pop up in a small window. Also, depending on the mode of the simulation, real-time plotting might be enabled or disabled by default.</p>
 
 <p>The <code class="language-plaintext highlighter-rouge">plot</code> argument can be used to override whether to enable the real-time plotting functionality.</p>
@@ -475,6 +479,10 @@ optional arguments:
 </ul>
 
 <p>The <code class="language-plaintext highlighter-rouge">fullscreen</code> argument can be used to make the real-time plotting window show up in full screen. To enable this, simply add the <code class="language-plaintext highlighter-rouge">--fullscreen</code> or <code class="language-plaintext highlighter-rouge">-f</code> argument.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">resize</code> argument can be used in a similar way as the <code class="language-plaintext highlighter-rouge">fullscreen</code> argument. Specifying this argument will cause the plot to start in a different mode allowing the plot to be resized without it resetting the current plot.</p>
+
+<p class="note" title="Important">Setting this option however will cause a significant base slow-down of the plot, and cause the plot to become gradually slower over the epochs too!</p>
 
 <h2 id="default-values-of-arguments">Default Values of Arguments</h2>
 <p>If left unspecified, some arguments have different defaults based on the current running mode. This is mainly influenced by whether the model is running a batch or range of experiments, and whether this is done in a multi-threaded environment. In the table below,</p>
@@ -509,7 +517,7 @@ optional arguments:
       <td>yes</td>
       <td>&gt;1</td>
       <td> </td>
-      <td>no</td>
+      <td>ignored</td>
       <td>ignored</td>
       <td>’<code class="language-plaintext highlighter-rouge">./out/</code>’</td>
     </tr>
@@ -518,7 +526,9 @@ optional arguments:
 
 <p class="figcaption">Default values of <code class="language-plaintext highlighter-rouge">plot</code>, <code class="language-plaintext highlighter-rouge">verbose</code> and <code class="language-plaintext highlighter-rouge">out</code> arguments depending on values of <code class="language-plaintext highlighter-rouge">batch</code>/<code class="language-plaintext highlighter-rouge">range</code> and <code class="language-plaintext highlighter-rouge">jobs</code> arguments.</p>
 
-<p>Note that the <code class="language-plaintext highlighter-rouge">verbose</code> argument is <em>ignored</em> if the model is running in multi-threaded mode. This means that, even when you override the <code class="language-plaintext highlighter-rouge">verbose</code> argument, it will not matter. This is because the multi-threading has a custom output.</p>
+<blockquote>
+  <p>Note that both the <code class="language-plaintext highlighter-rouge">verbose</code> and <code class="language-plaintext highlighter-rouge">plot</code> arguments are <em>ignored</em> if the model is running in multi-threaded mode. This means that, even when you override the <code class="language-plaintext highlighter-rouge">verbose</code> or <code class="language-plaintext highlighter-rouge">plot</code> arguments, it will not matter. This is because the multi-threading has a custom output, and showing multiple plotting windows is not feasible in a multi-threaded environment.</p>
+</blockquote>
 
 <div class="footnotes" role="doc-endnotes">
   <ol>

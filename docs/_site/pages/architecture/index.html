@@ -270,7 +270,25 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
         <span class="c1"># Params and modules initializer
 </span>    
     <span class="k">def</span> <span class="nf">get_agent_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_social_values</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_social_value</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="c1"># 
+        <span class="c1"># Get amount of agents based on min and max SVO
+</span>
+    <span class="k">def</span> <span class="nf">add_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+        <span class="c1"># Adds an agent to the simulation
+</span>    
+    <span class="k">def</span> <span class="nf">remove_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+        <span class="c1"># Removes an agent from the simulation
+</span>
+    <span class="k">def</span> <span class="nf">generate_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Initializes and runs the simulation
+</span>
+    <span class="k">def</span> <span class="nf">plot_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Updates the real-time plot
+</span>
+    <span class="k">def</span> <span class="nf">print_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Updates the command-line output
+</span>
+    <span class="k">def</span> <span class="nf">log_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Updates the CSV logger
 </span></code></pre></div></div>
 
 <h1 id="ouput">Ouput</h1>
@@ -306,7 +324,17 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 
 <span class="k">class</span> <span class="nc">InvalidParameterError</span><span class="p">(</span><span class="nb">Exception</span><span class="p">):</span>
     <span class="k">pass</span>
-</code></pre></div></div>
+
+<span class="c1"># util.py
+</span><span class="k">def</span> <span class="nf">do_nothing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span> <span class="nf">dd_factory</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c1"># asd
+</span>
+<span class="k">def</span> <span class="nf">update_dict</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">omit_new</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="c1"># asd
+</span></code></pre></div></div>
 
 
   

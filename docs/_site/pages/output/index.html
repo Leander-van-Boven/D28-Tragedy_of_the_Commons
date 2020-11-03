@@ -172,15 +172,33 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 
   <ol title="Contents" id="markdown-toc">
   <li><a href="#verbosity" id="markdown-toc-verbosity">Verbosity</a>    <ol>
-      <li><a href="#minimal-mode---verbose-0" id="markdown-toc-minimal-mode---verbose-0">Minimal Mode (<code class="language-plaintext highlighter-rouge">--verbose 0</code>)</a></li>
-    </ol>
-  </li>
-  <li><a href="#real-time-plot" id="markdown-toc-real-time-plot">Real-time Plot</a></li>
-  <li><a href="#csv-logger" id="markdown-toc-csv-logger">CSV-logger</a>    <ol>
-      <li><a href="#logged-values" id="markdown-toc-logged-values">Logged values</a>        <ol>
-          <li><a href="#experiment-values" id="markdown-toc-experiment-values">Experiment Values</a></li>
+      <li><a href="#minimal-mode---verbose-0" id="markdown-toc-minimal-mode---verbose-0">Minimal mode (<code class="language-plaintext highlighter-rouge">--verbose 0</code>)</a></li>
+      <li><a href="#standard-mode---verbose-1" id="markdown-toc-standard-mode---verbose-1">Standard mode (<code class="language-plaintext highlighter-rouge">--verbose 1</code>)</a></li>
+      <li><a href="#detailed-mode---verbose-2" id="markdown-toc-detailed-mode---verbose-2">Detailed mode (<code class="language-plaintext highlighter-rouge">--verbose 2</code>)</a>        <ol>
+          <li><a href="#example-output" id="markdown-toc-example-output">Example output</a></li>
         </ol>
       </li>
+    </ol>
+  </li>
+  <li><a href="#real-time-plot" id="markdown-toc-real-time-plot">Real-time Plot</a>    <ol>
+      <li><a href="#example-plot" id="markdown-toc-example-plot">Example plot</a></li>
+    </ol>
+  </li>
+  <li><a href="#csv-logger" id="markdown-toc-csv-logger">CSV-logger</a>    <ol>
+      <li><a href="#logged-values" id="markdown-toc-logged-values">Logged values</a>        <ol>
+          <li><a href="#experiment-values" id="markdown-toc-experiment-values">Experiment values</a></li>
+          <li><a href="#epoch-statistics" id="markdown-toc-epoch-statistics">Epoch statistics</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li><a href="#multi-threaded-experiments" id="markdown-toc-multi-threaded-experiments">Multi-threaded Experiments</a>    <ol>
+      <li><a href="#graphical-output" id="markdown-toc-graphical-output">Graphical output</a>        <ol>
+          <li><a href="#command-line-interface" id="markdown-toc-command-line-interface">Command-line interface</a></li>
+          <li><a href="#real-time-plot-1" id="markdown-toc-real-time-plot-1">Real-time plot</a></li>
+        </ol>
+      </li>
+      <li><a href="#csv-logging" id="markdown-toc-csv-logging">CSV logging</a></li>
     </ol>
   </li>
 </ol>
@@ -189,10 +207,113 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 <p>The most basic form of output, in the command-line itself.
 The type of verbosity can be specified using the <code class="language-plaintext highlighter-rouge">--verbose [mode]</code>  or <code class="language-plaintext highlighter-rouge">-v</code> command-line argument together with the <code class="language-plaintext highlighter-rouge">run</code> command. Three different modes of verbosity are available:</p>
 
-<h2 id="minimal-mode---verbose-0">Minimal Mode (<code class="language-plaintext highlighter-rouge">--verbose 0</code>)</h2>
-<p>This will only print out the number of the currently running experiment, together with the total amount of experiments to run. This verbose option is used when a batch experiments are run, or when a range of experiments over some parameter values is run.</p>
+<h2 id="minimal-mode---verbose-0">Minimal mode (<code class="language-plaintext highlighter-rouge">--verbose 0</code>)</h2>
+<p>This will only print out the number of the currently running experiment, together with the total amount of experiments to run. This verbose option is used as default when a batch of experiments are run, or when a range of experiments over some parameter values are run. The output will then be a single line in the command-line interface, which is being updated real-time. This line has the following formatting: <code class="language-plaintext highlighter-rouge">Iteration [c]/[t]</code>. Where <code class="language-plaintext highlighter-rouge">[c]</code> is the experiment that is currently running, and <code class="language-plaintext highlighter-rouge">[t]</code> is the total amount of experiments to run <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote">1</a></sup>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration 69/420
+</code></pre></div></div>
+<p class="figcaption">Example output when using <code class="language-plaintext highlighter-rouge">--verbose 0</code> while running multiple experiments</p>
+
+<h2 id="standard-mode---verbose-1">Standard mode (<code class="language-plaintext highlighter-rouge">--verbose 1</code>)</h2>
+<p>As is its name, this is the standard verbosity mode used when running a single experiment. It will</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>restriction: ACTIVE,   epoch: 21, agent count: 85, resource: 45,352135 
+</code></pre></div></div>
+<p class="figcaption">Example output when using <code class="language-plaintext highlighter-rouge">--verbose 1</code> while running a single experiment</p>
+
+<p>This mode will also print a message when the simulation ends based on the way the simulation ended:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Maximum epoch reached, you managed to keep [x] agents alive!
+</code></pre></div></div>
+<p class="figcaption">The simulation reached the maximum amount of agents. <code class="language-plaintext highlighter-rouge">[x]</code> denotes the amount of agents that were alive when the epoch threshold was reached.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Only one lonely agent managed to survive
+He will stay on this forgotten island forever.
+</code></pre></div></div>
+<p class="figcaption">One agent was left, he can’t procreate on its own and die of age. Therefore the simulation is considered to be done.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>All agents are dead :(
+There is no hope left for the village, just darkness.
+</code></pre></div></div>
+<p class="figcaption">All agents died, and agents can’t spawn out of thin air. Therefore the simulation is considered to be done.</p>
+
+<h2 id="detailed-mode---verbose-2">Detailed mode (<code class="language-plaintext highlighter-rouge">--verbose 2</code>)</h2>
+<p>The detailed verbosity mode is used when one would want to investigate each step of the simulation. The simulation is paused per epoch and the statistics of the simulation are printed in combination with the statistics of each alive agent. Move to the next epoch by pressing the <em>enter</em> key. It is possible to quickly scroll through a few epochs by holding down the <em>enter</em> key.</p>
+
+<h3 id="example-output">Example output</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---    EPOCH 1    ---
+
+Agent count: 10
+Available resource: 4000.00
+Restriction: INACTIVE
+  0     id=0    svo=0.41        pre=6.50        -met=1.50       UNRESTRICTED    +beh=10.50      post=10.50      LIVE
+  1     id=1    svo=0.60        pre=6.50        -met=1.50       UNRESTRICTED    +beh=10.50      post=10.50      LIVE
+  2     id=2    svo=0.49        pre=6.50        -met=1.50       UNRESTRICTED    +beh=10.50      post=10.50      LIVE
+  3     id=3    svo=0.50        pre=6.50        -met=1.50       UNRESTRICTED    +beh=10.50      post=10.50      LIVE
+  4     id=4    svo=0.31        pre=6.50        -met=1.50       UNRESTRICTED    +beh=10.50      post=10.50      LIVE
+  5     id=5    svo=0.33        pre=6.50        -met=1.50       UNRESTRICTED    +beh=10.50      post=10.50      LIVE
+  6     id=6    svo=0.56        pre=6.50        -met=1.50       UNRESTRICTED    +beh=10.50      post=10.50      LIVE
+  7     id=7    svo=0.52        pre=6.50        -met=1.50       UNRESTRICTED    +beh=10.50      post=10.50      LIVE
+  8     id=8    svo=0.55        pre=6.50        -met=1.50       UNRESTRICTED    +beh=10.50      post=10.50      LIVE
+  9     id=9    svo=0.43        pre=6.50        -met=1.50       UNRESTRICTED    +beh=10.50      post=10.50      LIVE
+
+EOL:  (tot 0)
+Post act agent count: 10
+
+Procreate:  (tot 0)
+Post procreate agent count: 10
+
+Resource: 3910.00,       growing 4195.15,       now 4195.15
+Press enter to continue...
+
+---    EPOCH 2    ---
+
+Agent count: 10
+Available resource: 4195.15
+Restriction: INACTIVE
+  0     id=9    svo=0.43        pre=10.50       -met=5.50       UNRESTRICTED    +beh=14.50      post=14.50      LIVE
+  1     id=4    svo=0.31        pre=10.50       -met=5.50       UNRESTRICTED    +beh=14.50      post=14.50      LIVE
+  2     id=7    svo=0.52        pre=10.50       -met=5.50       UNRESTRICTED    +beh=14.50      post=14.50      LIVE
+  3     id=2    svo=0.49        pre=10.50       -met=5.50       UNRESTRICTED    +beh=14.50      post=14.50      LIVE
+  4     id=3    svo=0.50        pre=10.50       -met=5.50       UNRESTRICTED    +beh=14.50      post=14.50      LIVE
+  5     id=5    svo=0.33        pre=10.50       -met=5.50       UNRESTRICTED    +beh=14.50      post=14.50      LIVE
+  6     id=0    svo=0.41        pre=10.50       -met=5.50       UNRESTRICTED    +beh=14.50      post=14.50      LIVE
+  7     id=8    svo=0.55        pre=10.50       -met=5.50       UNRESTRICTED    +beh=14.50      post=14.50      LIVE
+  8     id=1    svo=0.60        pre=10.50       -met=5.50       UNRESTRICTED    +beh=14.50      post=14.50      LIVE
+  9     id=6    svo=0.56        pre=10.50       -met=5.50       UNRESTRICTED    +beh=14.50      post=14.50      LIVE
+
+EOL:  (tot 0)
+Post act agent count: 10
+
+Procreate:  (tot 0)
+Post procreate agent count: 10
+
+Resource: 4105.15,       growing 4387.93,       now 4387.93
+Press enter to continue...
+</code></pre></div></div>
+<p class="figcaption">Example command-line output of the first 2 epochs when using <code class="language-plaintext highlighter-rouge">--verbose 2</code> and 10 initial agents.</p>
 
 <h1 id="real-time-plot">Real-time Plot</h1>
+<p>The real-time plot consists of 3 subplots.</p>
+<ol>
+  <li>Real-time agent SVO distribution histogram. This is the left subplot. It will show the percentage of currently alive agents that have a SVO within the range of each bar. Overwrite the <code class="language-plaintext highlighter-rouge">plotter_params:svo_bar_count</code> parameter to add more bars to the histogram, therefore decreasing the range of each range, thus increasing the resolution.</li>
+  <li>The current agent count. This is the top-right subplot. It will show the currently alive agents over the epochs.</li>
+  <li>The current amount of resources and the thresholds of when to activate or deactivate the restriction of the restricted energy function. This is the bottom-right subplot. The <span style="color:green">green</span> line denotes the current amount of resource. The <span style="color:red">red</span> line shows the threshold under which the resource restriction is activated. The <span style="color:purple">purple</span> line shows the threshold above which the resource restriction is deactivated.</li>
+</ol>
+
+<p class="note">It is advised to not set the <code class="language-plaintext highlighter-rouge">plotter_params:svo_bar_count</code> paramater too high, since doing so will slow down the plot significantly.</p>
+
+<p>The plot can be shown in a maximized window by specifying the <code class="language-plaintext highlighter-rouge">--fullscreen</code> argument.</p>
+
+<p class="note">Currently this is only supported on the <code class="language-plaintext highlighter-rouge">tkagg</code>, <code class="language-plaintext highlighter-rouge">qt4agg</code>, <code class="language-plaintext highlighter-rouge">qt5agg</code> and <code class="language-plaintext highlighter-rouge">wxagg</code> backends.</p>
+
+<p>The plot can be resized during runtime. By default this will cause the plot to reset and start drawing from the first epoch after the resize. Specifying the <code class="language-plaintext highlighter-rouge">--resize</code> argument starts the plot in a different mode allowing it to resize without resetting. As a result however the plot will become <em>significantly</em> slower! Furthermore the plot will become gradually slower throughout the epochs as well.</p>
+
+<p>When the simulation has finished, by default the plot will be saved in the background and automatically reset <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote">2</a></sup>. In this case using the <code class="language-plaintext highlighter-rouge">resize</code> argument might be preferred when the figure needs to, for example, be saved in a certain format or size. Then the plot will not be reset after the simulation, allowing it to be resized or saved in a different format using the <code class="language-plaintext highlighter-rouge">matplotlib</code> ui-elements.</p>
+
+<h2 id="example-plot">Example plot</h2>
+<p class="figcaption"><img src="/D28-Tragedy_of_the_Commons/assets/img/realtime_plot.png" alt="Full-width image" class="lead" loading="lazy" />
+Example of real-time plot run for 13 epochs.</p>
 
 <h1 id="csv-logger">CSV-logger</h1>
 <p>The CSV logger logs the statistics of the simulation into a CSV- or <a href="https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated values file</a>. This file can then be used for further data processing. Its usage becomes most optimal if combined with the <a href="/D28-Tragedy_of_the_Commons/pages/interaction/#batch-and-range">–range</a> command-line argument.</p>
@@ -204,9 +325,85 @@ The type of verbosity can be specified using the <code class="language-plaintext
   <li>The statistics of the simulation at a certain epoch.</li>
 </ul>
 
-<p>The former will change per experiment, the latter per call of the <code class="language-plaintext highlighter-rouge">add_row</code> function.</p>
+<p>The former will change per experiment, the latter per call of the <code class="language-plaintext highlighter-rouge">add_row</code> function. Suppose \(S\) the total set of simulations run <sup id="fnref:1:1" role="doc-noteref"><a href="#fn:1" class="footnote">1</a></sup>. Say that, for each \(s\in S\), the amount of epochs that \(s\) reached is defined as \(e(s)\). If the value of the <code class="language-plaintext highlighter-rouge">simulation:log_interval</code> parameter is then called \(i\), the resulting CSV file will contain the following amount of rows:</p>
 
-<h3 id="experiment-values">Experiment Values</h3>
+\[1 + \left\lfloor\frac{\sum_{s\in S} e(s)}{i}\right\rfloor\]
+
+<p>I.e. the sum of the amount of epochs per experiment divided by the interval on which was logged (<code class="language-plaintext highlighter-rouge">simulation:log_interval</code>) plus the csv header row.</p>
+
+<p class="note" title="Imporant">When running experiments in a multi-threaded setting this will not hold. Refer to <a href="#multi-threaded-experiments">Multi-threaded Experiments</a> for more information.</p>
+
+<h3 id="experiment-values">Experiment values</h3>
+<p>Each CSV file will contain at least one <em>Experiment Value</em> column called ‘Exp Num’. The value of this column will start at 0, stay the same throughout the epochs of a single simulation and is then increased with 1. This is similarl to how the ‘iteration’ value works in <a href="#minimal-mode---verbose-0">Minimal Verbosity Mode</a>.<br />
+Since the model is quite extensive and contains a lot of parameters, it is not feasible to log all parameter values for each epoch. Especially considering the amount of epoch statistics that are being logged. Therefore the logger will only log the parameter values that make an experiment unique.<br />
+There are a two cases that make an experiment unique and these are added to the columns in the following order:</p>
+<ol>
+  <li>The batch number of the current paramter combination, called <code class="language-plaintext highlighter-rouge">"batch"</code>.</li>
+  <li>All parameters overwritten using the <a href="/D28-Tragedy_of_the_Commons/pages/interaction/#batch-and-range"><code class="language-plaintext highlighter-rouge">range</code></a> argument, in the order they were overwritten. The name of the column is equal to the name of the parameter that is overwritten following the naming scheme of the <a href="/D28-Tragedy_of_the_Commons/pages/parameters">Parameters</a> (specifying a range for the maximum epoch will result in a column named <code class="language-plaintext highlighter-rouge">"simulation:max_epoch"</code>).</li>
+</ol>
+
+<p class="note">A JSON file containing the values used for the other parameters can be obtained running the <a href="/D28-Tragedy_of_the_Commons/pages/interaction/#specifying-a-certain-scenario"><code class="language-plaintext highlighter-rouge">save</code></a> command.</p>
+
+<h3 id="epoch-statistics">Epoch statistics</h3>
+<p>Each time the statistics of an epoch are logged, the following values are added to the right of the experiment values (in order of column location):</p>
+<ul>
+  <li>The current epoch of the simulation that is currently being logged, called <code class="language-plaintext highlighter-rouge">"Epoch"</code></li>
+  <li>The current amount of resources, called <code class="language-plaintext highlighter-rouge">"Resource"</code></li>
+  <li>The current amount of agents alive, called <code class="language-plaintext highlighter-rouge">"Count"</code></li>
+  <li>The current amount of alive agents per SVO range:
+    <ul>
+      <li>\((0.0,0.2]\) (extremely proself), called <code class="language-plaintext highlighter-rouge">"A"</code></li>
+      <li>\((0.2,0.4]\) (slightly proself), called <code class="language-plaintext highlighter-rouge">"B"</code></li>
+      <li>\((0.4,0.6]\) (neutral), called <code class="language-plaintext highlighter-rouge">"C"</code></li>
+      <li>\((0.6,0.8]\) (slightly prosocial), called <code class="language-plaintext highlighter-rouge">"D"</code></li>
+      <li>\((0.8,1.0]\) (extremely prosocial), called <code class="language-plaintext highlighter-rouge">"E"</code></li>
+    </ul>
+  </li>
+  <li>Statistics about the set of SVO values of the currently alive agents:
+    <ul>
+      <li>The median, called <code class="language-plaintext highlighter-rouge">"Median"</code></li>
+      <li>The 40th percentile, called <code class="language-plaintext highlighter-rouge">"Below"</code></li>
+      <li>The 60th percentile, called <code class="language-plaintext highlighter-rouge">"Above"</code></li>
+      <li>The mean, called <code class="language-plaintext highlighter-rouge">"Mean"</code></li>
+      <li>The standard deviation, called <code class="language-plaintext highlighter-rouge">"STD"</code></li>
+    </ul>
+  </li>
+  <li>The current threshold for the restriction of the restricted energy function to become active. <a href="#epoch-statistics">link needed</a>. This column is called <code class="language-plaintext highlighter-rouge">"Resource Limit"</code>.</li>
+  <li>The current threshold for the restriction of the restricted energy function to become active. <a href="#epoch-statistics">link needed</a>. This column is called <code class="language-plaintext highlighter-rouge">"Resource Unlimit"</code>.</li>
+</ul>
+
+<h1 id="multi-threaded-experiments">Multi-threaded Experiments</h1>
+<p>When multiple experiments are run in a multithreaded environment (i.e. <a href="/D28-Tragedy_of_the_Commons/pages/interaction/#multi-threading"><code class="language-plaintext highlighter-rouge">--jobs &gt;1</code></a>), the output of the model is slightly altered.</p>
+
+<h2 id="graphical-output">Graphical output</h2>
+<h3 id="command-line-interface">Command-line interface</h3>
+<p>Since the Python module used to run multi-threaded experiments (<a href="https://joblib.readthedocs.io/en/latest/"><code class="language-plaintext highlighter-rouge">joblib</code></a>) provides its own command-line output, the mode of verbosity is ignored. When for example 500 experiments need to be executed on 5 different threads, the following output will be shown in the command-line instead:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Running 500 instances...
+<span class="o">[</span>Parallel<span class="o">(</span><span class="nv">n_jobs</span><span class="o">=</span>5<span class="o">)]</span>: Using backend LokyBackend with 5 concurrent workers.
+<span class="o">[</span>Parallel<span class="o">(</span><span class="nv">n_jobs</span><span class="o">=</span>5<span class="o">)]</span>: Done   6 tasks      | elapsed:    0.8s
+<span class="o">[</span>Parallel<span class="o">(</span><span class="nv">n_jobs</span><span class="o">=</span>5<span class="o">)]</span>: Done  58 tasks      | elapsed:    3.3s
+...
+</code></pre></div></div>
+<p class="figcaption">Example command-line output when running 500 experiments on 5 threads.</p>
+
+<h3 id="real-time-plot-1">Real-time plot</h3>
+<p>Since multithreading is used to run a lot of experiments in parallel, it does not make sense to show an individual plot for each experiment run. Furthermore, while the plot of a previous experiment is still open, a new experiment on the same thread cannot start, thereby neglecting the benefit of running experiments in parallel.
+Therefore the <a href="/D28-Tragedy_of_the_Commons/pages/interaction/#specifying-real-time-plotting-behaviour"><code class="language-plaintext highlighter-rouge">plot</code></a> argument is ignored when running experiments in a multi-threaded environment. Plotting the results from these experiments should be done in later data analysis.</p>
+
+<h2 id="csv-logging">CSV logging</h2>
+<p>When running multiple loggers in parallel, proper file locking procedures should be put in place if each logger would need to append its data to the same CSV file. Additionally, memory concerns will arise when opening and closing an ever growing file. Therefore each experiment is put in a seperate CSV file put in the folder specified by the <a href="/D28-Tragedy_of_the_Commons/interaction/#output-path-for-csv-logging"><code class="language-plaintext highlighter-rouge">out</code></a> argument. Each CSV file is then named using the following naming schedule: <code class="language-plaintext highlighter-rouge">run{experiment_number}.csv</code>. The <code class="language-plaintext highlighter-rouge">experiment_number</code> goes from 0 to (excluding) the total amount of experiments that were run <sup id="fnref:1:2" role="doc-noteref"><a href="#fn:1" class="footnote">1</a></sup>. The first <em>parameter_combinations</em> amount of files will then contain the first batch of each different parameter combination before it run the second batch of each parameter combination. If there is only one parameter combination, there will be <em>batch</em> amount of files. Each <em>n</em>-th file containing the <em>n</em>-th batch.</p>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>This can be calculated using the formula as given in the <a href="/D28-Tragedy_of_the_Commons/pages/interaction/#total-amount-of-experiments">Interaction</a> page. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:1:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a> <a href="#fnref:1:2" class="reversefootnote" role="doc-backlink">&#8617;<sup>3</sup></a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p>Although not preferred, this is done automatically by the <code class="language-plaintext highlighter-rouge">matplotlib</code> library and cannot be prevented. The image containing the plot can be found in the base directory and is called <code class="language-plaintext highlighter-rouge">".lastplot.png"</code>. Otherwise the <a href="/D28-Tragedy_of_the_Commons/pages/interaction/#specifying-a-certain-scenario"><code class="language-plaintext highlighter-rouge">save</code></a> command can be executed, saving both the plot and used parameters in a new scenario folder. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
   
 

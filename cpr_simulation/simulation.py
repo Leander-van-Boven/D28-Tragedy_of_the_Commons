@@ -236,11 +236,11 @@ class Simulator:
                            str(len(self.agents)) +
                            " agents alive!")
         elif len(self.agents) == 1:
-            self.result = ("Only one lonely agent managed to survive\n" +
+            self.result = ("Only one lonely agent managed to survive.\n" +
                            "He will stay on this forgotten island forever.")
         else:
-            self.result = ("All agents are dead :( " +
-                           "there is no hope left for the village, " +
+            self.result = ("All agents are dead :(\n" +
+                           "There is no hope left for the village, " +
                            "just darkness.")
 
         if self.printer:

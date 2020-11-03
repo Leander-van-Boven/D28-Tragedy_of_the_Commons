@@ -112,6 +112,8 @@
   * Explanation of real-time plots
   * Explanation of different verbosity modes and their uses
   * Explanation of CSV logging functionality
+  * Add links
+    * from #epoch-statistics to location where limit and unlimit factor are calculated
 * ~~Parameters pages~~
   * ~~first headername "General" or "General Structure", or...?~~
   * ~~Simulation parameters~~

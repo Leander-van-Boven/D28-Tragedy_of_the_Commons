@@ -95,7 +95,25 @@ class Simulation:
         # Params and modules initializer
     
     def get_agent_count(self, min_social_values=0, max_social_value=1):
-        # 
+        # Get amount of agents based on min and max SVO
+
+    def add_agent(self, agent):
+        # Adds an agent to the simulation
+    
+    def remove_agent(self, agent):
+        # Removes an agent from the simulation
+
+    def generate_simulation(self):
+        # Initializes and runs the simulation
+
+    def plot_results(self):
+        # Updates the real-time plot
+
+    def print_results(self):
+        # Updates the command-line output
+
+    def log_results(self):
+        # Updates the CSV logger
 ```
 
 # Ouput
@@ -134,5 +152,15 @@ class MissingArgumentError(Exception):
 
 class InvalidParameterError(Exception):
     pass
+
+# util.py
+def do_nothing(self, *args, **kwargs):
+    pass
+
+def dd_factory(d=None):
+    # asd
+
+def update_dict(d, u, omit_new=False):
+    # asd
 ```
 

@@ -15,7 +15,7 @@ from .util import update_dict
 
 def run(override_params=dict(), params_to_range=None, param_ranges=None,
         log_path=None, use_plot=True, n_jobs=1, fullscreen_plot=True, 
-        verbose=1):
+        resize_plot=False, verbose=1):
     """Reads and generates param dicts and runs the simulation with them.
 
     Parameters
@@ -44,7 +44,10 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
 
     fullscreen_plot : `bool`, optional,
         Whether to make the real-time plotting window full-screen, by
-        default True
+        default True.
+
+    resize_plot : `bool`, optional,
+        Whether to enable plot resizing without the plot getting reset.
 
     verbose : `int`, optional,
         The verbose mode. 0 = iteration count, 1 = status every
@@ -90,7 +93,8 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
                 params['agent']['count'],
                 params['plotter_params']['svo_bar_count'],
                 params['resource']['start_amount'],
-                fullscreen_plot)
+                fullscreen_plot,
+                resize_plot)
 
         # Generate the Simulator class
         simulator = Simulator(p, printer, lg, list(c),

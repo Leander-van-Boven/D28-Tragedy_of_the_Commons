@@ -5,7 +5,8 @@ from matplotlib import animation
 
 
 class ResultsPlotter:
-    def __init__(self, start_agent, svo_bar_count, start_resource, fullscreen):
+    def __init__(self, start_agent, svo_bar_count, start_resource, fullscreen, 
+                 allow_resize):
         """Sets up the real-time plot
 
         Parameters
@@ -21,6 +22,8 @@ class ResultsPlotter:
         fullscreen : `bool`
             Whether to run the plot in maximized window 
             (if backend supports it)
+        allow_resize : `bool`
+            Whether to enable resizing without resetting the plot
         """
 
         # Set parameters to use during initialisation
@@ -28,6 +31,7 @@ class ResultsPlotter:
         self.xdata, self.yagent = [], []
         self.yresource, self.limitresource, self.unlimitresource = [], [], []
         self.start_resource = start_resource
+        self.blit = not allow_resize
 
         # Create figure
         self.fig = plt.figure(figsize=(10, 7))
@@ -42,8 +46,16 @@ class ResultsPlotter:
             if backend == 'tkagg':
                 mng = plt.get_current_fig_manager()
                 mng.window.state('zoomed')
-            elif backend == 'qt5agg':
+            elif backend == 'qt5agg' or backend == 'qt4agg':
                 self.fig.canvas.manager.window.showMaximized()
+            elif backend == 'wxagg': # Not tested
+                print('WARNING: ' +
+                      'maximize plot has not been tested yet on this backend.')
+                try:
+                    mng = plt.get_current_fig_manager()
+                    mng.frame.Maximize(True)
+                except:
+                    print('Failed to maximize plot')
 
         # Setup agent subplot
         self.agent_line, = self.ax_agent.plot([], [], lw=2, color='blue', 
@@ -176,7 +188,7 @@ class ResultsPlotter:
 
         self.animation = animation.FuncAnimation(
             self.fig, self.update, data_gen,
-            blit=True, interval=1, repeat=False,
+            blit=self.blit, interval=1, repeat=False,
             init_func=self.init_plot)
         plt.show()
 

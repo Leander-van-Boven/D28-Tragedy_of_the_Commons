@@ -75,7 +75,9 @@ def run(args):
     else:
         verbose = 1
 
-    if args.plot is not None:
+    if args.jobs > 1:
+        plot = False
+    elif args.plot is not None:
         plot = args.plot
     elif verbose == 2:
         plot = False
@@ -98,8 +100,8 @@ def run(args):
                   "to 'out'.")
 
     try:
-        cpr.run(param_dict, params_to_range, param_ranges,
-                args.out, plot, args.jobs, args.fullscreen, verbose)
+        cpr.run(param_dict, params_to_range, param_ranges, args.out, plot, 
+                args.jobs, args.fullscreen, args.resize, verbose)
     except cpr.exception.InvalidArgumentError as e:
         print(f"Inalid argument: {e.message}")
         sys.exit(1)
@@ -291,6 +293,10 @@ if __name__ == '__main__':
         '-f', '--fullscreen', required=False, default=False, const=True,
         type=str2bool, nargs='?', metavar='bool',
         help='whether to show the plot in fullscreen')
+    parser.add_argument(
+        '--resize', required=False, default=False, const=True,
+        type=str2bool, nargs='?', metavar='bool',
+        help='whether to enable plot resizing without plot reset')
 
     # Parse the arguments that were input
     args = parser.parse_args()
