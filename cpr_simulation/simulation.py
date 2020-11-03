@@ -67,7 +67,7 @@ class Simulator:
             param_dict['agent']['svo_inheritance_function']
         Agent.svo_convergence_factor = \
             param_dict['agent']['svo_convergence_factor'] \
-                      [param_dict['agent']['svo_procreation_function']] / 3
+                      [param_dict['agent']['svo_inheritance_function']] / 3
 
         Resource.print = self.v2_print
 
@@ -144,6 +144,8 @@ class Simulator:
             yield self.plot_results()
         if self.verbose:
             self.print_results()
+        if self.logger:
+            self.log_results()
         self.epoch = 1
 
         # Run the simulations for max_epoch amounts
@@ -223,7 +225,7 @@ class Simulator:
                 input("Press enter to continue...")
 
             # Check whether there are still agents alive
-            if self.n_agents == 0 or len(self.agents) <= 1:
+            if len(self.agents) <= 1:
                 break
 
             self.epoch += 1

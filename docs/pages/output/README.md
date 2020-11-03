@@ -40,7 +40,7 @@ The simulation reached the maximum amount of agents. `[x]` denotes the amount of
 Only one lonely agent managed to survive
 He will stay on this forgotten island forever.
 ```
-One agent was left, he can't procreate on its own and die of age. Therefore the simulation is considered to be done.
+One agent was left, he can't procreate on its own and will die of age. Therefore the simulation is considered to be done.
 {:.figcaption}
 
 ```
@@ -166,11 +166,11 @@ Each time the statistics of an epoch are logged, the following values are added 
 * The current amount of resources, called `"Resource"`
 * The current amount of agents alive, called `"Count"`
 * The current amount of alive agents per SVO range:
-  * $$(0.0,0.2]$$ (extremely proself), called `"A"`
-  * $$(0.2,0.4]$$ (slightly proself), called `"B"`
+  * $$(0.0,0.2]$$ (extremely pro-self), called `"A"`
+  * $$(0.2,0.4]$$ (slightly pro-self), called `"B"`
   * $$(0.4,0.6]$$ (neutral), called `"C"`
-  * $$(0.6,0.8]$$ (slightly prosocial), called `"D"`
-  * $$(0.8,1.0]$$ (extremely prosocial), called `"E"`
+  * $$(0.6,0.8]$$ (slightly pro-social), called `"D"`
+  * $$(0.8,1.0]$$ (extremely pro-social), called `"E"`
 * Statistics about the set of SVO values of the currently alive agents:
   * The median, called `"Median"`
   * The 40th percentile, called `"Below"`

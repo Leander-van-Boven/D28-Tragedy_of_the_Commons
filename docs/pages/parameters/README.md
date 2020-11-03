@@ -69,13 +69,13 @@ Use `--param [parameter_location]=[value]` to change a parameter using the comma
 # Agent Parameters
 > Refer to the explanation of the [Agent](/D28-Tragedy_of_the_Commons/pages/architecture/agent/) class for a full explanation of the effects of each parameter.
 
-## General Agent Parameters
+## General agent parameters
 * `agent:count` (`int`): Determines the start amount of agents.
 * `agent:svo_procreation_function` (`str`): Function to use to determine the SVO of a new agent. Can be either `"svo_either_parent"` or `"svo_between_parents"`.
 * `agent:svo_convergence_factor:svo_either_parent` (`float`): The SVO convergence factor for the `svo_either_parent` procreate function.
 * `agent:svo_convergence_factor:svo_between_parents` (`float`): The SVO convergence factor for the `svo_between_parents` procreate function.
 
-## Agent Specific Parameters
+## Agent-specific parameters
 * `agent:params:metabolism` (`float`): Sets the cost of staying alive (in energy / epoch).
 * `agent:params:maximum_age` (`int`): Sets the mean of the Gaussian distribution used to determine the actual age of the agent (in epochs).
 * `agent:params:maximum_age_std_factor` (`float`): Sets the standard deviation of the Gaussian distribution used to determine the actual maximum age of the agent.
@@ -86,11 +86,11 @@ Use `--param [parameter_location]=[value]` to change a parameter using the comma
   
 * `agent:params:behaviour` (`str`): Sets the behaviour model to use for the agents. Currently the only two options are `"base_energy_function"` and `"restricted_energy_function"`.
   
-### Base Model Parameters
-* `agent:params:scarcity` (`float`): If $$\frac{current\_resource\_amount}{agent\_count}<value$$, proself agents (all agents with a SVO<.5) will try to fish more, therefore allowing them to stockpile energy.
-* `agent:params:greed` (`float`): When resources are scarce, proself agents (all agents with a SVO<.5) will try to fish more: $$consumption\cdot value$$.
+### Base model parameters
+* `agent:params:scarcity` (`float`): If $$\frac{current\_resource\_amount}{agent\_count}<value$$, pro-self agents (all agents with a SVO<.5) will try to fish more, therefore allowing them to stockpile energy.
+* `agent:params:greed` (`float`): When resources are scarce, pro-self agents (all agents with a SVO<.5) will try to fish more: $$consumption\cdot value$$.
   
-### Restricted Model Parameters
+### Restricted model parameters
 * `agent:params:caught_chance` (`float`): When an agent violates the restriction when the restriction is active, this value determines the chance that the agent is caught violating the restriction. (0.5 means 50% chance of getting caught)
 * `agent:params:caught_cooldown_factor` (`float`): When an agent is caught violating the restriction when it is active, this parameter determines how long this agent is prohibited from fishing (in epochs).
 
@@ -116,17 +116,17 @@ The `"m"` key then denotes the mean of the Gaussian distribution, `"s"` then den
 * `resource:min_amount` (`float`): The minimum amount of resources. If the resources drop below this limit, it is reset to this value.
 * `resource:growth_function` (`str`): The growth function to use. Choices are: `"exponential"`, `"logarithmic"` and `"nroot"`.
 
-## Growth Function Parameters
+## Growth function parameters
 The parameters below are sorted by the resource growth function they apply to. 
-### Exponential Growth Function
+### Exponential growth function
 * `resource:gf_params:exponential:rate` (`float`): The exponential rate for the exponential growth function.
   
-### Logarithmic Growth Function
+### Logarithmic growth function
 * `resource:gf_params:logarithmic:a` (`float`): The scaling factor of the logarithmic growth function.
 * `resource:gf_params:logarithmic:t` (`float`): The translation factor of the logarithmic growth function.
 * `resource:gf_params:logarithmic:s` (`float`): The initial jump scaling factor of the logarithmic growth function.
    
-### NRoot Growth Function
+### NRoot growth function
 * `resource:gf_params:nroot:a` (`float`): The scaling factor of the nroot growth function.
 * `resource:gf_params:nroot:tx` (`float`): The translation factor over the x axis of the nroot growth function.
 * `resource:gf_params:nroot:ty` (`float`): The translation factor over the y axis of the nroot growth function.
@@ -141,15 +141,15 @@ The parameters below are sorted by the resource growth function they apply to.
 * `simulation:log_interval` (`int`): How many every epoch the current stats of the simulation should be posted to the logger. (When set to e.g. 2, the stats of epoch 1,3,5,etc. will be logged. No buffer is created!).
 * `simulation:sleep` (`float`): The amount of time (in seconds) to pause the simulation between each epoch. Setting this value to >0 allows for better oversight of the model, but will obsviously make the simulation take longer to complete.
   
-## Restricted Model Limit Parameters
+## Restricted model limit parameters
 * `simulation:res_limit_factor` (`float`): Determines when to activate the restriction in the restricted energy function based on when $$agent\_count\cdot consumption\cdot value$$ is greater than the currently available resources. Values <1 mean that the restriction will become active at a point that if all agents would fish their consumption, some agents will not get any resources.
 * `simluation:res_unlimit_factor` (`float`): Determines when to deactivate the restriction in the restricted energy function. This follows the same functions as for the `res_limit_factor` parameter. It is desirable to set `res_limit_factor`<`res_unlimit_factor` to allow the resources to regrow before all agents are allowed to fish their consumption again (resulting in the restriction to become active again at some point).
 
 # Output Parameters
-## Real-time Plot Parameters
+## Real-time plot parameters
 * `plotter_params:svo_bar_count` (`int`): The amount of bars to show in the real-time histogram plot. To allow fast plotting this value should be kept below ~50 [^1].
   
-## CSV-Logger Parameters
+## CSV-Logger parameters
 * `logger_params:separator` (`str`): The separator to use to separate the individual items in a row with.
 * `logger_params:separator_replacement` (`str`): The string to use when an item in a row contains the separator.
 

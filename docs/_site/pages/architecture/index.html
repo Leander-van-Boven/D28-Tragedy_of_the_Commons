@@ -186,8 +186,25 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
       </li>
     </ol>
   </li>
-  <li><a href="#resource" id="markdown-toc-resource">Resource</a></li>
-  <li><a href="#simulation" id="markdown-toc-simulation">Simulation</a></li>
+  <li><a href="#resource" id="markdown-toc-resource">Resource</a>    <ol>
+      <li><a href="#resource-construction" id="markdown-toc-resource-construction">Resource construction</a></li>
+      <li><a href="#growth-functions" id="markdown-toc-growth-functions">Growth functions</a>        <ol>
+          <li><a href="#exponential" id="markdown-toc-exponential">Exponential</a></li>
+          <li><a href="#nth-root" id="markdown-toc-nth-root">Nth root</a></li>
+          <li><a href="#logarithmic-default" id="markdown-toc-logarithmic-default">Logarithmic (default)</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li><a href="#simulation" id="markdown-toc-simulation">Simulation</a>    <ol>
+      <li><a href="#simulation-construction" id="markdown-toc-simulation-construction">Simulation construction</a></li>
+      <li><a href="#simulation-loop" id="markdown-toc-simulation-loop">Simulation loop</a>        <ol>
+          <li><a href="#initialisation" id="markdown-toc-initialisation">Initialisation</a></li>
+          <li><a href="#the-epoch-loop" id="markdown-toc-the-epoch-loop">The epoch loop</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
   <li><a href="#output" id="markdown-toc-output">Output</a>    <ol>
       <li><a href="#real-time-plot" id="markdown-toc-real-time-plot">Real-time plot</a></li>
       <li><a href="#csv-logger" id="markdown-toc-csv-logger">CSV logger</a></li>
@@ -290,23 +307,31 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 <p class="note">The energy function used by the agents can be altered through the <code class="language-plaintext highlighter-rouge">agent:behaviour</code> parameter. Refer to <a href="../parameters/">Parameters</a> for more information.</p>
 
 <h3 id="base-energy-function">Base energy function</h3>
-<p>The base energy function, represented by the method <code class="language-plaintext highlighter-rouge">Agent.base_energy_function()</code>, is the initially proposed agent behaviour function. This functions is very naive in that it makes a black and white separation between proself and prosocial agents (&lt;.5 SVO means proself, &gt;=.5 SVO means prosocial). While prosocial agents will always fish their consumption, the consumption of the proself agents differs based on the available resources.<br />
-Assume \(A\) the set of all proself agents. Then for each agent \(a\in A\) the amount of energy it consumes can be defined as \(c(a)\). If \(f\) is then defined as the amount of resources or fish available, \(s\) a certain threshold value and \(\)</p>
+<p>The base energy function, represented by the method <code class="language-plaintext highlighter-rouge">Agent.base_energy_function()</code>, is the initially proposed agent behaviour function. This functions is very naive in that it makes a black and white separation between pro-self and pro-social agents (&lt;.5 SVO means pro-self, &gt;=.5 SVO means pro-social). While pro-social agents will always fish their consumption, the consumption of the pro-self agents differs based on the available resources.<br />
+Let \(A_p\subseteq A\) be the set of all pro-self agents as a subset of the set of all agents. Each agent \(a\in A_p\) has a predetermined and constant metabolism value, which we define here as \(m\). An agent consumes a little more than they need, which is why a predefined and constant consumption factor is added. Let us define this factor as \(c\).<br />
+Say that the total amount of resource that’s available when agent goes fishing is denoted as \(f_a\). If the amount of resource that available fish for each agent falls below a certain threshold (denoted \(s\)), pro-self agents start behaving differently. Their behaviour can be defined as follows:</p>
+
+\[\begin{array}{lr}c_a=
+    \begin{cases}
+        m\cdot c\cdot g\ &amp; \frac{f_a}{|A|}&lt;s\\
+        m\cdot c &amp; \text{otherwise}
+    \end{cases} &amp; \forall a\in A_p
+\end{array}\]
 
 <h3 id="restricted-energy-function-default">Restricted energy function (default)</h3>
 <p>The restricted energy function, represented by the method <code class="language-plaintext highlighter-rouge">Agent.restricted_energy_function</code>(), builds on the base function by adding a epoch-based resource restriction.</p>
 
-<p class="note">The point at which the restriction kicks in or out can be altered through the <code class="language-plaintext highlighter-rouge">simulation:res_limit_factor</code> and <code class="language-plaintext highlighter-rouge">simulation:res_unlimit_factor</code> parameters respectively. Refer to <a href="../parameters/">Parameters</a> for more information.</p>
+<p class="note">The point at which the restriction kicks in or out can be altered through the <code class="language-plaintext highlighter-rouge">simulation:res_limit_factor</code> and <code class="language-plaintext highlighter-rouge">simulation:res_unlimit_factor</code> parameters respectively. Refer to <a href="../parameters/restricted-model-limit-parameters">Restricted model limit parameters</a> for more information.</p>
 
 <p>If this restriction is active, agents are only allowed to fish if they would die otherwise. However, each agent has a chance of ignoring this restriction. The probability hereof is linearly dependent of the agent’s social value orientation, i.e. if they range more towards pro-selfness, they are inclined to ignore the restriction more often.<br />
 However, agents that choose to ignore this rule have have a probability of being caught. If they are catched red-handed, they are punished and can’t fish for a predetermined number of epochs.</p>
 
-<p class="note">The probability of an agent being caught and the amount of epochs they can’t fish if they are caught can be altered through the <code class="language-plaintext highlighter-rouge">agent:caught_chance</code> and <code class="language-plaintext highlighter-rouge">agent:caught_cooldown_factor</code> parameters respectively. Refer to <a href="../parameters/">Parameters</a> for more information.</p>
+<p class="note">The probability of an agent being caught and the amount of epochs they can’t fish if they are caught can be altered through the <code class="language-plaintext highlighter-rouge">agent:caught_chance</code> and <code class="language-plaintext highlighter-rouge">agent:caught_cooldown_factor</code> parameters respectively. Refer to <a href="../parameters/#agent-specific-parameters">Agent-specific parameters</a> for more information.</p>
 
 <h2 id="agent-procreation">Agent procreation</h2>
 <p>If agents have enough energy available, they can procreate. The procreation is implemented in the static method <code class="language-plaintext highlighter-rouge">Agent.procreate()</code>. Repeatedly, two random agents are taken from the list of parents and they procreate. Apart from the child’s social value orientation, all attributes remain constant. The child’s social value orientation is dynamic however, and is chosen depending on the parents’ social value orientations and energy levels. This model implements two social value orientation inheritance functions, which are described in the sections below.</p>
 
-<p class="note">The social value orientation inheritance function can be altered through the <code class="language-plaintext highlighter-rouge">agent:svo_inheritance_function</code> parameter. Refer to <a href="../parameters/">Parameters</a> for more information.</p>
+<p class="note">The social value orientation inheritance function can be altered through the <code class="language-plaintext highlighter-rouge">agent:svo_inheritance_function</code> parameter. Refer to <a href="../parameters/#general-agent-parameters">General agent parameters</a> for more information.</p>
 
 <h3 id="svo-inheritance-from-either-parent-default">SVO inheritance from either parent (default)</h3>
 <p>This function is represented by the local method <code class="language-plaintext highlighter-rouge">svo_either_parent()</code> that is located within <code class="language-plaintext highlighter-rouge">Agent.procreate()</code>. With this method, the child’s social value orientation is based on one of their parents. We first have to decide which parent to take, which is done probabilisticly based on the parents’ energy level:</p>
@@ -317,21 +342,29 @@ P(\mu_c=svo_{p2}) &amp;= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
 &amp;=1-P(\mu_c=svo_{p1})
 \end{align}\]
 
-<p class="figcaption">The probabilities of the child’s mean svo to become that of both parents. Here, $P(\varphi )$ denotes the probability that $\varphi$.</p>
+<p class="figcaption">The probabilities of the child’s mean svo to become that of both parents. Here, \(P(\phi )\) denotes the probability that \(\phi\).</p>
 
 <p>Notice that \(\mu_c\) is used instead of \(svo_c\). This because the social value orientation of the child is drawn from a normal distribution with a predetermined standard deviation. Thus we get:</p>
 
-\[svo_c \sim \mathcal{N}(\mu_c, \sigma)\]
+\[\begin{array}{ll}svo_c = \max(\min(\alpha,1),\ 0) &amp; \alpha \sim \mathcal{N}(\mu_c, \sigma_c)\end{array}\]
 
-<p>The social value orientation is drawn from a normal distribution. Here, \(\sigma\) denotes the predetermined standard deviation
+<p>The social value orientation is drawn from a normal distribution. Here, \(\sigma_c\) denotes the predetermined standard deviation
 {.figcaption}</p>
 
-<p class="note">The standard deviation for the final normal distribution can be altered through the <code class="language-plaintext highlighter-rouge">agent:svo_convergence_factor:svo_either_parent</code> parameter. Refer to <a href="../parameters/">Parameters</a> for more information.</p>
+<p>The standard deviation for the final normal distribution can be altered through the <code class="language-plaintext highlighter-rouge">agent:svo_convergence_factor:svo_either_parent</code> parameter. Refer to <a href="../parameters/#general-agent-parameters">General Agents Parameters</a> for more information.</p>
 
 <h3 id="svo-inheritance-from-both-parents">SVO inheritance from both parents</h3>
 <p>This function is represented by the lcoal method <code class="language-plaintext highlighter-rouge">svo_both_parents()</code> that is located within <code class="language-plaintext highlighter-rouge">Agent.procreate()</code>. With this method, the child’s social value orientation is based on both parents. As before, we construct a normal distribution where the social value orientation is sampled from. However, in this case the mean \(\mu_c\) is determined by the weighted mean of the parents’ social value orientations:</p>
 
 \[\mu_c=\frac{svo_{p1}\cdot e_{p1} + svo_{p2}\cdot e_{p2}}{e_{p1}+e_{p2}}\]
+
+<p>So the mean social value orienation of the child lies somewhere between the social value orientations of its parents. The standard deviation depends on the actual distance of \(\mu_c\) from the parents’ social valure orientations:</p>
+
+\[\sigma_c=\frac{1}{3}\cdot \min(\vert\mu_c, svo_{p1}\vert, \vert\mu_c, svo_{p2}\vert)\cdot t\]
+
+<p>Put in words, the extremes of the normal distributions (\(\pm 3\sigma_c\)) are made so that it will not exceed the parents’ social value orientation. That is, if \(t\) is set to 1. This factor can thus be used to allow for some exploration in the social value orientation search space.</p>
+
+<p class="note">The value of \(t\) can be altered through the <code class="language-plaintext highlighter-rouge">agent:svo_convergence_factor:svo_both_parents</code> parameter. Refer to <a href="../parameters/#general-agent-parameters">General agent parameters</a> for more information.</p>
 
 <h1 id="resource">Resource</h1>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Resource</span><span class="p">:</span>
@@ -354,9 +387,55 @@ P(\mu_c=svo_{p2}) &amp;= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
         <span class="c1"># Resource consumption entry pont
 </span></code></pre></div></div>
 
+<h2 id="resource-construction">Resource construction</h2>
+
+<h2 id="growth-functions">Growth functions</h2>
+<p>Three different growth functions are defined.</p>
+
+<h3 id="exponential">Exponential</h3>
+
+<p>The exponential resource growth function is defined as follows:</p>
+
+\[\begin{align}
+r_{t+1} &amp;= r_t + f(r_t)\\[2em]
+f(x) &amp;= e\cdot x
+\end{align}\]
+
+<p>Note that this function in itself isn’t exponential. However, when it is repeatedly applied each epoch, it will be. This function has one parameter, \(e\), which determines the amount of exponential growth.</p>
+
+<p class="note">The exponent \(e\) can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:exponential:rate</code> parameter. Refer to <a href="../parameters/$exponential-growth-function">Exponential growth function</a> for more information.</p>
+
+<h3 id="nth-root">Nth root</h3>
+
+<p>The nth root function is defined as follows:</p>
+
+\[\begin{align}
+r_{t+1} &amp;= r_{t} + g(r_t)\\[2em]
+g(x) &amp;= a\cdot\frac{1}{(x-\frac{t_x}{a})^\frac{1}{n}}-t_y
+\end{align}\]
+
+<p>The value of this one over log function decreases as \(r_t\) increases. This allows for a radical resource growth at the start, but a more gradual resource growth if there is already a high amount of resources available. This function was designed to be resemble a ‘nested’ common-pool resource, where the lake is able to support but a limited amount of fish. The exponents \(a\), \(t_x\), \(t_y\) and \(n\) have the following implications on $g(x)$:</p>
+
+<ul>
+  <li>$a$: Scales the whole function. Scales any properties that are already existent.</li>
+  <li>$t_x$: Translation over x axis. Makes the decrease</li>
+</ul>
+
+<h3 id="logarithmic-default">Logarithmic (default)</h3>
+
+<p>The logarithmic function is defined as follows:</p>
+
+\[\begin{align}
+r_{t+1} &amp;= r_{t} \cdot h(r_t)\\[2em]
+h(x) &amp;= \frac{a}{\log(x)+\frac{a}{s-t}} + t
+\end{align}\]
+
+<p>With the current parameters</p>
+
 <h1 id="simulation">Simulation</h1>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Simulation</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_dict</span><span class="p">,</span> <span class="n">printer</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">row_head</span><span class="o">=</span><span class="p">[],</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_dict</span><span class="p">,</span> <span class="n">printer</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> 
+                 <span class="n">row_head</span><span class="o">=</span><span class="p">[],</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="c1"># Params and modules initializer
 </span>    
     <span class="k">def</span> <span class="nf">get_agent_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_social_values</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_social_value</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
@@ -380,6 +459,30 @@ P(\mu_c=svo_{p2}) &amp;= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
     <span class="k">def</span> <span class="nf">log_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Updates the CSV logger
 </span></code></pre></div></div>
+
+<p>This class is the spine of the simulation, hence its name. Here is where the agents and fish live and where the actual results of the model are produced by controlling both the community of agents and the common resource.</p>
+
+<h2 id="simulation-construction">Simulation construction</h2>
+<p>The constructor of <code class="language-plaintext highlighter-rouge">Simulation</code>, <code class="language-plaintext python highlighter-rouge">Simulation.__init__()</code>, constructs a new intance of the <code class="language-plaintext highlighter-rouge">Simulation</code> class. Not only will this class set the values of its own attributes and variables, it will also receive the parameters for both the <code class="language-plaintext highlighter-rouge">Agent</code> and <code class="language-plaintext highlighter-rouge">Resource</code> classes, of which it will instantiate instances. Here the <code class="language-plaintext highlighter-rouge">Simulation</code> class also receives a reference to a <code class="language-plaintext highlighter-rouge">ResultPlotter</code> or <code class="language-plaintext highlighter-rouge">CsvLogger</code> class if specified via the command-line and/or instatiated in <code class="language-plaintext highlighter-rouge">main.py</code>. 
+Furthermore, the thresholds for activating and deactivating the resource restriction are calculated.</p>
+
+<h2 id="simulation-loop">Simulation loop</h2>
+<h3 id="initialisation">Initialisation</h3>
+<p>Before the simulation goes into its simulation loop, the simulation is first initialised:</p>
+<ul>
+  <li>First the list of agents is initialised using the <a href="#agent-construction"><code class="language-plaintext highlighter-rouge">Agent.from_svo_distribution()</code></a> function.</li>
+  <li>Then the resources are <a href="#resource-construction"><code class="language-plaintext highlighter-rouge">initialised</code></a>.</li>
+  <li>The current statistics and epoch counter are reset.</li>
+  <li>If required, the initial statistics are plotted, printed and logged.</li>
+</ul>
+
+<h3 id="the-epoch-loop">The epoch loop</h3>
+<p>Once initialisation is complete, the epoch loop starts. This loop will run untill either of the stopping conditions are met. There are two different stopping conditions:</p>
+<ul>
+  <li>Either the maximum amount of epochs are reached; or</li>
+  <li>The amount of alive agents drops under a certain threshold.
+The first stopping condition can be specified by setting the <code class="language-plaintext highlighter-rouge">simulation:max_epoch</code> parameter. The second stopping condition is set to 2. This is done so since 1 agent will not be able to procreate, and will eventually die of age. It may however happen that all alive agents die all within the epoch, therefore we need to check whether \(|A|&lt;2\) (where \(A\) denotes the set of alive agents), instead of \(|A|=1\)</li>
+</ul>
 
 <h1 id="output">Output</h1>
 

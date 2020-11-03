@@ -102,25 +102,35 @@ The energy function used by the agents can be altered through the `agent:behavio
 {:.note}
 
 ### Base energy function
-The base energy function, represented by the method `Agent.base_energy_function()`, is the initially proposed agent behaviour function. This functions is very naive in that it makes a black and white separation between proself and prosocial agents (<.5 SVO means proself, >=.5 SVO means prosocial). While prosocial agents will always fish their consumption, the consumption of the proself agents differs based on the available resources.  
-Assume $$A$$ the set of all proself agents. Then for each agent $$a\in A$$ the amount of energy it consumes can be defined as $$c(a)$$. If $$f$$ is then defined as the amount of resources or fish available, $$s$$ a certain threshold value and $$$$ 
+The base energy function, represented by the method `Agent.base_energy_function()`, is the initially proposed agent behaviour function. This functions is very naive in that it makes a black and white separation between pro-self and pro-social agents (<.5 SVO means pro-self, >=.5 SVO means pro-social). While pro-social agents will always fish their consumption, the consumption of the pro-self agents differs based on the available resources.  
+Let $$A_p\subseteq A$$ be the set of all pro-self agents as a subset of the set of all agents. Each agent $$a\in A_p$$ has a predetermined and constant metabolism value, which we define here as $$m$$. An agent consumes a little more than they need, which is why a predefined and constant consumption factor is added. Let us define this factor as $$c$$.  
+Say that the total amount of resource that's available when agent goes fishing is denoted as $$f_a$$. If the amount of resource that available fish for each agent falls below a certain threshold (denoted $$s$$), pro-self agents start behaving differently. Their behaviour can be defined as follows:
+
+$$
+\begin{array}{lr}c_a=
+    \begin{cases}
+        m\cdot c\cdot g\ & \frac{f_a}{|A|}<s\\
+        m\cdot c & \text{otherwise}
+    \end{cases} & \forall a\in A_p
+\end{array}
+$$
 
 ### Restricted energy function (default)
 The restricted energy function, represented by the method `Agent.restricted_energy_function`(), builds on the base function by adding a epoch-based resource restriction. 
 
-The point at which the restriction kicks in or out can be altered through the `simulation:res_limit_factor` and `simulation:res_unlimit_factor` parameters respectively. Refer to [Parameters](../parameters/) for more information.
+The point at which the restriction kicks in or out can be altered through the `simulation:res_limit_factor` and `simulation:res_unlimit_factor` parameters respectively. Refer to [Restricted model limit parameters](../parameters/restricted-model-limit-parameters) for more information.
 {:.note}
 
 If this restriction is active, agents are only allowed to fish if they would die otherwise. However, each agent has a chance of ignoring this restriction. The probability hereof is linearly dependent of the agent's social value orientation, i.e. if they range more towards pro-selfness, they are inclined to ignore the restriction more often.  
 However, agents that choose to ignore this rule have have a probability of being caught. If they are catched red-handed, they are punished and can't fish for a predetermined number of epochs. 
 
-The probability of an agent being caught and the amount of epochs they can't fish if they are caught can be altered through the `agent:caught_chance` and `agent:caught_cooldown_factor` parameters respectively. Refer to [Parameters](../parameters/) for more information.
+The probability of an agent being caught and the amount of epochs they can't fish if they are caught can be altered through the `agent:caught_chance` and `agent:caught_cooldown_factor` parameters respectively. Refer to [Agent-specific parameters](../parameters/#agent-specific-parameters) for more information.
 {:.note}
 
 ## Agent procreation
 If agents have enough energy available, they can procreate. The procreation is implemented in the static method `Agent.procreate()`. Repeatedly, two random agents are taken from the list of parents and they procreate. Apart from the child's social value orientation, all attributes remain constant. The child's social value orientation is dynamic however, and is chosen depending on the parents' social value orientations and energy levels. This model implements two social value orientation inheritance functions, which are described in the sections below.
 
-The social value orientation inheritance function can be altered through the `agent:svo_inheritance_function` parameter. Refer to [Parameters](../parameters/) for more information.
+The social value orientation inheritance function can be altered through the `agent:svo_inheritance_function` parameter. Refer to [General agent parameters](../parameters/#general-agent-parameters) for more information.
 {:.note}
 
 ### SVO inheritance from either parent (default)
@@ -134,20 +144,19 @@ P(\mu_c=svo_{p2}) &= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
 \end{align}
 $$
 
-The probabilities of the child's mean svo to become that of both parents. Here, $P(\varphi )$ denotes the probability that $\varphi$.
+The probabilities of the child's mean svo to become that of both parents. Here, $$P(\phi )$$ denotes the probability that $$\phi$$.
 {:.figcaption}
 
 Notice that $$\mu_c$$ is used instead of $$svo_c$$. This because the social value orientation of the child is drawn from a normal distribution with a predetermined standard deviation. Thus we get:
 
 $$
-svo_c \sim \mathcal{N}(\mu_c, \sigma)
+\begin{array}{ll}svo_c = \max(\min(\alpha,1),\ 0) & \alpha \sim \mathcal{N}(\mu_c, \sigma_c)\end{array}
 $$
 
-The social value orientation is drawn from a normal distribution. Here, $$\sigma$$ denotes the predetermined standard deviation
+The social value orientation is drawn from a normal distribution. Here, $$\sigma_c$$ denotes the predetermined standard deviation
 {.figcaption}
 
-The standard deviation for the final normal distribution can be altered through the `agent:svo_convergence_factor:svo_either_parent` parameter. Refer to [Parameters](../parameters/) for more information.
-{:.note}
+The standard deviation for the final normal distribution can be altered through the `agent:svo_convergence_factor:svo_either_parent` parameter. Refer to [General Agents Parameters](../parameters/#general-agent-parameters) for more information.
 
 ### SVO inheritance from both parents
 This function is represented by the lcoal method `svo_both_parents()` that is located within `Agent.procreate()`. With this method, the child's social value orientation is based on both parents. As before, we construct a normal distribution where the social value orientation is sampled from. However, in this case the mean $$\mu_c$$ is determined by the weighted mean of the parents' social value orientations:
@@ -156,7 +165,16 @@ $$
 \mu_c=\frac{svo_{p1}\cdot e_{p1} + svo_{p2}\cdot e_{p2}}{e_{p1}+e_{p2}}
 $$
 
+So the mean social value orienation of the child lies somewhere between the social value orientations of its parents. The standard deviation depends on the actual distance of $$\mu_c$$ from the parents' social valure orientations:
 
+$$
+\sigma_c=\frac{1}{3}\cdot \min(\vert\mu_c, svo_{p1}\vert, \vert\mu_c, svo_{p2}\vert)\cdot t
+$$
+
+Put in words, the extremes of the normal distributions ($$\pm 3\sigma_c$$) are made so that it will not exceed the parents' social value orientation. That is, if $$t$$ is set to 1. This factor can thus be used to allow for some exploration in the social value orientation search space. 
+
+The value of $$t$$ can be altered through the `agent:svo_convergence_factor:svo_both_parents` parameter. Refer to [General agent parameters](../parameters/#general-agent-parameters) for more information.
+{:.note}
 
 # Resource
 ```python
@@ -180,10 +198,63 @@ class Resource:
         # Resource consumption entry pont
 ```
 
+## Resource construction
+
+## Growth functions
+Three different growth functions are defined.
+
+### Exponential
+
+The exponential resource growth function is defined as follows:
+
+$$
+\begin{align}
+r_{t+1} &= r_t + f(r_t)\\[2em]
+f(x) &= e\cdot x
+\end{align}
+$$
+
+Note that this function in itself isn't exponential. However, when it is repeatedly applied each epoch, it will be. This function has one parameter, $$e$$, which determines the amount of exponential growth.
+
+The exponent $$e$$ can be altered through the `resource:gf_params:exponential:rate` parameter. Refer to [Exponential growth function](../parameters/$exponential-growth-function) for more information. 
+{:.note}
+
+### Nth root
+
+The nth root function is defined as follows:
+
+$$
+\begin{align}
+r_{t+1} &= r_{t} + g(r_t)\\[2em]
+g(x) &= a\cdot\frac{1}{(x-\frac{t_x}{a})^\frac{1}{n}}-t_y
+\end{align}
+$$
+
+The value of this one over log function decreases as $$r_t$$ increases. This allows for a radical resource growth at the start, but a more gradual resource growth if there is already a high amount of resources available. This function was designed to be resemble a 'nested' common-pool resource, where the lake is able to support but a limited amount of fish. The exponents $$a$$, $$t_x$$, $$t_y$$ and $$n$$ have the following implications on $g(x)$:
+
+* $a$: Scales the whole function. Scales any properties that are already existent.
+* $t_x$: Translation over x axis. Makes the decrease 
+
+### Logarithmic (default)
+
+The logarithmic function is defined as follows:
+
+$$
+\begin{align}
+r_{t+1} &= r_{t} \cdot h(r_t)\\[2em]
+h(x) &= \frac{a}{\log(x)+\frac{a}{s-t}} + t
+\end{align}
+$$
+
+ With the current parameters
+
+
+
 # Simulation
 ```python
 class Simulation:
-    def __init__(self, param_dict, printer=None, logger=None, row_head=[], verbose=True):
+    def __init__(self, param_dict, printer=None, logger=None, 
+                 row_head=[], verbose=True):
         # Params and modules initializer
     
     def get_agent_count(self, min_social_values=0, max_social_value=1):
@@ -207,6 +278,26 @@ class Simulation:
     def log_results(self):
         # Updates the CSV logger
 ```
+
+This class is the spine of the simulation, hence its name. Here is where the agents and fish live and where the actual results of the model are produced by controlling both the community of agents and the common resource.
+
+## Simulation construction
+The constructor of `Simulation`, `Simulation.__init__()`{:.python}, constructs a new intance of the `Simulation` class. Not only will this class set the values of its own attributes and variables, it will also receive the parameters for both the `Agent` and `Resource` classes, of which it will instantiate instances. Here the `Simulation` class also receives a reference to a `ResultPlotter` or `CsvLogger` class if specified via the command-line and/or instatiated in `main.py`. 
+Furthermore, the thresholds for activating and deactivating the resource restriction are calculated.
+
+## Simulation loop
+### Initialisation
+Before the simulation goes into its simulation loop, the simulation is first initialised:
+* First the list of agents is initialised using the [`Agent.from_svo_distribution()`](#agent-construction) function.
+* Then the resources are [`initialised`](#resource-construction).
+* The current statistics and epoch counter are reset.
+* If required, the initial statistics are plotted, printed and logged.
+
+### The epoch loop
+Once initialisation is complete, the epoch loop starts. This loop will run untill either of the stopping conditions are met. There are two different stopping conditions:
+* Either the maximum amount of epochs are reached; or
+* The amount of alive agents drops under a certain threshold.
+The first stopping condition can be specified by setting the `simulation:max_epoch` parameter. The second stopping condition is set to 2. This is done so since 1 agent will not be able to procreate, and will eventually die of age. It may however happen that all alive agents die all within the epoch, therefore we need to check whether $$|A|<2$$ (where $$A$$ denotes the set of alive agents), instead of $$|A|=1$$
 
 # Output
 
