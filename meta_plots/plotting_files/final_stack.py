@@ -1,13 +1,20 @@
 
 
 import numpy as np
-
 import csv
-import numpy as np
 import pandas as pd
-
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+
+"""
+- This file operates on a CSV file containing multiple batches of multiple experiments.  
+- Community runs do not need to be of the same length.
+- Outputs plot for a SINGLE experiment
+- Select experiment with plot_batch and plot_exp below
+- Outputs a stack plot agent count for five 20% SVO ranges
+"""
+
 
 
 df = pd.read_csv('unimodal.csv')
@@ -20,14 +27,7 @@ exp_number = max(df['Exp Num'])
 agent_count = df['Count']
 
 
-batch1 = 0
-for i in df['batch']:
-	if i == 1:
-		batch1 += 1
-
-#print (batch1)
-
-
+# Appending the length of each batch to a list
 batch_count = []
 for k in range(12):
 	batch_num = 0
@@ -36,15 +36,20 @@ for k in range(12):
 			batch_num += 1
 	batch_count.append(batch_num)
 
+# Initializing counting variables
+batch_start = 0
+exp_end = 0
 
-batch_start = 10
-exp_end = 94
-
+# Set desired batch and experiment for plotting
 plot_batch = 11
 plot_exp = 106
 
 
-
+# Loops through all 12 batches
+# Loops through all ten experiments in each batch
+# Counts length of each experiment
+# Plots stack plot of selected experiment
+# Note for bimodal and trimodal plots, the amount of experiments needs to be changed to 54 for bimodal and 2160 for trimodal (not recommended)
 for w in range(12):
 
 	exp_end = 0
@@ -68,7 +73,6 @@ for w in range(12):
 
 		exp_end += exp0
 		
-
 	if w == plot_batch:
 		plt.legend(loc='upper right')
 		plt.legend(title='SVO')
@@ -77,7 +81,7 @@ for w in range(12):
 		plt.ylim(0, 100)
 		plt.xlabel('Epoch')
 		plt.ylabel('Agent Count')
-		#plt.savefig('Stack_b' + str(plot_batch) + '_e' + str(plot_exp) + '.png')
+		plt.savefig('Stack_b' + str(plot_batch) + '_e' + str(plot_exp) + '.png')
 		plt.show()
 	exp_end += exp0
 	batch_start += batch_count[w]

@@ -1,13 +1,17 @@
 
 
 import numpy as np
-
 import csv
-import numpy as np
 import pandas as pd
-
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+"""
+- This file operates on a CSV file containing multiple batches of multiple experiments.  
+- Community runs do not need to be of the same length.
+- Outputs plot for a SINGLE experiment, selected with plot_batch and plot_exp below
+- Plots Resource count over epochs with Resource limitation range
+"""
 
 
 df = pd.read_csv('unimodal.csv')
@@ -33,13 +37,20 @@ for k in range(12):
 	batch_count.append(batch_num)
 
 
-batch_start = 10
-exp_end = 94
+# Initialize counting variables
+batch_start = 0
+exp_end = 0
 
+# Select batch and experiment
 plot_batch = 11
 plot_exp = 106
 
 
+# Loops through all 12 batches
+# Loops through all ten experiments in each batch
+# Counts length of each experiment
+# Plots resource plot with limitaiton range for selected experiment
+# Note for bimodal and trimodal plots, the amount of experiments needs to be changed to 54 for bimodal and 2160 for trimodal (not recommended)
 for w in range(12):
 
 	exp_end = 0
@@ -58,8 +69,7 @@ for w in range(12):
 
 			plt.plot(df['Epoch'][exp_end+batch_start : exp_end+exp0+batch_start], df['Resource'][exp_end+batch_start : exp_end+exp0+batch_start], "g")
 			plt.fill_between(df['Epoch'][exp_end+batch_start : exp_end+exp0+batch_start], df['Resource Limit'][exp_end+batch_start : exp_end+exp0+batch_start], df['Resource Unlimit'][exp_end+batch_start : exp_end+exp0+batch_start], color = "r", alpha=.2)
-			#plt.plot(df['Epoch'][exp_end+batch_start : exp_end+exp0+batch_start], df['Resource Limit'][exp_end+batch_start : exp_end+exp0+batch_start])
-			#plt.plot(df['Epoch'][exp_end+batch_start : exp_end+exp0+batch_start], df['Resource Unlimit'][exp_end+batch_start : exp_end+exp0+batch_start])
+
 
 			plot_mean = str(round(df[df.columns[2]][exp_end+batch_start],2)) 
 			plot_std = str(round(df[df.columns[3]][exp_end+batch_start],2))
@@ -74,7 +84,7 @@ for w in range(12):
 		plt.xlabel('Epoch')
 		plt.ylabel('Resource Count')
 		plt.savefig('Resource_Growth_b' + str(plot_batch) + '_e' + str(plot_exp) + '.png')
-		#plt.show()
+		plt.show()
 	exp_end += exp0
 	batch_start += batch_count[w]
 

@@ -6,6 +6,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
+"""
+- Takes a CSV file with multiple experiments, all of the same length
+- Plots mean SVO ± 0.25*standard deviation for five 20% SVO segmentations
+"""
+
 
 df = pd.read_csv('BatchCSV')
 
@@ -14,7 +19,9 @@ m, n = df.shape
 total_batch = df['batch'][m-1]
 
 
+# List different SVO segments
 SVOS = [[df['A'].to_numpy()], [df['B'].to_numpy()], [df['C'].to_numpy()], [df['D'].to_numpy()], [df['E'].to_numpy()]]
+
 
 
 for z in range(5):

@@ -1,14 +1,17 @@
 
 
 import numpy as np
-
 import csv
-import numpy as np
 import pandas as pd
-
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
+
+"""
+- Takes a CSV that includes one experimental run
+- Plots agent count over epochs for five 20% SVO segmentations
+"""
 
 df = pd.read_csv('SingleCSV')
 

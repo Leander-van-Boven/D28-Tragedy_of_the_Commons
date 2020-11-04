@@ -1,14 +1,15 @@
 
 
 import numpy as np
-
 import csv
-import numpy as np
 import pandas as pd
-
 import matplotlib.pyplot as plt
-import seaborn as sns
 
+"""
+- This file operates on a CSV file containing multiple batches of multiple experiments.  
+- Community runs do not need to be of the same length.
+- Outputs multi-line plots of Agent Count per Epoch for each batch, containing all experimental runs in that batch.
+"""
 
 
 df = pd.read_csv('unimodal.csv')
@@ -19,12 +20,8 @@ exp_number = max(df['Exp Num'])
 
 agent_count = df['Count']
 
-batch1 = 0
-for i in df['batch']:
-	if i == 1:
-		batch1 += 1
 
-
+# Appending the length of each batch to a list
 batch_count = []
 for k in range(12):
 	batch_num = 0
@@ -33,8 +30,16 @@ for k in range(12):
 			batch_num += 1
 	batch_count.append(batch_num)
 
+# Initializing counting variables
 batch_start = 0
 exp_end = 0
+
+# Loops through all 12 batches
+# Loops through all ten experiments in each batch
+# Counts length of each experiment
+# Plots agent count each experiment of a batch onto one plot
+# 12 Plots total, with autosave option
+# Note for bimodal and trimodal plots, the amount of experiments needs to be changed to 54 for bimodal and  for trimodal
 
 for w in range(12):
 
@@ -47,7 +52,6 @@ for w in range(12):
 			if j == i + df['Exp Num'][batch_start]:
 				exp0 += 1
 
-		#print(exp1+batch_start, exp1+exp0+batch_start)
 		plt.rcParams["figure.figsize"] = [10, 5]
 		plt.plot(df['Epoch'][exp_end+batch_start : exp_end+exp0+batch_start], agent_count[exp_end+batch_start : exp_end+exp0+batch_start], label = "Mean = " + str(df[df.columns[2]][exp_end+batch_start]) + " and STD = " + str(round(df[df.columns[3]][exp_end+batch_start],2)) )
 
@@ -68,29 +72,5 @@ for w in range(12):
 
 
 
-"""
-color_map = [
-"#57bb8a",
-"#63b682",
-"#73b87e",
-"#84bb7b",
-"#94bd77",
-"#a4c073",
-"#b0be6e",
-"#c4c56d",
-"#d4c86a",
-"#e2c965",
-"#f5ce62",
-"#f3c563",
-"#e9b861",
-"#e6ad61",
-"#ecac67",
-"#e9a268",
-"#e79a69",
-"#e5026b",
-"#e2886c",
-"#e0816d",
-"#dd776e"
-]
-"""
+
 
