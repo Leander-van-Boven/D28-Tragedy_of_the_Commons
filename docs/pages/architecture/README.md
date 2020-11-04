@@ -217,7 +217,7 @@ The `Resource.grow_resource` method can be called to grow the resource ($$r_{t+1
 ## Growth functions
 In this section, the three available growth functions are explained. 
 
-The active resource growth function can be altered through the `resource:growth_function` parameter. Refer to [Resource Parameters](../parameters/#resource-parameters). See [this example](../interaction/#example-analyzing-resource-growth-functions) on how to check the behaviour of a growth function without interference of agents.
+The active resource growth function can be altered through the `resource:growth_function` parameter. Refer to [Resource Parameters](../parameters/#resource-parameters). See [this example](../interaction/#example-analyzing-resource-growth-functions) on how to check the behaviour of a growth function without interference of agents. It is also possible to run one of the predefined `resourcef_[x]` [scenarios](../interaction/#specifying-a-certain-scenario).
 
 ### The exponential function
 The exponential resource growth function is defined as follows:

@@ -12,7 +12,7 @@ Welcome to the documentation of a model modeling a community of agents living in
 ## Overview
 The documentation is separated into multiple parts:
 
-* [Model Background](/D28-Tragedy_of_the_Commons/pages/background/){:.heading.flip-title} --- Describes the concept and literature of the model in a broader context.
+* [Model Background](/D28-Tragedy_of_the_Commons/pages/background){:.heading.flip-title} --- Describes the concept and literature of the model in a broader context.
 * [Model Architecture](/D28-Tragedy_of_the_Commons/pages/architecture){:.heading.flip-title} --- Shows the different (code) parts of the model and how they are connected.
 * [Model Interaction](/D28-Tragedy_of_the_Commons/pages/interaction){:.heading.flip-title} --- Explains how to interact with the model.
 * [Model Parameters](/D28-Tragedy_of_the_Commons/pages/parameters){:.heading.flip-title} --- Shows a listing of all parameters of the model per submodule.
@@ -20,9 +20,9 @@ The documentation is separated into multiple parts:
 
 ## Quick Start
 ### Prerequisites
-* The simulation assumes Python 3.6+, and requires the modules `numpy`, `argparse`, and `matplotlib` to be installed.
+* The simulation assumes Python 3.6+, and requires the modules `numpy`, `argparse`, `matplotlib` and `joblib` to be installed.
   ```bash
-  pip3 install numpy argparse matplotlib
+  pip3 install numpy argparse matplotlib joblib
   ``` 
 * Download the code by cloning this repository.
   ```bash
@@ -43,6 +43,11 @@ To change a the parameter of the model the `--param [parameter]=[value]` or `-p 
 > Refer to [Parameters](/D28-Tragedy_of_the_Commons/pages/parameters) for a listing of all parameters per submodule
 
 ### Interesting Scenarios to run
-NEEDS CONTENT
+We included four scenarios that can be run by adding the `--name` argument (refer to [Interaction](pages/interaction/#specifying-a-certain-scenario)). These are:
 
-<clap-button></clap-button>
+* `semi_stable`, which shows a fluctuating agent distribution and resource pool but remains (almost always) stable.
+* `resourcef_exp`, which shows the behaviour of the [exponential](pages/architecture/#the-exponential-function) resource growth function.
+* `resourcef_nroot`, which shows the behaviour of the [nth root resource](pages/architecture/#the-nth-root-function) growth function.
+* `resourcef_log`, which shows the behaviour of the [logarithmic](pages/architecture/#the-logarithmic-function) resource growth function.
+ 
+<clap-button><3</clap-button>
