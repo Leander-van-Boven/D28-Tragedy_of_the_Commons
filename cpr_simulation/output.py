@@ -211,4 +211,4 @@ class ResultsPlotter:
         path : `str`,
             The path to save the plot to.
         """
-        plt.savefig(path)
+        #plt.savefig(path)
