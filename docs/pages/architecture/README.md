@@ -438,6 +438,7 @@ The `write()` function writes the list of CSV formatted strings to a comma-separ
 
 # Utilities
 ```python
+# exception.py
 class InvalidArgumentError(Exception):
     pass
 
@@ -460,4 +461,9 @@ def update_dict(d, u, omit_new=False):
 
 Two different utility files were created:
 * [`exception.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/cpr_simulation/exception.py) used for custom exception handling.
-* [`util.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/cpr_simulation/util.py) used to generate a default parameter dictionary (`dd_factory()`) and to update one dictionary with the values of another dictionary (`update_dict`).
+* [`util.py`](https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/cpr_simulation/util.py) contains some utilitarian methods that are used across the module. 
+  * `do_nothing()` does exactly nothing. This is used to remap some local print method to if that level of verbosity isn't required.
+  * `dd_factory()` is a recursive definition of a python `defaultdict` that returns a new `defaultdict` if a nonexistant key is specified. This property also holds for the nested `defaultdict`, which allows us to `dd['nest']['non']['existent']['keys']['into']['oblivion']`.
+  * `update_dict` is used to update dict-like `d` with the key-value pairs that exist in the dict-like `u`.
+
+used to generate a default parameter dictionary (`dd_factory()`) and to update one dictionary with the values of another dictionary (`update_dict`).
