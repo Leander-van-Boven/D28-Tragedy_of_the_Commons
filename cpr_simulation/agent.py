@@ -7,6 +7,13 @@ from .util import do_nothing
 
 
 class Agent:
+    """Class representing the main actors of the model
+
+    Refer to the documentation
+    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
+        pages/architecture/#agent) 
+    for a thorough explanation of this class.
+    """
 
     # Static attributes
     svo_convergence_factor = 0

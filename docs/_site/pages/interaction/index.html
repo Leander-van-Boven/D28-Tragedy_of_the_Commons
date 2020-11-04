@@ -179,6 +179,7 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
       </li>
       <li><a href="#altering-simulation-parameters" id="markdown-toc-altering-simulation-parameters">Altering simulation parameters</a>        <ol>
           <li><a href="#examples-1" id="markdown-toc-examples-1">Examples</a></li>
+          <li><a href="#example-analyzing-resource-growth-functions" id="markdown-toc-example-analyzing-resource-growth-functions">Example: Analyzing resource growth functions</a></li>
         </ol>
       </li>
       <li><a href="#specifying-output-behaviour" id="markdown-toc-specifying-output-behaviour">Specifying output behaviour</a>        <ol>
@@ -265,7 +266,7 @@ optional arguments:
 </ul>
 
 <h3 id="examples">Examples</h3>
-<ul class="note">
+<ul>
   <li>Load a scenario called <code class="language-plaintext highlighter-rouge">stable_system</code>, and run this simulation:
     <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--name</span> stable_system
 </code></pre></div>    </div>
@@ -273,9 +274,10 @@ optional arguments:
   <li>Save the previously ran simulation as a scenario named <code class="language-plaintext highlighter-rouge">interesting_results</code>
     <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py save <span class="nt">--name</span> interesting_results
 </code></pre></div>    </div>
-    <p>It isn’t possible to overwrite already saved scenarios. Scenarios can be manually deleted by deleting a the scenario directory in <code class="language-plaintext highlighter-rouge">./scenarios/</code>.</p>
   </li>
 </ul>
+
+<p class="note">It isn’t possible to overwrite already saved scenarios. Scenarios can be manually deleted by deleting a the scenario directory in <code class="language-plaintext highlighter-rouge">./scenarios/</code>.</p>
 
 <h2 id="altering-simulation-parameters">Altering simulation parameters</h2>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -p       [parameter_address]=[value]
@@ -306,6 +308,33 @@ optional arguments:
 <span class="o">&gt;</span>   svo_dist:d2:m<span class="o">=</span>0.95 <span class="se">\</span>
 <span class="o">&gt;</span>   svo_dist:d2:s<span class="o">=</span>0.01
 </code></pre></div>    </div>
+
+    <h3 id="example-analyzing-resource-growth-functions">Example: Analyzing resource growth functions</h3>
+    <ul>
+      <li>Analyze the behaviour of the resource growth functions for 100 epochs without interference of any agents:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="nt">--param</span> <span class="se">\</span>
+<span class="o">&gt;</span>   resource:growth_function<span class="o">=</span>exponential <span class="se">\</span>
+<span class="o">&gt;</span>   agent:count<span class="o">=</span>0 <span class="se">\</span>
+<span class="o">&gt;</span>   simulation:max_epoch<span class="o">=</span>100
+</code></pre></div>        </div>
+      </li>
+      <li>Compare 2 different base root values for the <code class="language-plaintext highlighter-rouge">nroot</code> growth function:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--param</span> <span class="se">\</span>
+<span class="o">&gt;</span>       resource:growth_function<span class="o">=</span>nroot <span class="se">\</span>
+<span class="o">&gt;</span>       agent:count<span class="o">=</span>0 <span class="se">\</span>
+<span class="o">&gt;</span>       simulation:max_epoch<span class="o">=</span>100 <span class="se">\</span>
+<span class="o">&gt;</span>       resource:growth_function:nroot:n<span class="o">=</span>2
+</code></pre></div>        </div>
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>py sim.py run <span class="se">\</span>
+<span class="o">&gt;</span>   <span class="nt">--param</span> <span class="se">\</span>
+<span class="o">&gt;</span>       resource:growth_function<span class="o">=</span>nroot <span class="se">\</span>
+<span class="o">&gt;</span>       agent:count<span class="o">=</span>0 <span class="se">\</span>
+<span class="o">&gt;</span>       simulation:max_epoch<span class="o">=</span>100 <span class="se">\</span>
+<span class="o">&gt;</span>       resource:growth_function:nroot:n<span class="o">=</span>15
+</code></pre></div>        </div>
+      </li>
+    </ul>
   </li>
 </ul>
 
@@ -517,7 +546,7 @@ optional arguments:
 <div class="footnotes" role="doc-endnotes">
   <ol>
     <li id="fn:1" role="doc-endnote">
-      <p>For more information about the characteristics of the different resource growth functions, refer to <a href="../architecture/resource/">Resource</a>. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+      <p>For more information about the characteristics of the different resource growth functions, refer to <a href="../architecture/#resource">Resource</a>. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>

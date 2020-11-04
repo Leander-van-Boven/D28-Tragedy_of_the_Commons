@@ -79,6 +79,7 @@ With the `name` argument, it's possible to specify a certain scenario name.
   ```shell
   $ py sim.py save --name interesting_results
   ```
+
 It isn't possible to overwrite already saved scenarios. Scenarios can be manually deleted by deleting a the scenario directory in `./scenarios/`.
 {:.note}
 
@@ -118,11 +119,27 @@ For an overview of all parameters available in this model, refer to [Parameters]
   * Analyze the behaviour of the resource growth functions for 100 epochs without interference of any agents:
   ```bash
   $ py sim.py run --param \
-  >   resource:growth_function=nroot \
+  >   resource:growth_function=exponential \
   >   agent:count=0 \
   >   simulation:max_epoch=100
   ```
-  TODO: MEER VOORBEELDJES HIERVAN MET EXPONENTEN AANPASSEN?
+  * Compare 2 different base root values for the `nroot` growth function:
+  ```bash
+  $ py sim.py run \
+  >   --param \
+  >       resource:growth_function=nroot \
+  >       agent:count=0 \
+  >       simulation:max_epoch=100 \
+  >       resource:growth_function:nroot:n=2
+  ```
+   ```bash
+  $ py sim.py run \
+  >   --param \
+  >       resource:growth_function=nroot \
+  >       agent:count=0 \
+  >       simulation:max_epoch=100 \
+  >       resource:growth_function:nroot:n=15
+  ```
 
 ## Specifying output behaviour
 ```
@@ -296,4 +313,4 @@ Default values of `plot`, `verbose` and `out` arguments depending on values of `
 Note that both the `verbose` and `plot` arguments are _ignored_ if the model is running in multi-threaded mode. This means that, even when you override the `verbose` or `plot` arguments, it will not matter. This is because the multi-threading has a custom output, and showing multiple plotting windows is not feasible in a multi-threaded environment. 
 {:.note}
 
-[^1]: For more information about the characteristics of the different resource growth functions, refer to [Resource](../architecture/resource/).
+[^1]: For more information about the characteristics of the different resource growth functions, refer to [Resource](../architecture/#resource).

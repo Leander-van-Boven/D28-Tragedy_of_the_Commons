@@ -67,7 +67,7 @@ Below is a listing of **all** parameters in the model that can be changed.
 Use `--param [parameter_location]=[value]` to change a parameter using the command-line interface. The `parameter_location` is given by the first text of each listing below. The type of value is put between parentheses.
 
 # Agent Parameters
-> Refer to the explanation of the [Agent](/D28-Tragedy_of_the_Commons/pages/architecture/agent/) class for a full explanation of the effects of each parameter.
+> Refer to the explanation of the [Agent](/D28-Tragedy_of_the_Commons/pages/architecture/#agent) class for a full explanation of the effects of each parameter.
 
 ## General agent parameters
 * `agent:count` (`int`): Determines the start amount of agents.
@@ -95,7 +95,7 @@ Use `--param [parameter_location]=[value]` to change a parameter using the comma
 * `agent:params:caught_cooldown_factor` (`float`): When an agent is caught violating the restriction when it is active, this parameter determines how long this agent is prohibited from fishing (in epochs).
 
 # SVO Distributions Parameters
-> Refer to the explanation of the [Agent](/D28-Tragedy_of_the_Commons/pages/architecture/agent/) class for a full explanation of the effects of each parameter.
+> Refer to the explanation of the [Agent](/D28-Tragedy_of_the_Commons/pages/architecture/#agent) class for a full explanation of the effects of each parameter.
 
 The `svo_dist` paramater is a dictionary containing the Gaussian distributions from which the starting SVO of the initial agent group is drawn. Multiple distributions can be added. Each distributions should be a dictionary with an unique key (d1, d2, ..., dn) and follow the following structure:
 ```python
@@ -109,7 +109,7 @@ The `svo_dist` paramater is a dictionary containing the Gaussian distributions f
 The `"m"` key then denotes the mean of the Gaussian distribution, `"s"` then denotes the standard deviation of the Gaussian distribution.
 
 # Resource Parameters
-> Refer to the explanation of the [Resource](/D28-Tragedy_of_the_Commons/pages/architecture/resource/) class for a full explanation of the effects of each parameter.
+> Refer to the explanation of the [Resource](/D28-Tragedy_of_the_Commons/pages/architecture/#resource) class for a full explanation of the effects of each parameter.
 
 * `resource:start_amount` (`float`): The amount of resources to start the simulation with.
 * `resource:max_amount` (`float`): The maximum amount for the resources. If resources grow beyond this value, it is set to this value. When set to $$-1$$, this parameter is ignored. This parameter can be used to keep resources within a reasonable amount, allowing the plot to not slow down too much.
@@ -117,7 +117,7 @@ The `"m"` key then denotes the mean of the Gaussian distribution, `"s"` then den
 * `resource:growth_function` (`str`): The growth function to use. Choices are: `"exponential"`, `"logarithmic"` and `"nroot"`.
 
 ## Growth function parameters
-The parameters below are sorted by the resource growth function they apply to. 
+The parameters below are grouped by the resource growth function they apply to. 
 ### Exponential growth function
 * `resource:gf_params:exponential:rate` (`float`): The exponential rate for the exponential growth function.
 
@@ -133,7 +133,7 @@ The parameters below are sorted by the resource growth function they apply to.
 * `resource:gf_params:logarithmic:s` (`float`): The initial jump scaling factor of the logarithmic growth function.
 
 # Simulation Parameters
-> Refer to the explanation of the [Simulation](/D28-Tragedy_of_the_Commons/pages/architecture/simulation/) class for a full explanation of the effects of each parameter.
+> Refer to the explanation of the [Simulation](/D28-Tragedy_of_the_Commons/pages/architecture/#simulator) class for a full explanation of the effects of each parameter.
 
 * `simulation:max_epoch` (`int`): The maximum amount of epochs for the simulation.
 * `simulation:plot_interval` (`int`): How many every epoch the real-time plot should be updated. This parameter is only used when the real-time plot is enabled.

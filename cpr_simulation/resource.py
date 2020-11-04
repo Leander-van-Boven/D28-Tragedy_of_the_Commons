@@ -7,10 +7,35 @@ from .util import do_nothing
 class Resource:
     """This class represents the common resource, or fish in our case.
 
-    All attributes are explained in `parameters.py`
+    Refer to the documentation
+    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/ 
+        pages/architecture/#resource) 
+    for a thorough explanation of this class.
     """
 
     print = do_nothing
+
+    def __init__(self, params):
+        """Resource class constructor
+
+        Parameters
+        ----------
+        params : `dict`,
+            The parameter dictionary
+        """
+
+        self.start_amount = params.get('start_amount', 100)
+        self.max_amount = params.get('max_amount', -1)
+        self.min_amount = params.get('min_amount', 1)
+        self.cooldown = params.get('cooldown', 10)
+        self.growth_rate = params.get('growth_rate', 0.2)
+        self.in_cooldown = False
+
+        self.growth = eval(f"self.growth_{params['growth_function']}")
+        self.growth = partial(
+            self.growth, **params['gf_params'][params['growth_function']])
+
+        self.amount = self.start_amount
 
     def growth_exponential(self, val, rate):
         """An exponential growth function.
@@ -72,28 +97,6 @@ class Resource:
             The new resource value
         """
         return val + max(a * (1 / ((val - (tx / a)) ** (1 / n)) - ty / a), 0)
-
-    def __init__(self, params):
-        """Resource class constructor
-
-        Parameters
-        ----------
-        params : `dict`,
-            The parameter dictionary
-        """
-
-        self.start_amount = params.get('start_amount', 100)
-        self.max_amount = params.get('max_amount', -1)
-        self.min_amount = params.get('min_amount', 1)
-        self.cooldown = params.get('cooldown', 10)
-        self.growth_rate = params.get('growth_rate', 0.2)
-        self.in_cooldown = False
-
-        self.growth = eval(f"self.growth_{params['growth_function']}")
-        self.growth = partial(
-            self.growth, **params['gf_params'][params['growth_function']])
-
-        self.amount = self.start_amount
 
     def grow_resource(self):
         """Regrows the resource with `self.growth_rate`

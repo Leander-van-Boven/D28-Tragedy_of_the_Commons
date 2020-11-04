@@ -5,6 +5,18 @@ from matplotlib import animation
 
 
 class ResultsPlotter:
+    """Class handling the real-time plotting
+
+    Refer to the documentation
+    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
+        pages/architecture/#results-plotter)
+    for a brief explanation of this class. 
+    And to
+    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
+        pages/output/#real-time-plot)
+    for a thorough explanation of the output. 
+    """
+
     def __init__(self, start_agent, svo_bar_count, start_resource, fullscreen, 
                  allow_resize):
         """Sets up the real-time plot
@@ -105,7 +117,6 @@ class ResultsPlotter:
         del self.yresource[:]
         del self.limitresource[:]
         del self.unlimitresource[:]
-        self.zero_flag = 0
 
         # Setup all lines
         self.agent_line.set_data(self.xdata, self.yagent)

@@ -4,34 +4,16 @@ from .exception import InvalidParameterError
 
 
 class CsvLogger:
-    """Helper class that constructs a CSV table.
+    """Helper class that constructs a CSV file.
 
-    Attributes
-    ----------
-    head : `list[str]`, 
-        The table header, where head[i] is the header for column i.
-
-    table : `list[list[str]]`,
-        The table, where table[i][j] holds the value of row i, column j.
-
-    n_cols : `int`,
-        The amount of columns of this table.
-
-    n_rows : `int`,
-        The amount of rows of this table.
-
-    separator : `str`,
-        The separator character used in CSV conversion.
-
-    sep_replace : `str`,
-        If a table value contains the separator character, 
-        it will be replaced by this character.
-
-    Methods
-    -------
-    `add_row(col_names, sep=',', rep=' ')`
-
-    `write(path)`
+    Refer to the documentation
+    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
+        pages/architecture/#csv-logger)
+    for a brief explanation of this class. 
+    And to
+    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
+        pages/output/#csv-logger)
+    for a thorough explanation of the output.
     """
 
     def __init__(self, params, col_names, path=None, append=False):
@@ -73,7 +55,7 @@ class CsvLogger:
 
         Parameters
         ----------
-        row : `list[str]`,
+        row : `list[obj]`,
             The row to add, where row[i] will be put at column i.
         """
 

@@ -189,25 +189,40 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
   <li><a href="#resource" id="markdown-toc-resource">Resource</a>    <ol>
       <li><a href="#resource-construction" id="markdown-toc-resource-construction">Resource construction</a></li>
       <li><a href="#growth-functions" id="markdown-toc-growth-functions">Growth functions</a>        <ol>
-          <li><a href="#exponential" id="markdown-toc-exponential">Exponential</a></li>
-          <li><a href="#nth-root" id="markdown-toc-nth-root">Nth root</a></li>
-          <li><a href="#logarithmic-default" id="markdown-toc-logarithmic-default">Logarithmic (default)</a></li>
+          <li><a href="#the-eponential-function" id="markdown-toc-the-eponential-function">The eponential function</a></li>
+          <li><a href="#the-nth-root-function" id="markdown-toc-the-nth-root-function">The nth root function</a></li>
+          <li><a href="#the-logarithmic-function-default" id="markdown-toc-the-logarithmic-function-default">The logarithmic function (default)</a></li>
         </ol>
       </li>
     </ol>
   </li>
-  <li><a href="#simulation" id="markdown-toc-simulation">Simulation</a>    <ol>
+  <li><a href="#simulator" id="markdown-toc-simulator">Simulator</a>    <ol>
       <li><a href="#simulation-construction" id="markdown-toc-simulation-construction">Simulation construction</a></li>
       <li><a href="#simulation-loop" id="markdown-toc-simulation-loop">Simulation loop</a>        <ol>
           <li><a href="#initialisation" id="markdown-toc-initialisation">Initialisation</a></li>
           <li><a href="#the-epoch-loop" id="markdown-toc-the-epoch-loop">The epoch loop</a></li>
+          <li><a href="#after-the-epoch-loop" id="markdown-toc-after-the-epoch-loop">After the epoch loop</a></li>
+          <li><a href="#pseudocode" id="markdown-toc-pseudocode">Pseudocode</a></li>
         </ol>
       </li>
     </ol>
   </li>
   <li><a href="#output" id="markdown-toc-output">Output</a>    <ol>
-      <li><a href="#real-time-plot" id="markdown-toc-real-time-plot">Real-time plot</a></li>
-      <li><a href="#csv-logger" id="markdown-toc-csv-logger">CSV logger</a></li>
+      <li><a href="#results-plotter" id="markdown-toc-results-plotter">Results plotter</a>        <ol>
+          <li><a href="#resultsplotter-construction" id="markdown-toc-resultsplotter-construction">ResultsPlotter construction</a></li>
+          <li><a href="#funcanimation" id="markdown-toc-funcanimation">FuncAnimation</a>            <ol>
+              <li><a href="#def-update" id="markdown-toc-def-update">Def update</a></li>
+              <li><a href="#blit" id="markdown-toc-blit">Blit</a></li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li><a href="#csv-logger" id="markdown-toc-csv-logger">CSV logger</a>        <ol>
+          <li><a href="#csvlogger-construction" id="markdown-toc-csvlogger-construction">CsvLogger construction</a></li>
+          <li><a href="#add-row" id="markdown-toc-add-row">Add row</a></li>
+          <li><a href="#write" id="markdown-toc-write">Write</a></li>
+        </ol>
+      </li>
     </ol>
   </li>
   <li><a href="#utilities" id="markdown-toc-utilities">Utilities</a></li>
@@ -243,7 +258,7 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
   <li><code class="language-plaintext highlighter-rouge">sim.py</code>: Contains the command-line interface and imports <code class="language-plaintext highlighter-rouge">cpr_simulation</code> to set-up and run a simulation. For more informatin about the command-line interface, refer to <a href="/D28-Tragedy_of_the_Commons/pages/interaction/">Interaction</a>.</li>
 </ul>
 
-<p>In the sections below, the <code class="language-plaintext highlighter-rouge">Agent</code>, <code class="language-plaintext highlighter-rouge">Resource</code> and <code class="language-plaintext highlighter-rouge">Simulation</code> classes are more thoroughly explained.</p>
+<p>In the sections below, the <a href="#agent"><code class="language-plaintext highlighter-rouge">Agent</code></a>, <a href="#resource"><code class="language-plaintext highlighter-rouge">Resource</code></a> and <a href="#simulator"><code class="language-plaintext highlighter-rouge">Simulator</code></a> classes are more thoroughly explained. Thereafter a brief explanation of the <a href="#results-plotter"><code class="language-plaintext highlighter-rouge">ResultsPlotter</code></a> and <a href="#csv-logger"><code class="language-plaintext highlighter-rouge">CsvLogger</code></a> classes are given, finished by a short notice of the <a href="#utilities">utilities</a> created and used.</p>
 
 <h1 id="agent">Agent</h1>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Agent</span><span class="p">:</span>
@@ -368,6 +383,9 @@ P(\mu_c=svo_{p2}) &amp;= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
 
 <h1 id="resource">Resource</h1>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Resource</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="c1"># Resource pool constructor
+</span>
     <span class="k">def</span> <span class="nf">growth_exponential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">rate</span><span class="p">):</span>
         <span class="c1"># Exponential growth function
 </span>
@@ -377,9 +395,6 @@ P(\mu_c=svo_{p2}) &amp;= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
     <span class="k">def</span> <span class="nf">growth_nroot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
         <span class="c1"># 1 / nth root growth function
 </span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
-        <span class="c1"># Resource pool constructor
-</span>
     <span class="k">def</span> <span class="nf">grow_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Resource growth function entry point
 </span>
@@ -388,12 +403,14 @@ P(\mu_c=svo_{p2}) &amp;= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
 </span></code></pre></div></div>
 
 <h2 id="resource-construction">Resource construction</h2>
+<p>The constructor of the <code class="language-plaintext highlighter-rouge">Resource</code>, <code class="language-plaintext highlighter-rouge">Resource.__init__()</code>, constructs a new instance of the <code class="language-plaintext highlighter-rouge">Resource</code> class. During construction, the attributes are set from the provided parameters. Furthermore a partial function is constructed for the resource regrowth. Finally the current amount of resources are set to the provided start amount.</p>
 
 <h2 id="growth-functions">Growth functions</h2>
 <p>Three different growth functions are defined.</p>
 
-<h3 id="exponential">Exponential</h3>
+<p>The active resource growth function can be altered through the <code class="language-plaintext highlighter-rouge">resource:growth_function</code> parameter. Refer to <a href="../parameters/#resource-parameters">Resource Parameters</a>. See <a href="../interaction/example-analyzing-resource-growth-functions">this example</a> on how to check the behaviour of a growth function without interference of agents.</p>
 
+<h3 id="the-eponential-function">The eponential function</h3>
 <p>The exponential resource growth function is defined as follows:</p>
 
 \[\begin{align}
@@ -405,7 +422,7 @@ f(x) &amp;= e\cdot x
 
 <p class="note">The exponent \(e\) can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:exponential:rate</code> parameter. Refer to <a href="../parameters/$exponential-growth-function">Exponential growth function</a> for more information.</p>
 
-<h3 id="nth-root">Nth root</h3>
+<h3 id="the-nth-root-function">The nth root function</h3>
 
 <p>The nth root function is defined as follows:</p>
 
@@ -414,14 +431,20 @@ r_{t+1} &amp;= r_{t} + g(r_t)\\[2em]
 g(x) &amp;= a\cdot\frac{1}{(x-\frac{t_x}{a})^\frac{1}{n}}-t_y
 \end{align}\]
 
-<p>The value of this one over log function decreases as \(r_t\) increases. This allows for a radical resource growth at the start, but a more gradual resource growth if there is already a high amount of resources available. This function was designed to be resemble a ‘nested’ common-pool resource, where the lake is able to support but a limited amount of fish. The exponents \(a\), \(t_x\), \(t_y\) and \(n\) have the following implications on \(g(x)\):</p>
+<p>The growth of the value of \(g(x)\) decreases as \(r_t\) increases. This allows for a radical resource growth at the start, but a more gradual resource growth if there is already a high amount of resources available. This function was designed to be resemble a ‘nested’ common-pool resource, where the lake is able to support but a limited amount of fish. The exponents \(a\), \(t_x\), \(t_y\) and \(n\) have the following implications to the behaviour of \(g(x)\):</p>
 
 <ul>
-  <li>\(a\): Scales the whole function. Scales any properties that are already existent.</li>
-  <li>\(t_x\): Translation over x axis. Makes the decrease</li>
+  <li>\(a\): Scales the whole function. Scales any properties that are already existent in the function.If all other values are set, this is value can be used to alter the amount of resource growth.</li>
+  <li>\(t_x\): Translation over the x axis. Alters the level of radicality in the beginning and the point at which the growth becomes more gradual.</li>
+  <li>\(t_y\): Translation over the y acis. Alters the ‘base’ amount of resource growth.</li>
+  <li>\(n\): Root base. This alters the speed at which the initial radicality changes to graduality. In a sense, this is the radicality redicality exponent.</li>
 </ul>
 
-<h3 id="logarithmic-default">Logarithmic (default)</h3>
+<p class="note">If the level of radicality of the initial growth is set too high, then all agents can feed off of the initial resource jump (\(r_t\rightarrow r_{t+1}\) if \(r_t=1\)). This behaviour can be recognized by a flat, straight line of resources in the real-time resource plot.</p>
+
+<p class="note">The exponents \(a\), \(t_x\), \(t_y\) and \(n\)  can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:a</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:tx</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:ty</code> and <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:n</code> parameters, respectively. Refer to <a href="../parameters/$nroot-growth-function">NRoot growth function</a> for more information.</p>
+
+<h3 id="the-logarithmic-function-default">The logarithmic function (default)</h3>
 
 <p>The logarithmic function is defined as follows:</p>
 
@@ -430,10 +453,18 @@ r_{t+1} &amp;= r_{t} \cdot h(r_t)\\[2em]
 h(x) &amp;= \frac{a}{\log(x)+\frac{a}{s-t}} + t
 \end{align}\]
 
-<p>With the current parameters</p>
+<p>This function was designed to account for the problem with the nth root function that agents can feed off of the initial jump, whilst keeping the radical-gradual pattern. In fact, as \(h(r_t)\) scales the value of \(r_t\) instead of adding up to it (as the previous two functions do), this growth function emits a gradual-redical-gradual resource growth pattern. The exponents \(a\), \(s\) and \(t\) have the following implications to the behaviour of \(h(x)\):</p>
 
-<h1 id="simulation">Simulation</h1>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Simulation</span><span class="p">:</span>
+<ul>
+  <li>\(a\): Scales the whole function. Scales any properties that are already existent in the function.If all other values are set, this is value can be used to alter the amount of resource growth.</li>
+  <li>\(s\): Initial scale factor. If \(r_t=1\), \(h(r_t)\) will be equal to \(s\). For all \(x&gt;1\), \(h(x)&lt;s\).</li>
+  <li>\(t\): Translation over x axis (roughly). Alters the speed at which the value of the function goes down, thus modifying the speed of the gradual-radical-gradual pattern.</li>
+</ul>
+
+<p class="note">The exponents \(a\), \(s\) and \(t\) can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:logarithmic:a</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:logarithmic:t</code> and <code class="language-plaintext highlighter-rouge">resource:gf_params:logarithmic:t</code> parameters, respectively. Refer to <a href="../parameters/$logarithmic-growth-function">Logarithmic growth function</a> for more information.</p>
+
+<h1 id="simulator">Simulator</h1>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Simulator</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_dict</span><span class="p">,</span> <span class="n">printer</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> 
                  <span class="n">row_head</span><span class="o">=</span><span class="p">[],</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="c1"># Params and modules initializer
@@ -463,10 +494,12 @@ h(x) &amp;= \frac{a}{\log(x)+\frac{a}{s-t}} + t
 <p>This class is the spine of the simulation, hence its name. Here is where the agents and fish live and where the actual results of the model are produced by controlling both the community of agents and the common resource.</p>
 
 <h2 id="simulation-construction">Simulation construction</h2>
-<p>The constructor of <code class="language-plaintext highlighter-rouge">Simulation</code>, <code class="language-plaintext python highlighter-rouge">Simulation.__init__()</code>, constructs a new intance of the <code class="language-plaintext highlighter-rouge">Simulation</code> class. Not only will this class set the values of its own attributes and variables, it will also receive the parameters for both the <code class="language-plaintext highlighter-rouge">Agent</code> and <code class="language-plaintext highlighter-rouge">Resource</code> classes, of which it will instantiate instances. Here the <code class="language-plaintext highlighter-rouge">Simulation</code> class also receives a reference to a <code class="language-plaintext highlighter-rouge">ResultPlotter</code> or <code class="language-plaintext highlighter-rouge">CsvLogger</code> class if specified via the command-line and/or instatiated in <code class="language-plaintext highlighter-rouge">main.py</code>. 
+<p>The constructor of <code class="language-plaintext highlighter-rouge">Simulator</code>, <code class="language-plaintext highlighter-rouge">Simulator.__init__()</code>, constructs a new intance of the <code class="language-plaintext highlighter-rouge">Simulator</code> class. Not only will this class set the values of its own attributes and variables, it will also receive the parameters for both the <code class="language-plaintext highlighter-rouge">Agent</code> and <code class="language-plaintext highlighter-rouge">Resource</code> classes, of which it will instantiate instances. Here the <code class="language-plaintext highlighter-rouge">Simulator</code> class also receives a reference to a <code class="language-plaintext highlighter-rouge">ResultPlotter</code> or <code class="language-plaintext highlighter-rouge">CsvLogger</code> class if specified via the command-line and/or instatiated in <code class="language-plaintext highlighter-rouge">main.py</code>. 
 Furthermore, the thresholds for activating and deactivating the resource restriction are calculated.</p>
 
 <h2 id="simulation-loop">Simulation loop</h2>
+<p class="note">The following subsections describe the workings of the main simulation loop, embedded in the <code class="language-plaintext highlighter-rouge">Simulator.generate_simulation()</code> function.</p>
+
 <h3 id="initialisation">Initialisation</h3>
 <p>Before the simulation goes into its simulation loop, the simulation is first initialised:</p>
 <ul>
@@ -478,15 +511,53 @@ Furthermore, the thresholds for activating and deactivating the resource restric
 
 <h3 id="the-epoch-loop">The epoch loop</h3>
 <p>Once initialisation is complete, the epoch loop starts. This loop will run untill either of the stopping conditions are met. There are two different stopping conditions:</p>
-<ul>
+<ol>
   <li>Either the maximum amount of epochs are reached; or</li>
   <li>The amount of alive agents drops under a certain threshold.
 The first stopping condition can be specified by setting the <code class="language-plaintext highlighter-rouge">simulation:max_epoch</code> parameter. The second stopping condition is set to 2. This is done so since 1 agent will not be able to procreate, and will eventually die of age. It may however happen that all alive agents die all within the epoch, therefore we need to check whether \(|A|&lt;2\) (where \(A\) denotes the set of alive agents), instead of \(|A|=1\).</li>
-</ul>
+</ol>
+
+<p>During each loop a few things happen in the following order:</p>
+<ol>
+  <li>Before the body of the loop starts, the first stopping condition is checked. If this passes the body of the loop is executed.</li>
+  <li>First the list of <em>parents</em> and <em>eol</em> (end of life) are reset.</li>
+  <li>Then it is checked whether the resource restriction should be active or inactive.</li>
+  <li>Then the list of alive agents is iterated through:
+    <ol>
+      <li>First the agent acts.</li>
+      <li>Then the consequences of its actions are determined (below points are mutually exclusive):
+        <ul>
+          <li>If the agent has an energy of &lt;0 it is added to the <em>eol</em> list.</li>
+          <li>If the agent has become to old it is added to the <em>eol</em> list.</li>
+          <li>If the energy of the agent meets the procreate requirement it is added to the list of parents.</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li>All agents on the <em>eol</em> list are removed from the simulation.</li>
+  <li>All agents on the <em>parents</em> list procreate, following the <a href="#agent-procreation">agent procreation</a> function.</li>
+  <li>The resources <a href="#growth-functions">regrow</a>.</li>
+  <li>The list of agents is shuffled, to minimize the chance that the same agent gets to act first each epoch.</li>
+  <li>If required, the results are printed, plotted and/or logged.</li>
+  <li>Finally if the second stopping condition passes, the epoch counter is increased by 1 and the loop restarts.</li>
+</ol>
+
+<h3 id="after-the-epoch-loop">After the epoch loop</h3>
+<p>When the epoch loop has finished there are 3 possible states of the simulation:</p>
+<ol>
+  <li>The loop has finished due to epoch limit. This means that the simulation could’ve run longer and is therefore considered a success. The following result message is displayed: <code class="language-plaintext highlighter-rouge">"Maximum epoch reached, ..."</code>.</li>
+  <li>The loop has finished due to agent count. The first possibility is that there is just one agent left. Such a simulation is considered a failure. Then the following result message is displayed: <code class="language-plaintext highlighter-rouge">"Only one lonely agent managed to survive. ..."</code>.</li>
+  <li>The loop has finished due to agent count and there are no agents left. A simulation with such result is also considered to be a failure. In this case the following result message is displayed: <code class="language-plaintext highlighter-rouge">"All agents are dead :( ..."</code></li>
+</ol>
+
+<h3 id="pseudocode">Pseudocode</h3>
+<p>See below for the pseudocode representing a graphical overview of aforementioned explanation of the <code class="language-plaintext highlighter-rouge">Simulator.generate_simulation()</code> method.</p>
+
+<p><img src="../../assets/img/simulation_pseudo.png" alt="" /></p>
 
 <h1 id="output">Output</h1>
 
-<h2 id="real-time-plot">Real-time plot</h2>
+<h2 id="results-plotter">Results plotter</h2>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ResultsPlotter</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_agent</span><span class="p">,</span> <span class="n">svo_bar_count</span><span class="p">,</span> <span class="n">start_resource</span><span class="p">,</span> <span class="n">fullscreen</span><span class="p">):</span>
         <span class="c1"># Sets up all parameters and attributes of the class
@@ -503,10 +574,53 @@ The first stopping condition can be specified by setting the <code class="langua
     <span class="k">def</span> <span class="nf">save_fig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 
 </code></pre></div></div>
+<p>Plots always give a good and quick overview of whats going on with the data, and the model in this case. By having this plot real-time, the progress of a simulation can be viewed directly without after-the-fact data analysis. Runs that did not provide satisfying results can then easily be discarded, since only those that do need to be explicitly saved. Refer to the <a href="../output/#real-time-plot">real-time plot output</a> for a detailed explanation of the output of this class. This plot is intentionally kept minimal to keep plotting speed as high as possible. If more advanced plots are desired one should perform off-line data analysis using the data from the <a href="#csv-logger">CSV-logger</a>.</p>
+
+<h3 id="resultsplotter-construction">ResultsPlotter construction</h3>
+<p>The constructor of <code class="language-plaintext highlighter-rouge">ResultsPlotter</code>, <code class="language-plaintext highlighter-rouge">ResultsPlotter.__init__()</code>, constructs a new instance of the <code class="language-plaintext highlighter-rouge">ResultsPlotter</code> class. During construction the figure and its subplots are initialised; the correct plot titles and axis labels are set. Furthermore, the various lines and histogram bars are initialised with the correct colors, labels and styles.</p>
+
+<h3 id="funcanimation">FuncAnimation</h3>
+<p>The <code class="language-plaintext highlighter-rouge">ResultsPlotter</code> class uses the <a href="https://matplotlib.org/3.3.2/api/_as_gen/matplotlib.animation.FuncAnimation.html#matplotlib.animation.FuncAnimation"><code class="language-plaintext highlighter-rouge">FuncAnimation</code></a> class from the <code class="language-plaintext highlighter-rouge">animation</code> module of the <code class="language-plaintext highlighter-rouge">matplotlib</code> library. <code class="language-plaintext highlighter-rouge">FuncAnimation</code> works by repeatedly calling a function that yields the data to be plotted. Before the actual animation starts, an initialisation is called.
+The animation initialisation is performed in the <code class="language-plaintext highlighter-rouge">init_plot()</code> method. Here all axis limits and data of the subplots are reset.</p>
+
+<p class="note">One would expect to do the initialisation all in one method (either the <code class="language-plaintext highlighter-rouge">init_plot()</code> or <code class="language-plaintext highlighter-rouge">__init__()</code> function). However the <code class="language-plaintext highlighter-rouge">FuncAnimation</code> can be set to run repeatedly (so restart each time a previous simulation ends). Each repeat then will call the initialisation function, before starting the animation. Resetting all subplots and their labels, axis limits and styles would be redundant..</p>
+
+<p>The animation is started in the <code class="language-plaintext highlighter-rouge">start_printer()</code> function. The initialisation function is called from this method and the animation is started using the provided data generator (a function yielding the data for the plot). Each time the data generator yields new results the <code class="language-plaintext highlighter-rouge">update()</code> function is called.</p>
+
+<h4 id="def-update">Def update</h4>
+<p>Each time the <code class="language-plaintext highlighter-rouge">update()</code> function is called, the plot will update using the newly provided data. This new data is contained in the tuple provided as argument. The  <code class="language-plaintext highlighter-rouge">update()</code> function will update the underlying arrays containing the data, adjust the axis limits if required and update the actual lines and histogram.</p>
+
+<h4 id="blit">Blit</h4>
+<p>One important argument of the <code class="language-plaintext highlighter-rouge">FuncAnimation</code> class to note is the <code class="language-plaintext highlighter-rouge">blit</code> argument. This argument changes the way the animation works internally. By settings this argument to <code class="language-plaintext highlighter-rouge">True</code> only the updated actors are drawn. Therefore the <code class="language-plaintext highlighter-rouge">init_plot()</code> and <code class="language-plaintext highlighter-rouge">update()</code> return the updated lines and histogram bars (which is not nessecary in normal plotting circumstances). This will make the plot significantly faster, since only a small part of each line is drawn each epoch. As a consequence however, the plot is reset when it is resized and when it reaches the end of the simulation.</p>
+
+<p>Sufficient measures have been put in place to circumvent this consequence of faster plotting. For example, the <code class="language-plaintext highlighter-rouge">--resize</code> parameter can be provided. This will set the <code class="language-plaintext highlighter-rouge">blit</code> argument to <code class="language-plaintext highlighter-rouge">False</code>. This will however cause the plot to become significantly slower. Furthermore the plot will become gradually slower since each epoch the full length of the 4 lines need to be redrawn, which means that each epoch more data needs to be redrawn.<br />
+Additionally the plot is automatically saved after the simulation, allowing the plot to be viewed even when it resets after the simulation. As a downside however, this image is saved in a fixed <code class="language-plaintext highlighter-rouge">.png</code> format therefore reducing the scalability of the image.</p>
 
 <h2 id="csv-logger">CSV logger</h2>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> 
-</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CsvLogger</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">append</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="c1"># Sets up the csv-logger with the parameters and column names provided
+</span>
+    <span class="k">def</span> <span class="nf">add_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+        <span class="c1"># Adds a row to the (currently in-memory) csvfile
+</span>
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="c1"># Writes the in-memory csv file to a hard-drive csv file
+</span></code></pre></div></div>
+<p>The CSV-logger is an important part of running multiple experiments, while allowing after-the-fact data processing. Refer to the <a href="../output/#csv-logger">CSV logger output</a> for a detailed explanation of the exact formatting of the outputted CSV files.</p>
+
+<p class="note">Although the <a href="https://pandas.pydata.org/"><code class="language-plaintext highlighter-rouge">pandas</code></a> library is a well known library to work with tables and CSV files, this class actually uses a list of CSV formatted strings instead of a <code class="language-plaintext highlighter-rouge">pandas</code> dataframe. This is done so since <code class="language-plaintext highlighter-rouge">pandas.append(row)</code> is a relatively expensive operation compared to <code class="language-plaintext highlighter-rouge">list.append(str)</code>, and appending to a dataframe would’ve be the only used feature of <code class="language-plaintext highlighter-rouge">pandas</code> (apart from the <code class="language-plaintext highlighter-rouge">_to_csv()</code> function).</p>
+
+<h3 id="csvlogger-construction">CsvLogger construction</h3>
+<p>The constructor of the <code class="language-plaintext highlighter-rouge">CsvLogger</code>, <code class="language-plaintext highlighter-rouge">CsvLogger.__init__()</code>, constructs a new instance of the <code class="language-plaintext highlighter-rouge">CsvLogger</code> class. During construction the parameters, such as the separator and separator replacement, for the logger are set. Using the provided columns names, the number of columns is determined and the header string is generated.</p>
+
+<h3 id="add-row">Add row</h3>
+<p>In this function a new row is added to the list of CSV formatted string. If \(R\) is the row to add, then \(R\) should be a list of objects \(r\in R\) such that \(\forall r\in R : str(r) \neq None\) and \(|R|=n\_cols\), where \(n\_cols\) represents the amount of columns of the final CSV file.</p>
+
+<p>For each object \(r\in R\) it is checked if <code class="language-plaintext highlighter-rouge">str(r)</code> contains the separator character. If so, it is replaced by the separator replacement character. Then all processed strings are joined together using the separator character and the resulting string is appended to the list of formatted strings.</p>
+
+<h3 id="write">Write</h3>
+<p>The <code class="language-plaintext highlighter-rouge">write()</code> function writes the list of CSV formatted strings to a comma-separated values file. First the header string is added, then all the CSV formatted string are added to this file.</p>
 
 <h1 id="utilities">Utilities</h1>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">InvalidArgumentError</span><span class="p">(</span><span class="nb">Exception</span><span class="p">):</span>
@@ -529,6 +643,11 @@ The first stopping condition can be specified by setting the <code class="langua
     <span class="c1"># asd
 </span></code></pre></div></div>
 
+<p>Two different utility files were created:</p>
+<ul>
+  <li><a href="https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/cpr_simulation/exception.py"><code class="language-plaintext highlighter-rouge">exception.py</code></a> used for custom exception handling.</li>
+  <li><a href="https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/cpr_simulation/util.py"><code class="language-plaintext highlighter-rouge">util.py</code></a> used to generate a default parameter dictionary (<code class="language-plaintext highlighter-rouge">dd_factory()</code>) and to update one dictionary with the values of another dictionary (<code class="language-plaintext highlighter-rouge">update_dict</code>).</li>
+</ul>
 
   
 
