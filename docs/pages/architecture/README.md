@@ -181,6 +181,9 @@ The value of $$t$$ can be altered through the `agent:svo_convergence_factor:svo_
 # Resource
 ```python
 class Resource:
+    # Attributes:
+    # - growth (unary function)
+
     def __init__(self, params):
         # Resource pool constructor
 
@@ -188,10 +191,10 @@ class Resource:
         # Exponential growth function
 
     def growth_logarithmic(self, val, a, t, s):
-        # 1 / log growth function
+        # logarithmic growth function
 
-    def growth_nroot(self, a, tx, ty, n):
-        # 1 / nth root growth function
+    def growth_nroot(self, val, a, tx, ty, n):
+        # Nth root growth function
 
     def grow_resource(self):
         # Resource growth function entry point
@@ -200,15 +203,23 @@ class Resource:
         # Resource consumption entry pont
 ```
 
-## Resource construction
-The constructor of the `Resource`, `Resource.__init__()`, constructs a new instance of the `Resource` class. During construction, the attributes are set from the provided parameters. Furthermore a partial function is constructed for the resource regrowth. Finally the current amount of resources are set to the provided start amount.
+## Resource pool construction
+The constructor of the `Resource`, `Resource.__init__()`, constructs a new instance of the `Resource` class. During construction, the attributes are set from the provided parameters. Assume the amount of resources that are available at epoch $$t$$ is defined by $$r_t$$. From the parameters, we set $$r_0$$ equal to a predetermined value.  
+In addition, the function (`Agent.growth_exponential`, `Agent.growth_logarithmi` or `Agent.growth_nroot`) that is used for the growth of the resource is also set from the parameters. We partially implement these functions already, filling the exponents (all function parameters but `val`). Therefore, after construction of the resource, a growth function that takes only one value `Agent.growth` is generated.  
+Finally, the current amount of resources $$r_0$$ are set to the provided start amount.
+
+## Resource consumption
+The resource class exposes a method `Resource.consume_resource()`, which attempts to take an amount (`amount`) of resource from the total amount of resource available. However, if less resources are left that this amount, the funtion will take whatever is left (taking into account the required minium amount of resources). This value is substracted from the amount of resources available ($$r_t$$) and is returned to the caller. 
+
+## Resource growth
+The `Resource.grow_resource` method can be called to grow the resource ($$r_{t+1}\leftarrow \text{growth}(r_t)$$). Naturally, this method is invoked once per epoch. The behaviour of this functin depends on the growth function that is chosen, as is more thoroughly explained in the next section.
 
 ## Growth functions
-Three different growth functions are defined.
+In this section, the three available growth functions are explained. 
 
 The active resource growth function can be altered through the `resource:growth_function` parameter. Refer to [Resource Parameters](../parameters/#resource-parameters). See [this example](../interaction/example-analyzing-resource-growth-functions) on how to check the behaviour of a growth function without interference of agents.
 
-### The eponential function
+### The exponential function
 The exponential resource growth function is defined as follows:
 
 $$
@@ -241,7 +252,7 @@ The growth of the value of $$g(x)$$ decreases as $$r_t$$ increases. This allows 
 * $$t_y$$: Translation over the y acis. Alters the 'base' amount of resource growth.
 * $$n$$: Root base. This alters the speed at which the initial radicality changes to graduality. In a sense, this is the radicality redicality exponent. 
 
-If the level of radicality of the initial growth is set too high, then all agents can feed off of the initial resource jump ($$r_t\rightarrow r_{t+1}$$ if $$r_t=1$$). This behaviour can be recognized by a flat, straight line of resources in the real-time resource plot.  
+If the level of radicality of the initial growth is set too high, then all agents can feed off of the initial resource jump ($$g(r_t)$$ if $$r_t=1$$) as at this point the function is most radical. This behaviour can be recognized by a flat, straight line of resources in the real-time resource plot.  
 {:.note}
 
 The exponents $$a$$, $$t_x$$, $$t_y$$ and $$n$$  can be altered through the `resource:gf_params:nroot:a`, `resource:gf_params:nroot:tx`, `resource:gf_params:nroot:ty` and `resource:gf_params:nroot:n` parameters, respectively. Refer to [NRoot growth function](../parameters/$nroot-growth-function) for more information. 
@@ -259,7 +270,12 @@ h(x) &= \frac{a}{\log(x)+\frac{a}{s-t}} + t
 \end{align}
 $$
 
-This function was designed to account for the problem with the nth root function that agents can feed off of the initial jump, whilst keeping the radical-gradual pattern. In fact, as $$h(r_t)$$ scales the value of $$r_t$$ instead of adding up to it (as the previous two functions do), this growth function emits a gradual-redical-gradual resource growth pattern. The exponents $$a$$, $$s$$ and $$t$$ have the following implications to the behaviour of $$h(x)$$:
+This function was designed to account for the problem with the nth root function that agents can feed off of the initial jump, whilst keeping the radical-gradual pattern. In fact, as $$h(r_t)$$ scales the value of $$r_t$$ instead of adding up to it (as the previous two functions do), this growth function emits a gradual-redical-gradual resource growth pattern. 
+
+For this function, a mimimum amount of 1 resource needs to always be available. This is because the behaviour of $$h(x)$$ is undefined if $$x=0$$. Always check that `resource:min_value` is set to 1 or higher if using the logarithmic growth function. Refer to [Resource Parameters](../parameters/#resource-parameters) for more information.
+{:.note}
+
+The exponents $$a$$, $$s$$ and $$t$$ have the following implications to the behaviour of $$h(x)$$:
 
 * $$a$$: Scales the whole function. Scales any properties that are already existent in the function.If all other values are set, this is value can be used to alter the amount of resource growth.
 * $$s$$: Initial scale factor. If $$r_t=1$$, $$h(r_t)$$ will be equal to $$s$$. For all $$x>1$$, $$h(x)<s$$.

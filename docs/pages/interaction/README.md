@@ -117,29 +117,29 @@ For an overview of all parameters available in this model, refer to [Parameters]
 
   ### Example: Analyzing resource growth functions
   * Analyze the behaviour of the resource growth functions for 100 epochs without interference of any agents:
-  ```bash
-  $ py sim.py run --param \
-  >   resource:growth_function=exponential \
-  >   agent:count=0 \
-  >   simulation:max_epoch=100
-  ```
-  * Compare 2 different base root values for the `nroot` growth function:
-  ```bash
-  $ py sim.py run \
-  >   --param \
-  >       resource:growth_function=nroot \
-  >       agent:count=0 \
-  >       simulation:max_epoch=100 \
-  >       resource:growth_function:nroot:n=2
-  ```
-   ```bash
-  $ py sim.py run \
-  >   --param \
-  >       resource:growth_function=nroot \
-  >       agent:count=0 \
-  >       simulation:max_epoch=100 \
-  >       resource:growth_function:nroot:n=15
-  ```
+    ```bash
+    $ py sim.py run --param \
+    >   resource:growth_function=exponential \
+    >   agent:count=0 \
+    >   simulation:max_epoch=100
+    ```
+  * Compare two different base root values for the `nroot` growth function:
+    ```bash
+    $ py sim.py run \
+    >   --param \
+    >       resource:growth_function=nroot \
+    >       agent:count=0 \
+    >       simulation:max_epoch=100 \
+    >       resource:growth_function:nroot:n=2
+    ```
+    ```bash
+    $ py sim.py run \
+    >   --param \
+    >       resource:growth_function=nroot \
+    >       agent:count=0 \
+    >       simulation:max_epoch=100 \
+    >       resource:growth_function:nroot:n=15
+    ```
 
 ## Specifying output behaviour
 ```

@@ -48,6 +48,7 @@
 * Check whether all code is compliant to beta implementation feedback
 * For each class, link to documentation in docstring
 * Decide what to do with ```parameters.py``` docstring
+* Determine behaviour of agent count is set to 0. Should iterate without agent limit.
 
 ### General repository
 * Change README (decide on what we want to have there)
