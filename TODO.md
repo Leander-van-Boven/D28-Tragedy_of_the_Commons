@@ -69,20 +69,19 @@
 * Background pages
   * 'Imagine a small island with no food but fish in the sea around it. Any agent living on that island...'
   * TOC vs CPR
-* Architecture pages
-  * Home page
-    * Explanation general framework
-    * TOC
-  * Agent class
-    * Multi modal gauss
-    * Procreate
-    * Behaviour
-  * Resource class
-  * Simulation class
-    * Add pseudo code
-  * Output classes
-    * Mention list of strings instead of pandas frame for output
-  * Helper classes?
+* ~~Architecture pages~~
+  * ~~Intro~~
+    * ~~Explanation general framework~~
+  * ~~Agent class~~
+    * ~~Multi modal gauss~~
+    * ~~Procreate~~
+    * ~~Behaviour~~
+  * ~~Resource class~~
+  * ~~Simulation class~~
+    * ~~Add pseudo code~~
+  * ~~Output classes~~
+    * ~~Mention list of strings instead of pandas frame for output~~
+  * ~~Helper classes?~~
 * ~~Interaction pages~~
   * ~~Overview of workflow of implementation~~
   * ~~Thorough explanation of every CL argument~~
@@ -102,9 +101,10 @@
   * ~~SVO distribution parameters~~
 * Check and Fix all links
   * Add additional /#header-title thingies if feasible
+* Fix section header capitalization
 * Data analysis page? Or in README? Should we mention it?
 * ~~Put GNU-GPL license in the /docs folder somewhere~~
-* Add rr (notice?)
+* Make links in Interaction/Agent somewhat more specific (subsection in parameter)
 ## Report
 * Read through section Implementation Model, add/fix things where needed
 * (Put things needed to fix below)

@@ -132,7 +132,7 @@ Example of real-time plot run for 13 epochs.
 {:.figcaption}
 
 # CSV-logger
-The CSV logger logs the statistics of the simulation into a CSV- or [comma-separated values file](https://en.wikipedia.org/wiki/Comma-separated_values). This file can then be used for further data processing. Its usage becomes most optimal if combined with the [--range](/D28-Tragedy_of_the_Commons/pages/interaction/#batch-and-range) command-line argument. 
+The CSV logger logs the statistics of the simulation into a CSV- or [comma-separated values file](https://en.wikipedia.org/wiki/Comma-separated_values). This file can then be used for further data processing. Its usage becomes most optimal if combined with the [--range](../pages/interaction/#batch-and-range) command-line argument. 
 
 ## Logged values
 The contents in each row of the logger are split into two parts.
@@ -155,9 +155,9 @@ Each CSV file will contain at least one _Experiment Value_ column called 'Exp Nu
 Since the model is quite extensive and contains a lot of parameters, it is not feasible to log all parameter values for each epoch. Especially considering the amount of epoch statistics that are being logged. Therefore the logger will only log the parameter values that make an experiment unique.  
 There are a two cases that make an experiment unique and these are added to the columns in the following order:
 1. The batch number of the current paramter combination, called `"batch"`.
-2. All parameters overwritten using the [`range`](/D28-Tragedy_of_the_Commons/pages/interaction/#batch-and-range) argument, in the order they were overwritten. The name of the column is equal to the name of the parameter that is overwritten following the naming scheme of the [Parameters](/D28-Tragedy_of_the_Commons/pages/parameters) (specifying a range for the maximum epoch will result in a column named `"simulation:max_epoch"`).
+2. All parameters overwritten using the [`range`](../interaction/#batch-and-range) argument, in the order they were overwritten. The name of the column is equal to the name of the parameter that is overwritten following the naming scheme of the [Parameters](../parameters) (specifying a range for the maximum epoch will result in a column named `"simulation:max_epoch"`).
 
-A JSON file containing the values used for the other parameters can be obtained running the [`save`](/D28-Tragedy_of_the_Commons/pages/interaction/#specifying-a-certain-scenario) command.
+A JSON file containing the values used for the other parameters can be obtained running the [`save`](../interaction/#specifying-a-certain-scenario) command.
 {:.note}
 
 ### Epoch statistics
@@ -177,11 +177,11 @@ Each time the statistics of an epoch are logged, the following values are added 
   * The 60th percentile, called `"Above"`
   * The mean, called `"Mean"`
   * The standard deviation, called `"STD"`
-* The current threshold for the restriction of the restricted energy function to become active. [link needed](#epoch-statistics). This column is called `"Resource Limit"`.
-* The current threshold for the restriction of the restricted energy function to become active. [link needed](#epoch-statistics). This column is called `"Resource Unlimit"`.
+* The current threshold for the restriction of the restricted energy function to become active. The calculation of this value is explained in the [parameters](../parameters/#restricted-model-limit-parameters). This column is called `"Resource Limit"`.
+* The current threshold for the restriction of the restricted energy function to become active. The calculation of this value is explained in the [parameters](../parameters/#restricted-model-limit-parameters). This column is called `"Resource Unlimit"`.
 
 # Multi-threaded Experiments
-When multiple experiments are run in a multithreaded environment (i.e. [`--jobs >1`](/D28-Tragedy_of_the_Commons/pages/interaction/#multi-threading)), the output of the model is slightly altered.
+When multiple experiments are run in a multithreaded environment (i.e. [`--jobs >1`](../interaction/#multi-threading)), the output of the model is slightly altered.
 
 ## Graphical output
 ### Command-line interface

@@ -338,7 +338,7 @@ Say that the total amount of resource that’s available when agent goes fishing
 <h3 id="restricted-energy-function-default">Restricted energy function (default)</h3>
 <p>The restricted energy function, represented by the method <code class="language-plaintext highlighter-rouge">Agent.restricted_energy_function</code>(), builds on the base function by adding a epoch-based resource restriction.</p>
 
-<p class="note">The point at which the restriction kicks in or out can be altered through the <code class="language-plaintext highlighter-rouge">simulation:res_limit_factor</code> and <code class="language-plaintext highlighter-rouge">simulation:res_unlimit_factor</code> parameters respectively. Refer to <a href="../parameters/restricted-model-limit-parameters">Restricted model limit parameters</a> for more information.</p>
+<p class="note">The point at which the restriction kicks in or out can be altered through the <code class="language-plaintext highlighter-rouge">simulation:res_limit_factor</code> and <code class="language-plaintext highlighter-rouge">simulation:res_unlimit_factor</code> parameters respectively. Refer to <a href="../parameters/#restricted-model-limit-parameters">Restricted model limit parameters</a> for more information.</p>
 
 <p>If this restriction is active, agents are only allowed to fish if they would die otherwise. However, each agent has a chance of ignoring this restriction. The probability hereof is linearly dependent of the agent’s social value orientation, i.e. if they range more towards pro-selfness, they are inclined to ignore the restriction more often.<br />
 However, agents that choose to ignore this rule have have a probability of being caught. If they are catched red-handed, they are punished and can’t fish for a predetermined number of epochs.</p>
@@ -409,7 +409,7 @@ P(\mu_c=svo_{p2}) &amp;= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
 
 <h2 id="resource-pool-construction">Resource pool construction</h2>
 <p>The constructor of the <code class="language-plaintext highlighter-rouge">Resource</code>, <code class="language-plaintext highlighter-rouge">Resource.__init__()</code>, constructs a new instance of the <code class="language-plaintext highlighter-rouge">Resource</code> class. During construction, the attributes are set from the provided parameters. Assume the amount of resources that are available at epoch \(t\) is defined by \(r_t\). From the parameters, we set \(r_0\) equal to a predetermined value.<br />
-In addition, the function (<code class="language-plaintext highlighter-rouge">Agent.growth_exponential</code>, <code class="language-plaintext highlighter-rouge">Agent.growth_logarithmi</code> or <code class="language-plaintext highlighter-rouge">Agent.growth_nroot</code>) that is used for the growth of the resource is also set from the parameters. We partially implement these functions already, filling the exponents (all function parameters but <code class="language-plaintext highlighter-rouge">val</code>). Therefore, after construction of the resource, a growth function that takes only one value <code class="language-plaintext highlighter-rouge">Agent.growth</code> is generated.<br />
+In addition, the function (<code class="language-plaintext highlighter-rouge">Resource.growth_exponential</code>, <code class="language-plaintext highlighter-rouge">Resource.growth_logarithmic</code> or <code class="language-plaintext highlighter-rouge">Resource.growth_nroot</code>) that is used for the growth of the resource is also set from the parameters. We partially implement these functions already, filling the exponents (all function parameters but <code class="language-plaintext highlighter-rouge">val</code>). Therefore, after construction of the resource, a growth function that takes only one value <code class="language-plaintext highlighter-rouge">Resource.growth</code> is generated.<br />
 Finally, the current amount of resources \(r_0\) are set to the provided start amount.</p>
 
 <h2 id="resource-consumption">Resource consumption</h2>
@@ -421,7 +421,7 @@ Finally, the current amount of resources \(r_0\) are set to the provided start a
 <h2 id="growth-functions">Growth functions</h2>
 <p>In this section, the three available growth functions are explained.</p>
 
-<p>The active resource growth function can be altered through the <code class="language-plaintext highlighter-rouge">resource:growth_function</code> parameter. Refer to <a href="../parameters/#resource-parameters">Resource Parameters</a>. See <a href="../interaction/example-analyzing-resource-growth-functions">this example</a> on how to check the behaviour of a growth function without interference of agents.</p>
+<p>The active resource growth function can be altered through the <code class="language-plaintext highlighter-rouge">resource:growth_function</code> parameter. Refer to <a href="../parameters/#resource-parameters">Resource Parameters</a>. See <a href="../interaction/#example-analyzing-resource-growth-functions">this example</a> on how to check the behaviour of a growth function without interference of agents.</p>
 
 <h3 id="the-exponential-function">The exponential function</h3>
 <p>The exponential resource growth function is defined as follows:</p>
@@ -433,7 +433,7 @@ f(x) &amp;= e\cdot x
 
 <p>Note that this function in itself isn’t exponential. However, when it is repeatedly applied each epoch, it will be. This function has one parameter, \(e\), which determines the amount of exponential growth.</p>
 
-<p class="note">The exponent \(e\) can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:exponential:rate</code> parameter. Refer to <a href="../parameters/$exponential-growth-function">Exponential growth function</a> for more information.</p>
+<p class="note">The exponent \(e\) can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:exponential:rate</code> parameter. Refer to <a href="../parameters/#exponential-growth-function">Exponential growth function</a> for more information.</p>
 
 <h3 id="the-nth-root-function">The nth root function</h3>
 
@@ -455,7 +455,7 @@ g(x) &amp;= a\cdot\frac{1}{(x-\frac{t_x}{a})^\frac{1}{n}}-t_y
 
 <p class="note">If the level of radicality of the initial growth is set too high, then all agents can feed off of the initial resource jump (\(g(r_t)\) if \(r_t=1\)) as at this point the function is most radical. This behaviour can be recognized by a flat, straight line of resources in the real-time resource plot.</p>
 
-<p class="note">The exponents \(a\), \(t_x\), \(t_y\) and \(n\)  can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:a</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:tx</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:ty</code> and <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:n</code> parameters, respectively. Refer to <a href="../parameters/$nroot-growth-function">NRoot growth function</a> for more information.</p>
+<p class="note">The exponents \(a\), \(t_x\), \(t_y\) and \(n\)  can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:a</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:tx</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:ty</code> and <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:n</code> parameters, respectively. Refer to <a href="../parameters/#nroot-growth-function">NRoot growth function</a> for more information.</p>
 
 <h3 id="the-logarithmic-function-default">The logarithmic function (default)</h3>
 
@@ -478,7 +478,7 @@ h(x) &amp;= \frac{a}{\log(x)+\frac{a}{s-t}} + t
   <li>\(t\): Translation over x axis (roughly). Alters the speed at which the value of the function goes down, thus modifying the speed of the gradual-radical-gradual pattern.</li>
 </ul>
 
-<p class="note">The exponents \(a\), \(s\) and \(t\) can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:logarithmic:a</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:logarithmic:t</code> and <code class="language-plaintext highlighter-rouge">resource:gf_params:logarithmic:t</code> parameters, respectively. Refer to <a href="../parameters/$logarithmic-growth-function">Logarithmic growth function</a> for more information.</p>
+<p class="note">The exponents \(a\), \(s\) and \(t\) can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:logarithmic:a</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:logarithmic:t</code> and <code class="language-plaintext highlighter-rouge">resource:gf_params:logarithmic:t</code> parameters, respectively. Refer to <a href="../parameters/#logarithmic-growth-function">Logarithmic growth function</a> for more information.</p>
 
 <h1 id="simulator">Simulator</h1>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Simulator</span><span class="p">:</span>
@@ -640,7 +640,8 @@ Additionally the plot is automatically saved after the simulation, allowing the 
 <p>The <code class="language-plaintext highlighter-rouge">write()</code> function writes the list of CSV formatted strings to a comma-separated values file. First the header string is added, then all the CSV formatted string are added to this file.</p>
 
 <h1 id="utilities">Utilities</h1>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">InvalidArgumentError</span><span class="p">(</span><span class="nb">Exception</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># exception.py
+</span><span class="k">class</span> <span class="nc">InvalidArgumentError</span><span class="p">(</span><span class="nb">Exception</span><span class="p">):</span>
     <span class="k">pass</span>
 
 <span class="k">class</span> <span class="nc">MissingArgumentError</span><span class="p">(</span><span class="nb">Exception</span><span class="p">):</span>
@@ -654,17 +655,26 @@ Additionally the plot is automatically saved after the simulation, allowing the 
     <span class="k">pass</span>
 
 <span class="k">def</span> <span class="nf">dd_factory</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="c1"># asd
+    <span class="c1"># recursive definition of defaultdict
 </span>
 <span class="k">def</span> <span class="nf">update_dict</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">omit_new</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-    <span class="c1"># asd
+    <span class="c1"># update dict-like d with key-value pairs 
+</span>    <span class="c1"># in dict-like u
 </span></code></pre></div></div>
 
 <p>Two different utility files were created:</p>
 <ul>
   <li><a href="https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/cpr_simulation/exception.py"><code class="language-plaintext highlighter-rouge">exception.py</code></a> used for custom exception handling.</li>
-  <li><a href="https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/cpr_simulation/util.py"><code class="language-plaintext highlighter-rouge">util.py</code></a> used to generate a default parameter dictionary (<code class="language-plaintext highlighter-rouge">dd_factory()</code>) and to update one dictionary with the values of another dictionary (<code class="language-plaintext highlighter-rouge">update_dict</code>).</li>
+  <li><a href="https://github.com/Leander-van-Boven/D28-Tragedy_of_the_Commons/blob/master/cpr_simulation/util.py"><code class="language-plaintext highlighter-rouge">util.py</code></a> contains some utilitarian methods that are used across the module.
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">do_nothing()</code> does exactly nothing. This is used to remap some local print method to if that level of verbosity isn’t required.</li>
+      <li><code class="language-plaintext highlighter-rouge">dd_factory()</code> is a recursive definition of a python <code class="language-plaintext highlighter-rouge">defaultdict</code> that returns a new <code class="language-plaintext highlighter-rouge">defaultdict</code> if a nonexistant key is specified. This property also holds for the nested <code class="language-plaintext highlighter-rouge">defaultdict</code>, which allows us to <code class="language-plaintext highlighter-rouge">dd['nest']['non']['existent']['keys']['into']['oblivion']</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">update_dict</code> is used to update dict-like <code class="language-plaintext highlighter-rouge">d</code> with the key-value pairs that exist in the dict-like <code class="language-plaintext highlighter-rouge">u</code>.</li>
+    </ul>
+  </li>
 </ul>
+
+<p>used to generate a default parameter dictionary (<code class="language-plaintext highlighter-rouge">dd_factory()</code>) and to update one dictionary with the values of another dictionary (<code class="language-plaintext highlighter-rouge">update_dict</code>).</p>
 
   
 

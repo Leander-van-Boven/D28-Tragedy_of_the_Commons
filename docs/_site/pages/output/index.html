@@ -316,7 +316,7 @@ Press enter to continue...
 Example of real-time plot run for 13 epochs.</p>
 
 <h1 id="csv-logger">CSV-logger</h1>
-<p>The CSV logger logs the statistics of the simulation into a CSV- or <a href="https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated values file</a>. This file can then be used for further data processing. Its usage becomes most optimal if combined with the <a href="/D28-Tragedy_of_the_Commons/pages/interaction/#batch-and-range">–range</a> command-line argument.</p>
+<p>The CSV logger logs the statistics of the simulation into a CSV- or <a href="https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated values file</a>. This file can then be used for further data processing. Its usage becomes most optimal if combined with the <a href="../pages/interaction/#batch-and-range">–range</a> command-line argument.</p>
 
 <h2 id="logged-values">Logged values</h2>
 <p>The contents in each row of the logger are split into two parts.</p>
@@ -339,10 +339,10 @@ Since the model is quite extensive and contains a lot of parameters, it is not f
 There are a two cases that make an experiment unique and these are added to the columns in the following order:</p>
 <ol>
   <li>The batch number of the current paramter combination, called <code class="language-plaintext highlighter-rouge">"batch"</code>.</li>
-  <li>All parameters overwritten using the <a href="/D28-Tragedy_of_the_Commons/pages/interaction/#batch-and-range"><code class="language-plaintext highlighter-rouge">range</code></a> argument, in the order they were overwritten. The name of the column is equal to the name of the parameter that is overwritten following the naming scheme of the <a href="/D28-Tragedy_of_the_Commons/pages/parameters">Parameters</a> (specifying a range for the maximum epoch will result in a column named <code class="language-plaintext highlighter-rouge">"simulation:max_epoch"</code>).</li>
+  <li>All parameters overwritten using the <a href="../interaction/#batch-and-range"><code class="language-plaintext highlighter-rouge">range</code></a> argument, in the order they were overwritten. The name of the column is equal to the name of the parameter that is overwritten following the naming scheme of the <a href="../parameters">Parameters</a> (specifying a range for the maximum epoch will result in a column named <code class="language-plaintext highlighter-rouge">"simulation:max_epoch"</code>).</li>
 </ol>
 
-<p class="note">A JSON file containing the values used for the other parameters can be obtained running the <a href="/D28-Tragedy_of_the_Commons/pages/interaction/#specifying-a-certain-scenario"><code class="language-plaintext highlighter-rouge">save</code></a> command.</p>
+<p class="note">A JSON file containing the values used for the other parameters can be obtained running the <a href="../interaction/#specifying-a-certain-scenario"><code class="language-plaintext highlighter-rouge">save</code></a> command.</p>
 
 <h3 id="epoch-statistics">Epoch statistics</h3>
 <p>Each time the statistics of an epoch are logged, the following values are added to the right of the experiment values (in order of column location):</p>
@@ -368,12 +368,12 @@ There are a two cases that make an experiment unique and these are added to the 
       <li>The standard deviation, called <code class="language-plaintext highlighter-rouge">"STD"</code></li>
     </ul>
   </li>
-  <li>The current threshold for the restriction of the restricted energy function to become active. <a href="#epoch-statistics">link needed</a>. This column is called <code class="language-plaintext highlighter-rouge">"Resource Limit"</code>.</li>
-  <li>The current threshold for the restriction of the restricted energy function to become active. <a href="#epoch-statistics">link needed</a>. This column is called <code class="language-plaintext highlighter-rouge">"Resource Unlimit"</code>.</li>
+  <li>The current threshold for the restriction of the restricted energy function to become active. The calculation of this value is explained in the <a href="../parameters/#restricted-model-limit-parameters">parameters</a>. This column is called <code class="language-plaintext highlighter-rouge">"Resource Limit"</code>.</li>
+  <li>The current threshold for the restriction of the restricted energy function to become active. The calculation of this value is explained in the <a href="../parameters/#restricted-model-limit-parameters">parameters</a>. This column is called <code class="language-plaintext highlighter-rouge">"Resource Unlimit"</code>.</li>
 </ul>
 
 <h1 id="multi-threaded-experiments">Multi-threaded Experiments</h1>
-<p>When multiple experiments are run in a multithreaded environment (i.e. <a href="/D28-Tragedy_of_the_Commons/pages/interaction/#multi-threading"><code class="language-plaintext highlighter-rouge">--jobs &gt;1</code></a>), the output of the model is slightly altered.</p>
+<p>When multiple experiments are run in a multithreaded environment (i.e. <a href="../interaction/#multi-threading"><code class="language-plaintext highlighter-rouge">--jobs &gt;1</code></a>), the output of the model is slightly altered.</p>
 
 <h2 id="graphical-output">Graphical output</h2>
 <h3 id="command-line-interface">Command-line interface</h3>
