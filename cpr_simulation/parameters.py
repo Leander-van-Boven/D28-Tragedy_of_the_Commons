@@ -41,12 +41,12 @@ default_params = {
         }
     },
 
-    "svo_dist": {
-        "d1": {
-            "m": 0.5,
-            "s": .1
-        }
-    },
+    # This parameter is set empty by default.
+    # This is to allow for a variable amount
+    # of distributions to be manually added.
+    # The default values are specified in 
+    # agent.py:from_svo_distribution()
+    "svo_dist": {},
 
     "resource": {
         "start_amount": 4000,

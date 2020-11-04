@@ -94,13 +94,9 @@ class Agent:
         if not dist_params:
             dist_params = {
                 "d1": {
-                    "m": 0.25,
-                    "s": .125
+                    "m": 0.5,
+                    "s": .1
                 },
-                "d2": {
-                    "m": 0.75,
-                    "s": .125
-                }
             }
 
         # Convert the dictionary structure to a list structure sorted
