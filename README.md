@@ -42,7 +42,7 @@ A tragedy about a planet with a single island in a sea of fish run by a bunch of
 ### Usage
 The simulation itself is encapsulated in the module called `cpr_simulation`. There are two ways to use this module: either by importing this module in a custom Python script or interactive notebook, or by using the included command-line interface. We recommend the latter, as it is the quickest way to get a simulation up and running. Its controls are documented below.
 
-After following the steps to install the simulation, open your favourite terminal and `cd` into `./_Code/`. The CLI can now be accessed through `sim.py`. The most important (and the only one that's required) argument, is the `command` argument, with possible choices being `run`, `save` and `list`. Using `run` will run a simulation, `save` saves a previously run simulation as a scenario, and `list` lists all saved scenarios. The most import commands are thus:
+The CLI can be accessed through `sim.py`. The most important (and the only one that's required) argument, is the `command` argument, with possible choices being `run`, `save` and `list`. Using `run` will run a simulation, `save` saves a previously run simulation as a scenario, and `list` lists all saved scenarios. The most import commands are thus:
 * To run a single simulation with default parameters, run 
   ```shell
   python sim.py run

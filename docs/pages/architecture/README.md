@@ -85,7 +85,7 @@ The constructor of `Agent`, `Agent.__init__()`, constructs a new instance of the
 
 In this method, the means and standard deviations are passed through the `dist_params` argument. However, instead of using this to make a single multi-modal normal distribution, we make multiple unimodal distributions. For each agent, we take one such distribution by chance, and sample its social value orientation from that. This is mathematically equivalent so sampling all agents from a multi-modal distribution. 
 
-The initial SVO distribution can be altered through the `svo_dist` parameter. Refer to [Parameters](../parameters/) for more information.
+The initial SVO distribution can be altered through the `svo_dist` parameter. Refer to [Parameters](../parameters/#svo-distributions-parameters) for more information.
 {:.note}
 
 ## Agent act
@@ -95,12 +95,12 @@ The behaviour 'act', represented by the method `Agent.act()`, represents the beh
 
 How much energy the agent metabolises is decided by a parameter that's constant across all agents. 
 
-The agents' fish consumption can be altered through the  `agent:metabolism` and `agent:consumption_factor` parameters. Refer to [Parameters](../parameters/) for more information.
+The agents' fish consumption can be altered through the  `agent:metabolism` and `agent:consumption_factor` parameters. Refer to [Parameters](../parameters/#agent-specific-parameters) for more information.
 {:.note}
 
 Whether to go fishing, and how much fish to catch, is decided by the *energy function*. The outcome of these functions relies solely on the agent's social value orientation and the amount of resource that's left. This model implements two such functions, which both are described in the sections below.
 
-The energy function used by the agents can be altered through the `agent:behaviour` parameter. Refer to [Parameters](../parameters/) for more information.
+The energy function used by the agents can be altered through the `agent:behaviour` parameter. Refer to [Parameters](../parameters/#agent-specific-parameters) for more information.
 {:.note}
 
 ### Base energy function
@@ -158,7 +158,7 @@ $$
 The social value orientation is drawn from a normal distribution. Here, $$\sigma_c$$ denotes the predetermined standard deviation
 {.figcaption}
 
-The standard deviation for the final normal distribution can be altered through the `agent:svo_convergence_factor:svo_either_parent` parameter. Refer to [General Agents Parameters](../parameters/#general-agent-parameters) for more information.
+The standard deviation for the final normal distribution can be altered through the `agent:svo_convergence_factor:svo_either_parent` parameter. Refer to [General agents parameters](../parameters/#general-agent-parameters) for more information.
 
 ### SVO inheritance from both parents
 This function is represented by the lcoal method `svo_both_parents()` that is located within `Agent.procreate()`. With this method, the child's social value orientation is based on both parents. As before, we construct a normal distribution where the social value orientation is sampled from. However, in this case the mean $$\mu_c$$ is determined by the weighted mean of the parents' social value orientations:
@@ -255,7 +255,7 @@ The growth of the value of $$g(x)$$ decreases as $$r_t$$ increases. This allows 
 If the level of radicality of the initial growth is set too high, then all agents can feed off of the initial resource jump ($$g(r_t)$$ if $$r_t=1$$) as at this point the function is most radical. This behaviour can be recognized by a flat, straight line of resources in the real-time resource plot.  
 {:.note}
 
-The exponents $$a$$, $$t_x$$, $$t_y$$ and $$n$$  can be altered through the `resource:gf_params:nroot:a`, `resource:gf_params:nroot:tx`, `resource:gf_params:nroot:ty` and `resource:gf_params:nroot:n` parameters, respectively. Refer to [NRoot growth function](../parameters/#nroot-growth-function) for more information. 
+The exponents $$a$$, $$t_x$$, $$t_y$$ and $$n$$  can be altered through the `resource:gf_params:nroot:a`, `resource:gf_params:nroot:tx`, `resource:gf_params:nroot:ty` and `resource:gf_params:nroot:n` parameters, respectively. Refer to [Nth root growth function](../parameters/#nth-root-growth-function) for more information. 
 {:.note}
 
 
@@ -349,7 +349,7 @@ During each loop a few things happen in the following order:
         * If the energy of the agent meets the procreate requirement it is added to the list of parents.
 5. All agents on the *eol* list are removed from the simulation.
 6. All agents on the *parents* list procreate, following the [agent procreation](#agent-procreation) function.
-7. The resources [regrow](#growth-functions).
+7. The resources [regrow](#resource-growth).
 8. The list of agents is shuffled, to minimize the chance that the same agent gets to act first each epoch.
 9. If required, the results are printed, plotted and/or logged.
 10. Finally if the second stopping condition passes, the epoch counter is increased by 1 and the loop restarts.

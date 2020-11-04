@@ -66,9 +66,9 @@
   * Add scenario that is actually included in the --name example
 * Introduction
   * Interesting scenarios to run
-* Background pages
-  * 'Imagine a small island with no food but fish in the sea around it. Any agent living on that island...'
-  * TOC vs CPR
+* ~~Background pages~~
+  * ~~'Imagine a small island with no food but fish in the sea around it. Any agent living on that island...'~~
+  * ~~TOC vs CPR~~
 * ~~Architecture pages~~
   * ~~Intro~~
     * ~~Explanation general framework~~
@@ -86,12 +86,12 @@
   * ~~Overview of workflow of implementation~~
   * ~~Thorough explanation of every CL argument~~
   * ~~Lots of example commands (w/ pictures?)~~
-* Output pages
+* ~~Output pages~~
   * ~~Explanation of real-time plots~~
   * ~~Explanation of different verbosity modes and their uses~~
   * ~~Explanation of CSV logging functionality~~
-  * Add links
-    * from #epoch-statistics to location where limit and unlimit factor are calculated
+  * ~~Add links~~
+    * ~~from #epoch-statistics to location where limit and unlimit factor are calculated~~
 * ~~Parameters pages~~
   * ~~first headername "General" or "General Structure", or...?~~
   * ~~Simulation parameters~~
@@ -101,10 +101,10 @@
   * ~~SVO distribution parameters~~
 * Check and Fix all links
   * Add additional /#header-title thingies if feasible
-* Fix section header capitalization
+* ~~Fix section header capitalization~~
 * Data analysis page? Or in README? Should we mention it?
 * ~~Put GNU-GPL license in the /docs folder somewhere~~
-* Make links in Interaction/Agent somewhat more specific (subsection in parameter)
+* ~~Make links in Interaction/Agent somewhat more specific (subsection in parameter)~~
 ## Report
 * Read through section Implementation Model, add/fix things where needed
 * (Put things needed to fix below)

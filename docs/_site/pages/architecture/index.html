@@ -306,7 +306,7 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 
 <p>In this method, the means and standard deviations are passed through the <code class="language-plaintext highlighter-rouge">dist_params</code> argument. However, instead of using this to make a single multi-modal normal distribution, we make multiple unimodal distributions. For each agent, we take one such distribution by chance, and sample its social value orientation from that. This is mathematically equivalent so sampling all agents from a multi-modal distribution.</p>
 
-<p class="note">The initial SVO distribution can be altered through the <code class="language-plaintext highlighter-rouge">svo_dist</code> parameter. Refer to <a href="../parameters/">Parameters</a> for more information.</p>
+<p class="note">The initial SVO distribution can be altered through the <code class="language-plaintext highlighter-rouge">svo_dist</code> parameter. Refer to <a href="../parameters/#svo-distributions-parameters">Parameters</a> for more information.</p>
 
 <h2 id="agent-act">Agent act</h2>
 <p>The behaviour ‘act’, represented by the method <code class="language-plaintext highlighter-rouge">Agent.act()</code>, represents the behaviour of this agent for an entire epoch. In our model, the act comprises of two things:</p>
@@ -317,11 +317,11 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
 
 <p>How much energy the agent metabolises is decided by a parameter that’s constant across all agents.</p>
 
-<p class="note">The agents’ fish consumption can be altered through the  <code class="language-plaintext highlighter-rouge">agent:metabolism</code> and <code class="language-plaintext highlighter-rouge">agent:consumption_factor</code> parameters. Refer to <a href="../parameters/">Parameters</a> for more information.</p>
+<p class="note">The agents’ fish consumption can be altered through the  <code class="language-plaintext highlighter-rouge">agent:metabolism</code> and <code class="language-plaintext highlighter-rouge">agent:consumption_factor</code> parameters. Refer to <a href="../parameters/#agent-specific-parameters">Parameters</a> for more information.</p>
 
 <p>Whether to go fishing, and how much fish to catch, is decided by the <em>energy function</em>. The outcome of these functions relies solely on the agent’s social value orientation and the amount of resource that’s left. This model implements two such functions, which both are described in the sections below.</p>
 
-<p class="note">The energy function used by the agents can be altered through the <code class="language-plaintext highlighter-rouge">agent:behaviour</code> parameter. Refer to <a href="../parameters/">Parameters</a> for more information.</p>
+<p class="note">The energy function used by the agents can be altered through the <code class="language-plaintext highlighter-rouge">agent:behaviour</code> parameter. Refer to <a href="../parameters/#agent-specific-parameters">Parameters</a> for more information.</p>
 
 <h3 id="base-energy-function">Base energy function</h3>
 <p>The base energy function, represented by the method <code class="language-plaintext highlighter-rouge">Agent.base_energy_function()</code>, is the initially proposed agent behaviour function. This functions is very naive in that it makes a black and white separation between pro-self and pro-social agents (&lt;.5 SVO means pro-self, &gt;=.5 SVO means pro-social). While pro-social agents will always fish their consumption, the consumption of the pro-self agents differs based on the available resources.<br />
@@ -368,7 +368,7 @@ P(\mu_c=svo_{p2}) &amp;= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
 <p>The social value orientation is drawn from a normal distribution. Here, \(\sigma_c\) denotes the predetermined standard deviation
 {.figcaption}</p>
 
-<p>The standard deviation for the final normal distribution can be altered through the <code class="language-plaintext highlighter-rouge">agent:svo_convergence_factor:svo_either_parent</code> parameter. Refer to <a href="../parameters/#general-agent-parameters">General Agents Parameters</a> for more information.</p>
+<p>The standard deviation for the final normal distribution can be altered through the <code class="language-plaintext highlighter-rouge">agent:svo_convergence_factor:svo_either_parent</code> parameter. Refer to <a href="../parameters/#general-agent-parameters">General agents parameters</a> for more information.</p>
 
 <h3 id="svo-inheritance-from-both-parents">SVO inheritance from both parents</h3>
 <p>This function is represented by the lcoal method <code class="language-plaintext highlighter-rouge">svo_both_parents()</code> that is located within <code class="language-plaintext highlighter-rouge">Agent.procreate()</code>. With this method, the child’s social value orientation is based on both parents. As before, we construct a normal distribution where the social value orientation is sampled from. However, in this case the mean \(\mu_c\) is determined by the weighted mean of the parents’ social value orientations:</p>
@@ -455,7 +455,7 @@ g(x) &amp;= a\cdot\frac{1}{(x-\frac{t_x}{a})^\frac{1}{n}}-t_y
 
 <p class="note">If the level of radicality of the initial growth is set too high, then all agents can feed off of the initial resource jump (\(g(r_t)\) if \(r_t=1\)) as at this point the function is most radical. This behaviour can be recognized by a flat, straight line of resources in the real-time resource plot.</p>
 
-<p class="note">The exponents \(a\), \(t_x\), \(t_y\) and \(n\)  can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:a</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:tx</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:ty</code> and <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:n</code> parameters, respectively. Refer to <a href="../parameters/#nroot-growth-function">NRoot growth function</a> for more information.</p>
+<p class="note">The exponents \(a\), \(t_x\), \(t_y\) and \(n\)  can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:a</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:tx</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:ty</code> and <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:n</code> parameters, respectively. Refer to <a href="../parameters/#nth-root-growth-function">Nth root growth function</a> for more information.</p>
 
 <h3 id="the-logarithmic-function-default">The logarithmic function (default)</h3>
 
@@ -553,7 +553,7 @@ The first stopping condition can be specified by setting the <code class="langua
   </li>
   <li>All agents on the <em>eol</em> list are removed from the simulation.</li>
   <li>All agents on the <em>parents</em> list procreate, following the <a href="#agent-procreation">agent procreation</a> function.</li>
-  <li>The resources <a href="#growth-functions">regrow</a>.</li>
+  <li>The resources <a href="#resource-growth">regrow</a>.</li>
   <li>The list of agents is shuffled, to minimize the chance that the same agent gets to act first each epoch.</li>
   <li>If required, the results are printed, plotted and/or logged.</li>
   <li>Finally if the second stopping condition passes, the epoch counter is increased by 1 and the loop restarts.</li>
