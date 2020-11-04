@@ -120,7 +120,7 @@ $$
 ### Restricted energy function (default)
 The restricted energy function, represented by the method `Agent.restricted_energy_function`(), builds on the base function by adding a epoch-based resource restriction. 
 
-The point at which the restriction kicks in or out can be altered through the `simulation:res_limit_factor` and `simulation:res_unlimit_factor` parameters respectively. Refer to [Restricted model limit parameters](../parameters/restricted-model-limit-parameters) for more information.
+The point at which the restriction kicks in or out can be altered through the `simulation:res_limit_factor` and `simulation:res_unlimit_factor` parameters respectively. Refer to [Restricted model limit parameters](../parameters/#restricted-model-limit-parameters) for more information.
 {:.note}
 
 If this restriction is active, agents are only allowed to fish if they would die otherwise. However, each agent has a chance of ignoring this restriction. The probability hereof is linearly dependent of the agent's social value orientation, i.e. if they range more towards pro-selfness, they are inclined to ignore the restriction more often.  
@@ -205,7 +205,7 @@ class Resource:
 
 ## Resource pool construction
 The constructor of the `Resource`, `Resource.__init__()`, constructs a new instance of the `Resource` class. During construction, the attributes are set from the provided parameters. Assume the amount of resources that are available at epoch $$t$$ is defined by $$r_t$$. From the parameters, we set $$r_0$$ equal to a predetermined value.  
-In addition, the function (`Agent.growth_exponential`, `Agent.growth_logarithmi` or `Agent.growth_nroot`) that is used for the growth of the resource is also set from the parameters. We partially implement these functions already, filling the exponents (all function parameters but `val`). Therefore, after construction of the resource, a growth function that takes only one value `Agent.growth` is generated.  
+In addition, the function (`Resource.growth_exponential`, `Resource.growth_logarithmic` or `Resource.growth_nroot`) that is used for the growth of the resource is also set from the parameters. We partially implement these functions already, filling the exponents (all function parameters but `val`). Therefore, after construction of the resource, a growth function that takes only one value `Resource.growth` is generated.  
 Finally, the current amount of resources $$r_0$$ are set to the provided start amount.
 
 ## Resource consumption
@@ -217,7 +217,7 @@ The `Resource.grow_resource` method can be called to grow the resource ($$r_{t+1
 ## Growth functions
 In this section, the three available growth functions are explained. 
 
-The active resource growth function can be altered through the `resource:growth_function` parameter. Refer to [Resource Parameters](../parameters/#resource-parameters). See [this example](../interaction/example-analyzing-resource-growth-functions) on how to check the behaviour of a growth function without interference of agents.
+The active resource growth function can be altered through the `resource:growth_function` parameter. Refer to [Resource Parameters](../parameters/#resource-parameters). See [this example](../interaction/#example-analyzing-resource-growth-functions) on how to check the behaviour of a growth function without interference of agents.
 
 ### The exponential function
 The exponential resource growth function is defined as follows:
@@ -231,7 +231,7 @@ $$
 
 Note that this function in itself isn't exponential. However, when it is repeatedly applied each epoch, it will be. This function has one parameter, $$e$$, which determines the amount of exponential growth.
 
-The exponent $$e$$ can be altered through the `resource:gf_params:exponential:rate` parameter. Refer to [Exponential growth function](../parameters/$exponential-growth-function) for more information. 
+The exponent $$e$$ can be altered through the `resource:gf_params:exponential:rate` parameter. Refer to [Exponential growth function](../parameters/#exponential-growth-function) for more information. 
 {:.note}
 
 ### The nth root function
@@ -255,7 +255,7 @@ The growth of the value of $$g(x)$$ decreases as $$r_t$$ increases. This allows 
 If the level of radicality of the initial growth is set too high, then all agents can feed off of the initial resource jump ($$g(r_t)$$ if $$r_t=1$$) as at this point the function is most radical. This behaviour can be recognized by a flat, straight line of resources in the real-time resource plot.  
 {:.note}
 
-The exponents $$a$$, $$t_x$$, $$t_y$$ and $$n$$  can be altered through the `resource:gf_params:nroot:a`, `resource:gf_params:nroot:tx`, `resource:gf_params:nroot:ty` and `resource:gf_params:nroot:n` parameters, respectively. Refer to [NRoot growth function](../parameters/$nroot-growth-function) for more information. 
+The exponents $$a$$, $$t_x$$, $$t_y$$ and $$n$$  can be altered through the `resource:gf_params:nroot:a`, `resource:gf_params:nroot:tx`, `resource:gf_params:nroot:ty` and `resource:gf_params:nroot:n` parameters, respectively. Refer to [NRoot growth function](../parameters/#nroot-growth-function) for more information. 
 {:.note}
 
 
@@ -281,7 +281,7 @@ The exponents $$a$$, $$s$$ and $$t$$ have the following implications to the beha
 * $$s$$: Initial scale factor. If $$r_t=1$$, $$h(r_t)$$ will be equal to $$s$$. For all $$x>1$$, $$h(x)<s$$.
 * $$t$$: Translation over x axis (roughly). Alters the speed at which the value of the function goes down, thus modifying the speed of the gradual-radical-gradual pattern. 
 
-The exponents $$a$$, $$s$$ and $$t$$ can be altered through the `resource:gf_params:logarithmic:a`, `resource:gf_params:logarithmic:t` and `resource:gf_params:logarithmic:t` parameters, respectively. Refer to [Logarithmic growth function](../parameters/$logarithmic-growth-function) for more information. 
+The exponents $$a$$, $$s$$ and $$t$$ can be altered through the `resource:gf_params:logarithmic:a`, `resource:gf_params:logarithmic:t` and `resource:gf_params:logarithmic:t` parameters, respectively. Refer to [Logarithmic growth function](../parameters/#logarithmic-growth-function) for more information. 
 {:.note}
 
 
