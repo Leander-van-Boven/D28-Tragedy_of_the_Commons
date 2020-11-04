@@ -190,6 +190,9 @@ $ py sim.py run --verbose 1
 ## Batch and range
 With the `batch` argument, it's possible to specify the mount of times a single experiment should be run. As our model is highly stochastic, this functionality can be used to determine more accurately the impact that a certain parameter has on system outcomes. 
 
+The batch and range functionality can't be saved as a scenario. If you attempt to save a previously ran batch or range scenario, it will only save the general parameters as listed in [Parameters](../parameters).
+{:.note}
+
 With the `range` argument, it's possible to specify a range of values that a specific parameter will iterate over. The list of values is obtained by repeatedly adding `[increment]` to the value of `[from]` (inclusive), until the value of `[to]` (exclusive) is reached. For example, if `0,5,1` is given, the resulting set of values will be $$\{0,1,2,3,4\}$$. It is possible to specify ranges for multiple parameters at once. 
 
 When using a range and/or batch, CSV logging is enabled by default. If the `out` argument isn't specified, it will default to `./out.csv`. 
