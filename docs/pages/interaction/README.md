@@ -9,7 +9,7 @@ title: Model Interaction
 # The Command-Line Interface
 Interaction with the model is done through the file `sim.py` that's located in the root directory. At any time, a discription of the CLI can be found by using ```python sim.py --help```.
 ```shell
-nemo@p-sea$ python sim.py --help
+nemo@p-sea$ py sim.py --help
 ```
 ```
 usage: sim.py [-h] [-n scenario] [-p item [item ...]] [-b int]
@@ -71,9 +71,9 @@ With the `name` argument, it's possible to specify a certain scenario name.
 * If the program is operating in `list`-mode, the `name` argument is ignored. 
 
 ## Examples
-* Load a scenario called `stable_system`, and run this simulation:
+* Load a scenario called `semi_stable`, and run this simulation:
   ```shell
-  $ py sim.py run --name stable_system
+  $ py sim.py run --name semi_stable
   ``` 
 * Save the previously ran simulation as a scenario named `interesting_results`
   ```shell
