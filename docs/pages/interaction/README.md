@@ -114,6 +114,16 @@ For an overview of all parameters available in this model, refer to [Parameters]
   >   svo_dist:d2:s=0.01
   ```
 
+  ### Example: Analyzing resource growth functions
+  * Analyze the behaviour of the resource growth functions for 100 epochs without interference of any agents:
+  ```bash
+  $ py sim.py run --param \
+  >   resource:growth_function=nroot \
+  >   agent:count=0 \
+  >   simulation:max_epoch=100
+  ```
+  TODO: MEER VOORBEELDJES HIERVAN MET EXPONENTEN AANPASSEN?
+
 ## Specifying output behaviour
 ```
  -o   [path]

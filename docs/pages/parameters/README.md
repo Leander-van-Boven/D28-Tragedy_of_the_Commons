@@ -120,17 +120,17 @@ The `"m"` key then denotes the mean of the Gaussian distribution, `"s"` then den
 The parameters below are sorted by the resource growth function they apply to. 
 ### Exponential growth function
 * `resource:gf_params:exponential:rate` (`float`): The exponential rate for the exponential growth function.
-  
-### Logarithmic growth function
-* `resource:gf_params:logarithmic:a` (`float`): The scaling factor of the logarithmic growth function.
-* `resource:gf_params:logarithmic:t` (`float`): The translation factor of the logarithmic growth function.
-* `resource:gf_params:logarithmic:s` (`float`): The initial jump scaling factor of the logarithmic growth function.
-   
+
 ### NRoot growth function
 * `resource:gf_params:nroot:a` (`float`): The scaling factor of the nroot growth function.
 * `resource:gf_params:nroot:tx` (`float`): The translation factor over the x axis of the nroot growth function.
 * `resource:gf_params:nroot:ty` (`float`): The translation factor over the y axis of the nroot growth function.
 * `resource:gf_params:nroot:n` (`float`): The base of the root that's used in the nroot growth function. ($$\sqrt[n]{x}$$)
+  
+### Logarithmic growth function
+* `resource:gf_params:logarithmic:a` (`float`): The scaling factor of the logarithmic growth function.
+* `resource:gf_params:logarithmic:t` (`float`): The translation factor of the logarithmic growth function.
+* `resource:gf_params:logarithmic:s` (`float`): The initial jump scaling factor of the logarithmic growth function.
 
 # Simulation Parameters
 > Refer to the explanation of the [Simulation](/D28-Tragedy_of_the_Commons/pages/architecture/simulation/) class for a full explanation of the effects of each parameter.

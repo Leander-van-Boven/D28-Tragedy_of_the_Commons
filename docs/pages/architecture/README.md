@@ -203,7 +203,9 @@ class Resource:
 ## Growth functions
 Three different growth functions are defined.
 
-### Exponential
+The active resource growth function can be altered through the `resource:growth_function` parameter. Refer to [Resource Parameters](../parameters/#resource-parameters). See [this example](../interaction/example-analyzing-resource-growth-functions) on how to check the behaviour of a growth function without interference of agents.
+
+### The eponential function
 
 The exponential resource growth function is defined as follows:
 
@@ -219,7 +221,7 @@ Note that this function in itself isn't exponential. However, when it is repeate
 The exponent $$e$$ can be altered through the `resource:gf_params:exponential:rate` parameter. Refer to [Exponential growth function](../parameters/$exponential-growth-function) for more information. 
 {:.note}
 
-### Nth root
+### The nth root function
 
 The nth root function is defined as follows:
 
@@ -230,12 +232,21 @@ g(x) &= a\cdot\frac{1}{(x-\frac{t_x}{a})^\frac{1}{n}}-t_y
 \end{align}
 $$
 
-The value of this one over log function decreases as $$r_t$$ increases. This allows for a radical resource growth at the start, but a more gradual resource growth if there is already a high amount of resources available. This function was designed to be resemble a 'nested' common-pool resource, where the lake is able to support but a limited amount of fish. The exponents $$a$$, $$t_x$$, $$t_y$$ and $$n$$ have the following implications on $$g(x)$$:
+The growth of the value of $$g(x)$$ decreases as $$r_t$$ increases. This allows for a radical resource growth at the start, but a more gradual resource growth if there is already a high amount of resources available. This function was designed to be resemble a 'nested' common-pool resource, where the lake is able to support but a limited amount of fish. The exponents $$a$$, $$t_x$$, $$t_y$$ and $$n$$ have the following implications to the behaviour of $$g(x)$$:
 
-* $$a$$: Scales the whole function. Scales any properties that are already existent.
-* $$t_x$$: Translation over x axis. Makes the decrease 
+* $$a$$: Scales the whole function. Scales any properties that are already existent in the function.If all other values are set, this is value can be used to alter the amount of resource growth.
+* $$t_x$$: Translation over the x axis. Alters the level of radicality in the beginning and the point at which the growth becomes more gradual.
+* $$t_y$$: Translation over the y acis. Alters the 'base' amount of resource growth.
+* $$n$$: Root base. This alters the speed at which the initial radicality changes to graduality. In a sense, this is the radicality redicality exponent. 
 
-### Logarithmic (default)
+If the level of radicality of the initial growth is set too high, then all agents can feed off of the initial resource jump ($$r_t\rightarrow r_{t+1}$$ if $$r_t=1$$). This behaviour can be recognized by a flat, straight line of resources in the real-time resource plot.  
+{:.note}
+
+The exponents $$a$$, $$t_x$$, $$t_y$$ and $$n$$  can be altered through the `resource:gf_params:nroot:a`, `resource:gf_params:nroot:tx`, `resource:gf_params:nroot:ty` and `resource:gf_params:nroot:n` parameters, respectively. Refer to [NRoot growth function](../parameters/$nroot-growth-function) for more information. 
+{:.note}
+
+
+### The logarithmic function (default)
 
 The logarithmic function is defined as follows:
 
@@ -246,8 +257,14 @@ h(x) &= \frac{a}{\log(x)+\frac{a}{s-t}} + t
 \end{align}
 $$
 
- With the current parameters
+This function was designed to account for the problem with the nth root function that agents can feed off of the initial jump, whilst keeping the radical-gradual pattern. In fact, as $$h(r_t)$$ scales the value of $$r_t$$ instead of adding up to it (as the previous two functions do), this growth function emits a gradual-redical-gradual resource growth pattern. The exponents $$a$$, $$s$$ and $$t$$ have the following implications to the behaviour of $$h(x)$$:
 
+* $$a$$: Scales the whole function. Scales any properties that are already existent in the function.If all other values are set, this is value can be used to alter the amount of resource growth.
+* $$s$$: Initial scale factor. If $$r_t=1$$, $$h(r_t)$$ will be equal to $$s$$. For all $$x>1$$, $$h(x)<s$$.
+* $$t$$: Translation over x axis (roughly). Alters the speed at which the value of the function goes down, thus modifying the speed of the gradual-radical-gradual pattern. 
+
+The exponents $$a$$, $$s$ and $$t$$  can be altered through the `resource:gf_params:logarithmic:a`, `resource:gf_params:logarithmic:t` and `resource:gf_params:logarithmic:t` parameters, respectively. Refer to [Logarithmic growth function](../parameters/$logarithmic-growth-function) for more information. 
+{:.note}
 
 
 # Simulation
