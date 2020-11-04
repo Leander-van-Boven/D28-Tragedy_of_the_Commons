@@ -9,7 +9,7 @@ class CsvLogger:
     Refer to the documentation
     (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
         pages/architecture/#csv-logger)
-    for a brief explanation of this class. 
+    for a brief explanation of this class.
     And to
     (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
         pages/output/#csv-logger)
@@ -27,20 +27,20 @@ class CsvLogger:
         col_names : `list[str]`,
             A list containing the names for each column of the table.
 
-        path : `str`, 
+        path : `str`,
             The path to which the output should be written.
 
         append : `bool`,
-            Whether to append this table to the file (assumes path is a 
+            Whether to append this table to the file (assumes path is a
             file that already exists). Will not copy over this table's
-            header row. 
+            header row.
         """
 
         self.path = path
         self.separator = params['separator']
         self.sep_replace = params['separator_replacement']
         if self.separator == self.sep_replace:
-            raise exception.InvalidParameterError(
+            raise InvalidParameterError(
                 "CSV separator and its replacement can't be equal!")
 
         self.head = [col.replace(self.separator, self.sep_replace)
@@ -74,7 +74,7 @@ class CsvLogger:
             The path to write the file to,
             if not specified self.path is taken.
         """
-        
+
         if not self.append:
             with open(path or self.path or '.log.csv', 'w') as file:
                 file.write(self.separator.join(self.head) + '\n')

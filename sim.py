@@ -1,16 +1,3 @@
-"""This module is the connection between the user and the simulation.
-
-It parses the commandline arguments and starts the simulation accordingly.
-The possible commandline arguments can be requested and reviewed by
-running:
->>> python3 sim.py --help
-"""
-
-# TODO:
-# - Check behavior of output path for csv logger
-# - Implement plot default true if single exp, default false if batch or
-#   range.
-
 import argparse
 import json
 import os
@@ -19,6 +6,13 @@ import sys
 import cpr_simulation as cpr
 import cpr_simulation.util
 
+"""This module is the connection between the user and the simulation.
+
+It parses the commandline arguments and starts the simulation accordingly.
+The possible commandline arguments can be requested and reviewed by
+running:
+>>> python3 sim.py --help
+"""
 
 # Constant values for loading and saving scenarios.
 SCENARIO_DIR = 'scenarios'
@@ -27,10 +21,10 @@ FIG_NAME = 'figure.pdf'
 
 
 def run(args):
-    """This method is called when `sim.py run` is run. 
+    """This method is called when `sim.py run` is run.
 
-    This method reads out all command-line arguments parses them and 
-    starts a simulation from the `cpr_simulation` package. 
+    This method reads out all command-line arguments parses them and
+    starts a simulation from the `cpr_simulation` package.
 
     Parameters
     ----------
@@ -91,16 +85,16 @@ def run(args):
                   "'out.csv'.")
         else:
             if os.path.exists('out'):
-                print("Missing argument: Please specify output directory for " +
-                      " multi-threaded batch or range mode.")
+                print("Missing argument: Please specify output directory " +
+                      " for multi-threaded batch or range mode.")
                 sys.exit(1)
             else:
                 args.out = 'out'
                 print("WARNING: No output directory specified. falling back " +
-                  "to 'out'.")
+                      "to 'out'.")
 
     try:
-        cpr.run(param_dict, params_to_range, param_ranges, args.out, plot, 
+        cpr.run(param_dict, params_to_range, param_ranges, args.out, plot,
                 args.jobs, args.fullscreen, args.resize, verbose)
     except cpr.exception.InvalidArgumentError as e:
         print(f"Inalid argument: {e.message}")
@@ -113,10 +107,10 @@ def run(args):
 
 
 def save(args):
-    """This method is called when `sim.py save` is run. 
+    """This method is called when `sim.py save` is run.
 
-    This method saves the parameters of the last run non-batch or 
-    non-range simulation, if it exists. 
+    This method saves the parameters of the last run non-batch or
+    non-range simulation, if it exists.
 
     Parameters
     ----------
@@ -158,9 +152,9 @@ def save(args):
 
 
 def llist(_):
-    """This method is called when `sim.py list` is run. 
+    """This method is called when `sim.py list` is run.
 
-    This method lists all saved scenarios as saved by the save method. 
+    This method lists all saved scenarios as saved by the save method.
 
     Parameters
     ----------
@@ -174,18 +168,18 @@ def llist(_):
 
 def str2bool(v):
     """Converts a string representation of a truth value to a boolean
-    type. This method is case-insensitive. 
+    type. This method is case-insensitive.
 
     Parameters
     ----------
     v : `str`,
         The input string that represents a truth value. Should be one of
-        the following: yes/no, true/false, t/f, y/n, 1/0. 
+        the following: yes/no, true/false, t/f, y/n, 1/0.
 
     Returns
     -------
     `bool`,
-        The output boolean. 
+        The output boolean.
     """
 
     if v is None:
@@ -200,20 +194,20 @@ def str2bool(v):
 
 
 def str2locval(x):
-    """Converts a string to a parameter tuple. 
+    """Converts a string to a parameter tuple.
 
     Parameters
     ----------
     x : `str`,
-        The input string. Should follow this syntax: 
+        The input string. Should follow this syntax:
         `root:nest:nest=int`.
 
     Returns
     -------
     `(str, int)`,
-        `str` represents the literal location of the parameter in the 
+        `str` represents the literal location of the parameter in the
         dictionary, and `int` represents the value this parameter should
-        get. 
+        get.
     """
     try:
         (param, val) = tuple(x.split('='))
@@ -228,20 +222,20 @@ def str2locval(x):
 
 
 def str2locrange(x):
-    """Converts a string to a parameter tuple. 
+    """Converts a string to a parameter tuple.
 
     Parameters
     ----------
     x : `str`,
-        The input string. Should follow this syntax: 
+        The input string. Should follow this syntax:
         `root:nest:nest=from,to,incr`.
 
     Returns
     -------
     `(str, tup)`,
-        `str` represents the literal location of the parameter in the 
-        dictionary, and `tup` represents the value range this parameter 
-        should get. 
+        `str` represents the literal location of the parameter in the
+        dictionary, and `tup` represents the value range this parameter
+        should get.
     """
     try:
         (param, val) = tuple(x.split('='))
@@ -283,8 +277,9 @@ if __name__ == '__main__':
         '-o', '--out', required=False, type=str, metavar='path',
         help='the output path for CSV logging')
     parser.add_argument(
-        '-P', '--plot', required=False, default=None, const=True, type=str2bool,
-        nargs='?', metavar='bool', help='whether to show a real-time plot')
+        '-P', '--plot', required=False, default=None, const=True,
+        type=str2bool, nargs='?', metavar='bool',
+        help='whether to show a real-time plot')
     parser.add_argument(
         '-v', '--verbose', required=False, default=-1, const=1,
         type=int, nargs='?', metavar='int',

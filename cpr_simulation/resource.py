@@ -8,8 +8,8 @@ class Resource:
     """This class represents the common resource, or fish in our case.
 
     Refer to the documentation
-    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/ 
-        pages/architecture/#resource) 
+    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
+        pages/architecture/#resource)
     for a thorough explanation of this class.
     """
 

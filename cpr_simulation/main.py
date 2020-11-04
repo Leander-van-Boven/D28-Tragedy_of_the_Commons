@@ -14,7 +14,7 @@ from .util import update_dict
 
 
 def run(override_params=dict(), params_to_range=None, param_ranges=None,
-        log_path=None, use_plot=True, n_jobs=1, fullscreen_plot=True, 
+        log_path=None, use_plot=True, n_jobs=1, fullscreen_plot=True,
         resize_plot=False, verbose=1):
     """Reads and generates param dicts and runs the simulation with them.
 
@@ -22,15 +22,15 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
     ----------
 
     override_params : `dict`, optional,
-        A dictionary with parameters to override from default, 
+        A dictionary with parameters to override from default,
         by default None.
 
     params_to_range : `list`, optional,
-        The list of parameters (based on location in parameter 
+        The list of parameters (based on location in parameter
         dictionary) that will be ranged over.
 
     param_ranges : `list`, optional,
-        The ranges (organized by index) that the params_to_range will 
+        The ranges (organized by index) that the params_to_range will
         range over.
 
     log_path : `str`, optional,
@@ -63,7 +63,7 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
         ':'.join(x.split('\'][\''))[2:-2] for x in params_to_range]
 
     def _get_logger(fn=None):
-        """Generate a CsvLogger class with right parameters, 
+        """Generate a CsvLogger class with right parameters,
         if out_path is specified. Returns None if not.
         """
 
@@ -83,7 +83,7 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
         return logger
 
     def _run_sim(p, c=[0], lg=None):
-        """Local method that generates and runs a simulation. This is a 
+        """Local method that generates and runs a simulation. This is a
         local method as the way we call it depends on operating mode.
         """
 
@@ -187,7 +187,7 @@ def run(override_params=dict(), params_to_range=None, param_ranges=None,
                 if logger:
                     logger.write()
 
-            # Run all experiments in parallel, with batch_size to 16 as 
+            # Run all experiments in parallel, with batch_size to 16 as
             # experiments tend to be quite quick
             Parallel(n_jobs=n_jobs, verbose=10, batch_size=16)(
                 delayed(_run_parallel)(*tup) for tup in enumerate(value_combis))

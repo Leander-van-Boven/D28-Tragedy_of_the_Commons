@@ -11,7 +11,7 @@ class Agent:
 
     Refer to the documentation
     (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
-        pages/architecture/#agent) 
+        pages/architecture/#agent)
     for a thorough explanation of this class.
     """
 
@@ -31,7 +31,7 @@ class Agent:
         params : `dict`,
             Dictionary containing the parameters for this agent.
         **kwargs : `dict`, optional,
-            If desired, you can add 'id' key for a unique agent 
+            If desired, you can add 'id' key for a unique agent
             identifier and 'svo' key to override the svo value.
         """
 
@@ -69,14 +69,14 @@ class Agent:
 
     @classmethod
     def from_svo_distribution(cls, dist_params, n, agent_params=dict()):
-        """Generate a list of agent with their SVOs drawn from a 
+        """Generate a list of agent with their SVOs drawn from a
         multimodal distribution.
 
         Parameters
         ----------
         dist_params : `dict[str, dict[str, float]]`,
             A dictionary of normal distribution dicionaries. Each normal
-            distribution should have a key 'm' denoting the mean, and a 
+            distribution should have a key 'm' denoting the mean, and a
             key 's' denoting the standard deviation.
         n : `float` or `int`
             The desired number of agents. Will be rounded down.
@@ -138,8 +138,8 @@ class Agent:
                 enumerate(agent_svos)]
 
     def act(self, sim):
-        """This is the act function of the agent. This function updates the 
-        status of the agent depending on its behaviour function.
+        """This is the act function of the agent. This function updates
+        the status of the agent depending on its behaviour function.
 
         Parameters
         ----------
@@ -161,9 +161,9 @@ class Agent:
 
         Implements the basic behaviour of the agents.
 
-        - Pro-social agents will always fish 
+        - Pro-social agents will always fish
             at the predefined consumption rate.
-        - Pro-self agents, will fish with an extra greed coefficient 
+        - Pro-self agents, will fish with an extra greed coefficient
             when fish population is low relative to human population.
 
         Parameters
@@ -194,8 +194,8 @@ class Agent:
         This limit is determined in terms of currently alive agents and
         a certain factor.
 
-        The following happens when resources drop below set limit: 
-        - Prosocial agents will only consume enough fish to be left 
+        The following happens when resources drop below set limit:
+        - Prosocial agents will only consume enough fish to be left
             with 1 energy; enough to just survive another day.
             Thus if they already have >=1 energy they will not fish.
         - Proself agents with >=1 energy have a chance to violate the

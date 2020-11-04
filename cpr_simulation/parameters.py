@@ -10,7 +10,7 @@ agent : `dict`,
     min_social_value : `float`,
         The lower limit of the SVO for agents in this group.
 
-    max_social_value : `float`, 
+    max_social_value : `float`,
         The upper limit of the SVO for agents in this group.
 
     metabolism : `double`,
@@ -37,7 +37,7 @@ agent : `dict`,
     # Restricted Energy Function Parameters
     res_limit_factor : `double`,
         This factor is multiplied by the amount of agents alive at that
-        point. If the resource amount is below the calculated value, 
+        point. If the resource amount is below the calculated value,
         the resources are assumed as 'scarce' and the restriction rule
         is activated.
     caught_chance : `float`,
@@ -57,7 +57,7 @@ resource : `dict`,
 
     max_amount : `double`,
         The maximum amount for the common resource.
-        If the amount of resource exceeds this limit, 
+        If the amount of resource exceeds this limit,
             the amount of resource gets reset to this limit.
 
     min_amount : `double`,
@@ -91,17 +91,17 @@ simulation : `dict`,
 
 logger_params : `dict`,
     Contains parameters for the CSV logger.
-    
+
     separator : `str`,
         The separator the separate each item in a datarow with.
 
     separator_replacement : `str`,
-        The value to replace the separator with 
+        The value to replace the separator with
         if it occurs in a value.
 
 
 run : `int`,
-    Determines the amount of times the simulation is run, 
+    Determines the amount of times the simulation is run,
     with the specified parameters.
 """
 

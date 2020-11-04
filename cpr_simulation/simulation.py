@@ -11,8 +11,8 @@ class Simulator:
     """Main class that manages the agents and resource.
 
     Refer to the documentation
-    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/ 
-        pages/architecture/#simulator) 
+    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
+        pages/architecture/#simulator)
     for a thorough explanation of this class.
     """
 
@@ -71,8 +71,8 @@ class Simulator:
         Agent.svo_inheritance_function = \
             param_dict['agent']['svo_inheritance_function']
         Agent.svo_convergence_factor = \
-            param_dict['agent']['svo_convergence_factor'] \
-                      [param_dict['agent']['svo_inheritance_function']] / 3
+            (param_dict['agent']['svo_convergence_factor']
+                       [param_dict['agent']['svo_inheritance_function']]) / 3
 
         Resource.print = self.v2_print
 
@@ -122,13 +122,13 @@ class Simulator:
         """Generates the simulation.
 
         This function runs sets up the simulation as a Generator
-        Every iteration, tt makes an agent act, causes resource to 
+        Every iteration, tt makes an agent act, causes resource to
         replenish and collects data to plot and/or log.
 
         Yields
         ------
         data : `tuple`,
-            Tuple containing the current epoch, 
+            Tuple containing the current epoch,
                 the current amount of agents per agent distribution
                 and the current amount of the common resource.
         """
@@ -199,7 +199,7 @@ class Simulator:
 
             self.v2_print("\nEOL: %s (tot %s)" % (
                 ', '.join([str(a.id) for a in eol]),
-                len(eol) ))
+                len(eol)))
 
             for agent in eol:
                 self.agents.remove(agent)
@@ -211,7 +211,8 @@ class Simulator:
                 len(parents)))
 
             Agent.procreate(self, parents)
-            self.v2_print('Post procreate agent count: %s\n' % len(self.agents))
+            self.v2_print('Post procreate agent count: %s\n'
+                          % len(self.agents))
             # Update the resource and epoch
             self.resource.grow_resource()
             np.random.shuffle(self.agents)
@@ -303,12 +304,9 @@ class Simulator:
         e = 0
 
         agents_now = []
-        agent_svo_rounded = []
-
         for agent in self.agents:
             svo = agent.social_value_orientation
             agents_now.append(svo)
-            # agent_svo_rounded.append(np.round(svo,2))
             if svo <= .2:
                 a += 1
             elif .2 < svo <= .4:

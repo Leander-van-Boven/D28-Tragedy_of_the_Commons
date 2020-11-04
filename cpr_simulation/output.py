@@ -10,14 +10,14 @@ class ResultsPlotter:
     Refer to the documentation
     (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
         pages/architecture/#results-plotter)
-    for a brief explanation of this class. 
+    for a brief explanation of this class.
     And to
     (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
         pages/output/#real-time-plot)
-    for a thorough explanation of the output. 
+    for a thorough explanation of the output.
     """
 
-    def __init__(self, start_agent, svo_bar_count, start_resource, fullscreen, 
+    def __init__(self, start_agent, svo_bar_count, start_resource, fullscreen,
                  allow_resize):
         """Sets up the real-time plot
 
@@ -29,10 +29,10 @@ class ResultsPlotter:
         svo_bar_count : `int`
             The amount of bars to show in the real-time histogram
         start_resource : `float`
-            The amount of starting resources, used to set y-axis limit 
+            The amount of starting resources, used to set y-axis limit
             of the resource plot (1.25*start_resource)
         fullscreen : `bool`
-            Whether to run the plot in maximized window 
+            Whether to run the plot in maximized window
             (if backend supports it)
         allow_resize : `bool`
             Whether to enable resizing without resetting the plot
@@ -60,7 +60,7 @@ class ResultsPlotter:
                 mng.window.state('zoomed')
             elif backend == 'qt5agg' or backend == 'qt4agg':
                 self.fig.canvas.manager.window.showMaximized()
-            elif backend == 'wxagg': # Not tested
+            elif backend == 'wxagg':  # Not tested
                 print('WARNING: ' +
                       'maximize plot has not been tested yet on this backend.')
                 try:
@@ -70,7 +70,7 @@ class ResultsPlotter:
                     print('Failed to maximize plot')
 
         # Setup agent subplot
-        self.agent_line, = self.ax_agent.plot([], [], lw=2, color='blue', 
+        self.agent_line, = self.ax_agent.plot([], [], lw=2, color='blue',
                                               label='Agent Count')
         self.ax_agent.set_title('Real time plot of agent count')
         self.ax_agent.set_ylabel('agent count')
@@ -92,7 +92,7 @@ class ResultsPlotter:
         self.res_limit_line, = self.ax_resource.plot(
             [], [], lw=1, color='red', linestyle='--', label='Resource Limit')
         self.res_unlimit_line, = self.ax_resource.plot(
-            [], [], lw=1, color='purple', linestyle='--', 
+            [], [], lw=1, color='purple', linestyle='--',
             label='Resource Unlimit')
         self.ax_resource.set_title('Real time plot of resource supply')
         self.ax_resource.set_ylabel('resource supply')
@@ -125,8 +125,8 @@ class ResultsPlotter:
         self.res_unlimit_line.set_data(self.xdata, self.unlimitresource)
 
         # Return updated actors
-        initialised = [self.agent_line, self.resource_line, self.res_limit_line, 
-                       self.res_unlimit_line]
+        initialised = [self.agent_line, self.resource_line,
+                       self.res_limit_line, self.res_unlimit_line]
         for bar in self.svo_bars:
             initialised.append(bar)
         return initialised
@@ -138,7 +138,7 @@ class ResultsPlotter:
         Parameters
         ----------
         data : `tuple`,
-            Tuple containing the current epoch, 
+            Tuple containing the current epoch,
                 the current amount of agents alive,
                 a list of all SVO's of the currently alive agents,
                 the current amount of resources,
@@ -157,7 +157,7 @@ class ResultsPlotter:
         self.limitresource.append(l)
         self.unlimitresource.append(u)
 
-        # Resize window of all plots if current epoch exceeds x_max        
+        # Resize window of all plots if current epoch exceeds x_max
         xmin, xmax = self.ax_agent.get_xlim()
         if t >= xmax:
             self.ax_agent.set_xlim(xmin, 2 * xmax)
@@ -182,7 +182,7 @@ class ResultsPlotter:
         self.resource_line.set_data(self.xdata, self.yresource)
         self.res_limit_line.set_data(self.xdata, self.limitresource)
         self.res_unlimit_line.set_data(self.xdata, self.unlimitresource)
-        updated = [self.agent_line, self.resource_line, self.res_limit_line, 
+        updated = [self.agent_line, self.resource_line, self.res_limit_line,
                    self.res_unlimit_line]
         for bar in self.svo_bars:
             updated.append(bar)
