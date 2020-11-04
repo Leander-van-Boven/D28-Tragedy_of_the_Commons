@@ -7,12 +7,12 @@ class CsvLogger:
     """Helper class that constructs a CSV file.
 
     Refer to the documentation
-    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
-        pages/architecture/#csv-logger)
+    > https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
+        pages/architecture/#csv-logger
     for a brief explanation of this class.
     And to
-    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
-        pages/output/#csv-logger)
+    > https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
+        pages/output/#csv-logger
     for a thorough explanation of the output.
     """
 

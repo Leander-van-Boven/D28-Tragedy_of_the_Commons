@@ -187,9 +187,11 @@ Powered by Hydejack v9.0.5 <https://hydejack.com/>
     </ol>
   </li>
   <li><a href="#resource" id="markdown-toc-resource">Resource</a>    <ol>
-      <li><a href="#resource-construction" id="markdown-toc-resource-construction">Resource construction</a></li>
+      <li><a href="#resource-pool-construction" id="markdown-toc-resource-pool-construction">Resource pool construction</a></li>
+      <li><a href="#resource-consumption" id="markdown-toc-resource-consumption">Resource consumption</a></li>
+      <li><a href="#resource-growth" id="markdown-toc-resource-growth">Resource growth</a></li>
       <li><a href="#growth-functions" id="markdown-toc-growth-functions">Growth functions</a>        <ol>
-          <li><a href="#the-eponential-function" id="markdown-toc-the-eponential-function">The eponential function</a></li>
+          <li><a href="#the-exponential-function" id="markdown-toc-the-exponential-function">The exponential function</a></li>
           <li><a href="#the-nth-root-function" id="markdown-toc-the-nth-root-function">The nth root function</a></li>
           <li><a href="#the-logarithmic-function-default" id="markdown-toc-the-logarithmic-function-default">The logarithmic function (default)</a></li>
         </ol>
@@ -383,6 +385,9 @@ P(\mu_c=svo_{p2}) &amp;= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
 
 <h1 id="resource">Resource</h1>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Resource</span><span class="p">:</span>
+    <span class="c1"># Attributes:
+</span>    <span class="c1"># - growth (unary function)
+</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
         <span class="c1"># Resource pool constructor
 </span>
@@ -390,10 +395,10 @@ P(\mu_c=svo_{p2}) &amp;= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
         <span class="c1"># Exponential growth function
 </span>
     <span class="k">def</span> <span class="nf">growth_logarithmic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-        <span class="c1"># 1 / log growth function
+        <span class="c1"># logarithmic growth function
 </span>
-    <span class="k">def</span> <span class="nf">growth_nroot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="c1"># 1 / nth root growth function
+    <span class="k">def</span> <span class="nf">growth_nroot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="c1"># Nth root growth function
 </span>
     <span class="k">def</span> <span class="nf">grow_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Resource growth function entry point
@@ -402,15 +407,23 @@ P(\mu_c=svo_{p2}) &amp;= \frac{e_{p2}}{e_{p1}+e_{p2}}\\[2em]
         <span class="c1"># Resource consumption entry pont
 </span></code></pre></div></div>
 
-<h2 id="resource-construction">Resource construction</h2>
-<p>The constructor of the <code class="language-plaintext highlighter-rouge">Resource</code>, <code class="language-plaintext highlighter-rouge">Resource.__init__()</code>, constructs a new instance of the <code class="language-plaintext highlighter-rouge">Resource</code> class. During construction, the attributes are set from the provided parameters. Furthermore a partial function is constructed for the resource regrowth. Finally the current amount of resources are set to the provided start amount.</p>
+<h2 id="resource-pool-construction">Resource pool construction</h2>
+<p>The constructor of the <code class="language-plaintext highlighter-rouge">Resource</code>, <code class="language-plaintext highlighter-rouge">Resource.__init__()</code>, constructs a new instance of the <code class="language-plaintext highlighter-rouge">Resource</code> class. During construction, the attributes are set from the provided parameters. Assume the amount of resources that are available at epoch \(t\) is defined by \(r_t\). From the parameters, we set \(r_0\) equal to a predetermined value.<br />
+In addition, the function (<code class="language-plaintext highlighter-rouge">Agent.growth_exponential</code>, <code class="language-plaintext highlighter-rouge">Agent.growth_logarithmi</code> or <code class="language-plaintext highlighter-rouge">Agent.growth_nroot</code>) that is used for the growth of the resource is also set from the parameters. We partially implement these functions already, filling the exponents (all function parameters but <code class="language-plaintext highlighter-rouge">val</code>). Therefore, after construction of the resource, a growth function that takes only one value <code class="language-plaintext highlighter-rouge">Agent.growth</code> is generated.<br />
+Finally, the current amount of resources \(r_0\) are set to the provided start amount.</p>
+
+<h2 id="resource-consumption">Resource consumption</h2>
+<p>The resource class exposes a method <code class="language-plaintext highlighter-rouge">Resource.consume_resource()</code>, which attempts to take an amount (<code class="language-plaintext highlighter-rouge">amount</code>) of resource from the total amount of resource available. However, if less resources are left that this amount, the funtion will take whatever is left (taking into account the required minium amount of resources). This value is substracted from the amount of resources available (\(r_t\)) and is returned to the caller.</p>
+
+<h2 id="resource-growth">Resource growth</h2>
+<p>The <code class="language-plaintext highlighter-rouge">Resource.grow_resource</code> method can be called to grow the resource (\(r_{t+1}\leftarrow \text{growth}(r_t)\)). Naturally, this method is invoked once per epoch. The behaviour of this functin depends on the growth function that is chosen, as is more thoroughly explained in the next section.</p>
 
 <h2 id="growth-functions">Growth functions</h2>
-<p>Three different growth functions are defined.</p>
+<p>In this section, the three available growth functions are explained.</p>
 
 <p>The active resource growth function can be altered through the <code class="language-plaintext highlighter-rouge">resource:growth_function</code> parameter. Refer to <a href="../parameters/#resource-parameters">Resource Parameters</a>. See <a href="../interaction/example-analyzing-resource-growth-functions">this example</a> on how to check the behaviour of a growth function without interference of agents.</p>
 
-<h3 id="the-eponential-function">The eponential function</h3>
+<h3 id="the-exponential-function">The exponential function</h3>
 <p>The exponential resource growth function is defined as follows:</p>
 
 \[\begin{align}
@@ -440,7 +453,7 @@ g(x) &amp;= a\cdot\frac{1}{(x-\frac{t_x}{a})^\frac{1}{n}}-t_y
   <li>\(n\): Root base. This alters the speed at which the initial radicality changes to graduality. In a sense, this is the radicality redicality exponent.</li>
 </ul>
 
-<p class="note">If the level of radicality of the initial growth is set too high, then all agents can feed off of the initial resource jump (\(r_t\rightarrow r_{t+1}\) if \(r_t=1\)). This behaviour can be recognized by a flat, straight line of resources in the real-time resource plot.</p>
+<p class="note">If the level of radicality of the initial growth is set too high, then all agents can feed off of the initial resource jump (\(g(r_t)\) if \(r_t=1\)) as at this point the function is most radical. This behaviour can be recognized by a flat, straight line of resources in the real-time resource plot.</p>
 
 <p class="note">The exponents \(a\), \(t_x\), \(t_y\) and \(n\)  can be altered through the <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:a</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:tx</code>, <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:ty</code> and <code class="language-plaintext highlighter-rouge">resource:gf_params:nroot:n</code> parameters, respectively. Refer to <a href="../parameters/$nroot-growth-function">NRoot growth function</a> for more information.</p>
 
@@ -453,7 +466,11 @@ r_{t+1} &amp;= r_{t} \cdot h(r_t)\\[2em]
 h(x) &amp;= \frac{a}{\log(x)+\frac{a}{s-t}} + t
 \end{align}\]
 
-<p>This function was designed to account for the problem with the nth root function that agents can feed off of the initial jump, whilst keeping the radical-gradual pattern. In fact, as \(h(r_t)\) scales the value of \(r_t\) instead of adding up to it (as the previous two functions do), this growth function emits a gradual-redical-gradual resource growth pattern. The exponents \(a\), \(s\) and \(t\) have the following implications to the behaviour of \(h(x)\):</p>
+<p>This function was designed to account for the problem with the nth root function that agents can feed off of the initial jump, whilst keeping the radical-gradual pattern. In fact, as \(h(r_t)\) scales the value of \(r_t\) instead of adding up to it (as the previous two functions do), this growth function emits a gradual-redical-gradual resource growth pattern.</p>
+
+<p class="note">For this function, a mimimum amount of 1 resource needs to always be available. This is because the behaviour of \(h(x)\) is undefined if \(x=0\). Always check that <code class="language-plaintext highlighter-rouge">resource:min_value</code> is set to 1 or higher if using the logarithmic growth function. Refer to <a href="../parameters/#resource-parameters">Resource Parameters</a> for more information.</p>
+
+<p>The exponents \(a\), \(s\) and \(t\) have the following implications to the behaviour of \(h(x)\):</p>
 
 <ul>
   <li>\(a\): Scales the whole function. Scales any properties that are already existent in the function.If all other values are set, this is value can be used to alter the amount of resource growth.</li>
@@ -553,7 +570,7 @@ The first stopping condition can be specified by setting the <code class="langua
 <h3 id="pseudocode">Pseudocode</h3>
 <p>See below for the pseudocode representing a graphical overview of aforementioned explanation of the <code class="language-plaintext highlighter-rouge">Simulator.generate_simulation()</code> method.</p>
 
-<p><img src="../../assets/img/simulation_pseudo.png" alt="" /></p>
+<p><img src="/D28-Tragedy_of_the_Commons/assets/img/simulation_pseudo.png" alt="" /></p>
 
 <h1 id="output">Output</h1>
 
@@ -662,6 +679,10 @@ Additionally the plot is automatically saved after the simulation, allowing the 
     
       
       <a class="heading flip-title" href="/D28-Tragedy_of_the_Commons/LICENSE/">LICENSE</a>
+      |
+    
+      
+      <a class="heading flip-title" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">COOKIES POLICY</a>
       
     
     </small></nav>

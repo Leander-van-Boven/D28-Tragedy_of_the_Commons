@@ -11,8 +11,8 @@ class Simulator:
     """Main class that manages the agents and resource.
 
     Refer to the documentation
-    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
-        pages/architecture/#simulator)
+    > https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
+        pages/architecture/#simulator
     for a thorough explanation of this class.
     """
 

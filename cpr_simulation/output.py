@@ -8,12 +8,12 @@ class ResultsPlotter:
     """Class handling the real-time plotting
 
     Refer to the documentation
-    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
-        pages/architecture/#results-plotter)
+    > https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
+        pages/architecture/#results-plotter
     for a brief explanation of this class.
     And to
-    (https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
-        pages/output/#real-time-plot)
+    > https://leander-van-boven.github.io/D28-Tragedy_of_the_Commons/
+        pages/output/#real-time-plot
     for a thorough explanation of the output.
     """
 

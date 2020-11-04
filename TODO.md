@@ -21,7 +21,7 @@
   * ~~```resource.py```~~
   * ~~```simulation.py```~~
   * ~~```util.py```~~
-* Check and fix any and all docstrings
+* ~~Check and fix any and all docstrings~~
   * ~~```__init__.py```~~
   * ~~```agent.py```~~
   * ~~```logger.py```~~
@@ -31,7 +31,7 @@
   * ~~```resource.py```~~
   * ~~```simulation.py```~~
   * ~~```util.py```~~
-* Final check PEP8-compliance
+* ~~Final check PEP8-compliance~~
   * ~~```__init__.py```~~
   * ~~```agent.py```~~
   * ~~```logger.py```~~
@@ -43,11 +43,11 @@
   * ~~```util.py```~~
 * ~~Solve fig.savefig() problem~~
   * ~~create new plot with data and save this figure instead.~~
-* Add more maximized function supports
+* ~~Add more maximized function supports~~
 * Add some nice scenarios
-* Check whether all code is compliant to beta implementation feedback
-* For each class, link to documentation in docstring
-* Decide what to do with ```parameters.py``` docstring
+* ~~Check whether all code is compliant to beta implementation feedback~~
+* ~~For each class, link to documentation in docstring~~
+* ~~Decide what to do with ```parameters.py``` docstring~~
 * Determine behaviour of agent count is set to 0. Should iterate without agent limit.
 
 ### General repository
@@ -59,8 +59,6 @@
 * Cleanup of repository (file structure)
   * Remove redundant files/folders
   * Maybe put CSV files of experiments in separate repository? We can then put that repository in our main repository but it will only be cloned if ```git clone --recursive``` is used. 
-* Check whether docs/FILES/file_structure.md is still up-to-date
-* Make 
 ## Documentation
 * General
   * ~~Nicify logo picture~~
