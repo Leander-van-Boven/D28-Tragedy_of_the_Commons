@@ -20,9 +20,9 @@ The documentation is separated into multiple parts:
 
 ## Quick Start
 ### Prerequisites
-* The simulation assumes Python 3.6+, and requires the modules `numpy`, `argparse`, and `matplotlib` to be installed.
+* The simulation assumes Python 3.6+, and requires the modules `numpy`, `argparse`, `matplotlib` and `joblib` to be installed.
   ```bash
-  pip3 install numpy argparse matplotlib
+  pip3 install numpy argparse matplotlib joblib
   ``` 
 * Download the code by cloning this repository.
   ```bash
