@@ -231,7 +231,7 @@ class Simulator:
                 input("Press enter to continue...")
 
             # Check whether there are still agents alive
-            if len(self.agents) <= 1:
+            if self.n_agents > 0 and len(self.agents) <= 1:
                 break
 
             self.epoch += 1

@@ -4,7 +4,6 @@ import os
 import sys
 
 import cpr_simulation as cpr
-import cpr_simulation.util
 
 """This module is the connection between the user and the simulation.
 
