@@ -1,14 +1,9 @@
 
 
 import numpy as np
-
 import csv
-import numpy as np
 import pandas as pd
-
 import matplotlib.pyplot as plt
-import seaborn as sns
-
 
 
 df = pd.read_csv('unimodal.csv')
@@ -47,7 +42,6 @@ for w in range(12):
 			if j == i + df['Exp Num'][batch_start]:
 				exp0 += 1
 
-		#print(exp1+batch_start, exp1+exp0+batch_start)
 		plt.rcParams["figure.figsize"] = [10, 5]
 		plt.plot(df['Epoch'][exp_end+batch_start : exp_end+exp0+batch_start], agent_count[exp_end+batch_start : exp_end+exp0+batch_start], label = "Mean = " + str(df[df.columns[2]][exp_end+batch_start]) + " and STD = " + str(round(df[df.columns[3]][exp_end+batch_start],2)) )
 
@@ -61,36 +55,12 @@ for w in range(12):
 	plt.ylabel('Agent Count')
 	plt.xlim(0, 1000)
 	plt.ylim(0, 100)
-	plt.savefig('FinalCount' + str(w+1) + '.png')
+	#plt.savefig('FinalCount' + str(w+1) + '.png')
 	plt.show()
 	batch_start += batch_count[w]
 
 
 
 
-"""
-color_map = [
-"#57bb8a",
-"#63b682",
-"#73b87e",
-"#84bb7b",
-"#94bd77",
-"#a4c073",
-"#b0be6e",
-"#c4c56d",
-"#d4c86a",
-"#e2c965",
-"#f5ce62",
-"#f3c563",
-"#e9b861",
-"#e6ad61",
-"#ecac67",
-"#e9a268",
-"#e79a69",
-"#e5026b",
-"#e2886c",
-"#e0816d",
-"#dd776e"
-]
-"""
+
 

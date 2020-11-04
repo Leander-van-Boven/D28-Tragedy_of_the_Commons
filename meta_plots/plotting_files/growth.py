@@ -58,8 +58,7 @@ for w in range(12):
 
 			plt.plot(df['Epoch'][exp_end+batch_start : exp_end+exp0+batch_start], df['Resource'][exp_end+batch_start : exp_end+exp0+batch_start], "g")
 			plt.fill_between(df['Epoch'][exp_end+batch_start : exp_end+exp0+batch_start], df['Resource Limit'][exp_end+batch_start : exp_end+exp0+batch_start], df['Resource Unlimit'][exp_end+batch_start : exp_end+exp0+batch_start], color = "r", alpha=.2)
-			#plt.plot(df['Epoch'][exp_end+batch_start : exp_end+exp0+batch_start], df['Resource Limit'][exp_end+batch_start : exp_end+exp0+batch_start])
-			#plt.plot(df['Epoch'][exp_end+batch_start : exp_end+exp0+batch_start], df['Resource Unlimit'][exp_end+batch_start : exp_end+exp0+batch_start])
+
 
 			plot_mean = str(round(df[df.columns[2]][exp_end+batch_start],2)) 
 			plot_std = str(round(df[df.columns[3]][exp_end+batch_start],2))
@@ -74,7 +73,7 @@ for w in range(12):
 		plt.xlabel('Epoch')
 		plt.ylabel('Resource Count')
 		plt.savefig('Resource_Growth_b' + str(plot_batch) + '_e' + str(plot_exp) + '.png')
-		#plt.show()
+		plt.show()
 	exp_end += exp0
 	batch_start += batch_count[w]
 

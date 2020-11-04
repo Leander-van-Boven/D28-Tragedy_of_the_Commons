@@ -1,11 +1,9 @@
 
 
 import numpy as np
-
 import csv
 import numpy as np
 import pandas as pd
-
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -25,9 +23,6 @@ for i in df['batch']:
 	if i == 1:
 		batch1 += 1
 
-#print (batch1)
-
-
 batch_count = []
 for k in range(12):
 	batch_num = 0
@@ -36,14 +31,11 @@ for k in range(12):
 			batch_num += 1
 	batch_count.append(batch_num)
 
-
 batch_start = 10
 exp_end = 94
 
 plot_batch = 11
 plot_exp = 106
-
-
 
 for w in range(12):
 
@@ -68,7 +60,6 @@ for w in range(12):
 
 		exp_end += exp0
 		
-
 	if w == plot_batch:
 		plt.legend(loc='upper right')
 		plt.legend(title='SVO')
