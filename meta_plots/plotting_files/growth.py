@@ -1,13 +1,17 @@
 
 
 import numpy as np
-
 import csv
-import numpy as np
 import pandas as pd
-
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+"""
+- This file operates on a CSV file containing multiple batches of multiple experiments.  
+- Community runs do not need to be of the same length.
+- Outputs plot for a SINGLE experiment, selected with plot_batch and plot_exp below
+- Plots Resource count over epochs with Resource limitation range
+"""
 
 
 df = pd.read_csv('unimodal.csv')
@@ -33,13 +37,20 @@ for k in range(12):
 	batch_count.append(batch_num)
 
 
-batch_start = 10
-exp_end = 94
+# Initialize counting variables
+batch_start = 0
+exp_end = 0
 
+# Select batch and experiment
 plot_batch = 11
 plot_exp = 106
 
 
+# Loops through all 12 batches
+# Loops through all ten experiments in each batch
+# Counts length of each experiment
+# Plots resource plot with limitaiton range for selected experiment
+# Note for bimodal and trimodal plots, the amount of experiments needs to be changed to 54 for bimodal and 2160 for trimodal (not recommended)
 for w in range(12):
 
 	exp_end = 0

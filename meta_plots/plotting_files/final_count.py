@@ -5,6 +5,12 @@ import csv
 import pandas as pd
 import matplotlib.pyplot as plt
 
+"""
+- This file operates on a CSV file containing multiple batches of multiple experiments.  
+- Community runs do not need to be of the same length.
+- Outputs multi-line plots of Agent Count per Epoch for each batch, containing all experimental runs in that batch.
+"""
+
 
 df = pd.read_csv('unimodal.csv')
 
@@ -14,12 +20,8 @@ exp_number = max(df['Exp Num'])
 
 agent_count = df['Count']
 
-batch1 = 0
-for i in df['batch']:
-	if i == 1:
-		batch1 += 1
 
-
+# Appending the length of each batch to a list
 batch_count = []
 for k in range(12):
 	batch_num = 0
@@ -28,8 +30,16 @@ for k in range(12):
 			batch_num += 1
 	batch_count.append(batch_num)
 
+# Initializing counting variables
 batch_start = 0
 exp_end = 0
+
+# Loops through all 12 batches
+# Loops through all ten experiments in each batch
+# Counts length of each experiment
+# Plots agent count each experiment of a batch onto one plot
+# 12 Plots total, with autosave option
+# Note for bimodal and trimodal plots, the amount of experiments needs to be changed to 54 for bimodal and  for trimodal
 
 for w in range(12):
 
@@ -55,7 +65,7 @@ for w in range(12):
 	plt.ylabel('Agent Count')
 	plt.xlim(0, 1000)
 	plt.ylim(0, 100)
-	#plt.savefig('FinalCount' + str(w+1) + '.png')
+	plt.savefig('FinalCount' + str(w+1) + '.png')
 	plt.show()
 	batch_start += batch_count[w]
 

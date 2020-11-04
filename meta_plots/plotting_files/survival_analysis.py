@@ -7,6 +7,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
+"""
+- Checks CSV files for unimodal, bimodal, and trimodal distributions
+- Outputs CSV files containing surviving experimental runs with their respective distributions settings
+- Auto saves CSV files in current directory
+"""
+
+
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 

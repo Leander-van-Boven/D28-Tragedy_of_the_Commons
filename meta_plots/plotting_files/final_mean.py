@@ -1,13 +1,17 @@
 
 
 import numpy as np
-
 import csv
-import numpy as np
 import pandas as pd
-
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+
+"""
+- This file operates on a CSV file containing multiple batches of multiple experiments.  
+- Community runs do not need to be of the same length.
+- Outputs multi-line plots of Mean SVO (with STD range) for each batch, containing all experimental runs in that batch.
+"""
 
 
 df = pd.read_csv('unimodal.csv')
@@ -20,14 +24,7 @@ exp_number = max(df['Exp Num'])
 Mean = df['Mean']
 
 
-batch1 = 0
-for i in df['batch']:
-	if i == 1:
-		batch1 += 1
-
-#print (batch1)
-
-
+# Appending the length of each batch to a list
 batch_count = []
 for k in range(12):
 	batch_num = 0
@@ -36,11 +33,19 @@ for k in range(12):
 			batch_num += 1
 	batch_count.append(batch_num)
 
-print(batch_count, np.sum(batch_count))
 
+# Initializing counting variables
 batch_start = 0
 exp_end = 0
 
+
+# Loops through all 12 batches
+# Loops through all ten experiments in each batch
+# Counts length of each experiment
+# Plots median each experiment of a batch onto one plot
+# Includes fill between ± 1 Decile
+# 12 Plots total, with autosave option
+# Note for bimodal and trimodal plots, the amount of experiments needs to be changed to 54 for bimodal and 2160 for trimodal (not recommended)
 for w in range(12):
 	print(batch_start, batch_start+batch_count[w])
 	exp_end = 0
@@ -66,7 +71,7 @@ for w in range(12):
 	plt.ylabel('SVO')
 	plt.xlim(0, 100)
 	plt.ylim(0, 1)
-	#plt.savefig('FinalMean' + str(w+1) + '.png')
+	plt.savefig('FinalMean' + str(w+1) + '.png')
 	plt.show()
 	batch_start += batch_count[w]
 
