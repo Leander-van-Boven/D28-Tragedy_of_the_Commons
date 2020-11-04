@@ -80,6 +80,7 @@
     * Behaviour
   * Resource class
   * Simulation class
+    * Add pseudo code
   * Output classes
     * Mention list of strings instead of pandas frame for output
   * Helper classes?
@@ -103,6 +104,8 @@
 * Check and Fix all links
   * Add additional /#header-title thingies if feasible
 * Data analysis page? Or in README? Should we mention it?
+* ~~Put GNU-GPL license in the /docs folder somewhere~~
+* Add rr (notice?)
 ## Report
 * Read through section Implementation Model, add/fix things where needed
 * (Put things needed to fix below)

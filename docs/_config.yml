@@ -29,6 +29,10 @@ menu:
   - title: Output
     url: /pages/output/
 
+legal:
+  - title: LICENSE
+    url: /LICENSE/
+
 # defaults:
 #   - scope:
 #       path:            pages/

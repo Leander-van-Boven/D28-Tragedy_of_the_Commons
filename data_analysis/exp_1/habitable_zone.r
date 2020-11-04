@@ -83,3 +83,11 @@ for (file in list.files(top5_batch_path, full.names=TRUE)){
   i <- i+1
 }
 
+top125 <- read.csv('../top125_habitable_params.csv')
+top125 %>% 
+  ggplot(aes(x=score)) +
+  geom_histogram(binwidth = 1, fill='blue') +
+  theme_minimal() +
+  scale_x_continuous(breaks=seq(10,34,2)) +
+  scale_y_continuous(breaks=seq(0,30,5)) +
+  labs(title='Histogram of simulation score of top 125 simulations', x='Score', y='Simulation Count')

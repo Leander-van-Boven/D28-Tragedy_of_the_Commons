@@ -230,10 +230,10 @@ g(x) &= a\cdot\frac{1}{(x-\frac{t_x}{a})^\frac{1}{n}}-t_y
 \end{align}
 $$
 
-The value of this one over log function decreases as $$r_t$$ increases. This allows for a radical resource growth at the start, but a more gradual resource growth if there is already a high amount of resources available. This function was designed to be resemble a 'nested' common-pool resource, where the lake is able to support but a limited amount of fish. The exponents $$a$$, $$t_x$$, $$t_y$$ and $$n$$ have the following implications on $g(x)$:
+The value of this one over log function decreases as $$r_t$$ increases. This allows for a radical resource growth at the start, but a more gradual resource growth if there is already a high amount of resources available. This function was designed to be resemble a 'nested' common-pool resource, where the lake is able to support but a limited amount of fish. The exponents $$a$$, $$t_x$$, $$t_y$$ and $$n$$ have the following implications on $$g(x)$$:
 
-* $a$: Scales the whole function. Scales any properties that are already existent.
-* $t_x$: Translation over x axis. Makes the decrease 
+* $$a$$: Scales the whole function. Scales any properties that are already existent.
+* $$t_x$$: Translation over x axis. Makes the decrease 
 
 ### Logarithmic (default)
 
@@ -297,7 +297,7 @@ Before the simulation goes into its simulation loop, the simulation is first ini
 Once initialisation is complete, the epoch loop starts. This loop will run untill either of the stopping conditions are met. There are two different stopping conditions:
 * Either the maximum amount of epochs are reached; or
 * The amount of alive agents drops under a certain threshold.
-The first stopping condition can be specified by setting the `simulation:max_epoch` parameter. The second stopping condition is set to 2. This is done so since 1 agent will not be able to procreate, and will eventually die of age. It may however happen that all alive agents die all within the epoch, therefore we need to check whether $$|A|<2$$ (where $$A$$ denotes the set of alive agents), instead of $$|A|=1$$
+The first stopping condition can be specified by setting the `simulation:max_epoch` parameter. The second stopping condition is set to 2. This is done so since 1 agent will not be able to procreate, and will eventually die of age. It may however happen that all alive agents die all within the epoch, therefore we need to check whether $$|A|<2$$ (where $$A$$ denotes the set of alive agents), instead of $$|A|=1$$.
 
 # Output
 
