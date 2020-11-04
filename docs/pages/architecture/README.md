@@ -453,10 +453,11 @@ def do_nothing(self, *args, **kwargs):
     pass
 
 def dd_factory(d=None):
-    # asd
+    # recursive definition of defaultdict
 
 def update_dict(d, u, omit_new=False):
-    # asd
+    # update dict-like d with key-value pairs 
+    # in dict-like u
 ```
 
 Two different utility files were created:
