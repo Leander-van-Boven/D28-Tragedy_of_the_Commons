@@ -105,6 +105,7 @@
 * Data analysis page? Or in README? Should we mention it?
 * ~~Put GNU-GPL license in the /docs folder somewhere~~
 * ~~Make links in Interaction/Agent somewhat more specific (subsection in parameter)~~
+* Add default off parameter to save the figure after simulation
 ## Report
 * Read through section Implementation Model, add/fix things where needed
 * (Put things needed to fix below)
