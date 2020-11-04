@@ -45,6 +45,8 @@ To change a the parameter of the model the `--param [parameter]=[value]` or `-p 
 ### Interesting Scenarios to run
 We included four scenarios that can be run by adding the `--name` argument (refer to [Interaction](pages/interaction/#specifying-a-certain-scenario)). These are:
 
+* `m.75s.05`, which represents an initial agent SVO distribution with a mean of 0.75 and a standard deviation of 0.05. This configuration is identical to that found in Figure 6 of the report. 
+* `m.75s.15`, which represents an initial agent SVO distribution with a mean of 0.75 and a standard deviation of 0.15. This configuration is identical to one found in Figure 5 of the report. 
 * `semi_stable`, which shows a fluctuating agent distribution and resource pool but remains (almost always) stable.
 * `resourcef_exp`, which shows the behaviour of the [exponential](pages/architecture/#the-exponential-function) resource growth function.
 * `resourcef_nroot`, which shows the behaviour of the [nth root resource](pages/architecture/#the-nth-root-function) growth function.
